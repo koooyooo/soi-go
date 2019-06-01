@@ -1,95 +1,71 @@
 package main
 
 import (
-	"bytes"
-	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
+	"os"
 	"strings"
+
+	"github.com/koooyooo/soi-go/model"
+	"github.com/koooyooo/soi-go/registory"
 )
 
 func main() {
-	name := flag.String("n", "", "name flag")
-	tags := flag.String("t", "", "tag name")
 	flag.Parse()
-	args := flag.Args()
-
-	if len(args) == 0 {
+	if flag.NArg() == 0 {
 		fmt.Println("Not enough argument")
 	}
-	cmd := args[0]
+	cmd := flag.Arg(0)
 	switch cmd {
 	case "add":
-		err := Add(args, *name, strings.Split(*tags, ","))
+		flags := flag.NewFlagSet("add", flag.PanicOnError)
+		name := flags.String("n", "", "name flag")
+		tags := flags.String("t", "", "tag name")
+		err := flags.Parse(os.Args[2:])
+		if err != nil {
+			log.Fatal(err)
+		}
+		uri := flags.Arg(0)
+		if *name == "" {
+			name = NameFromURI(uri)
+		}
+		err = Add(*name, uri, strings.Split(*tags, ","))
 		if err != nil {
 			log.Fatal(err)
 		}
 	}
 }
 
-func Add(args []string, name string, tags []string) error {
-	uri := args[1]
+func NameFromURI(uri string) *string {
+	idxURIServerStart := strings.Index(uri, "://") + len("://")
+	fromStartUri := uri[idxURIServerStart:]
+	idxFromStartServerEnd := strings.Index(fromStartUri, "/")
+	if idxFromStartServerEnd == -1 {
+		idxFromStartServerEnd = len(fromStartUri)
+	}
+	server := fromStartUri[:idxFromStartServerEnd]
+	server = strings.TrimPrefix(server, "www.")
+	return &server
+}
+
+func Add(name, uri string, tags []string) error {
 	fmt.Printf("soi add name=%s, url=%s \n", name, uri)
-	sois, err := Load()
+	sois, err := registory.Load()
 	if err != nil {
 		return err
 	}
-	fmt.Println(sois)
-
-	soi := Soi{
+	if sois.Contains(name) {
+		sois.Remove(name)
+	}
+	sois.Add(model.Soi{
 		Name: name,
 		Uri:  uri,
 		Tags: tags,
-	}
-	sois.Add(soi)
+	})
+
 	fmt.Println(sois) // TODO
-	err = Store(*sois)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-type Sois struct {
-	Sois []Soi `json:"sois"`
-}
-
-func (s *Sois) Add(soi Soi) {
-	s.Sois = append(s.Sois, soi)
-}
-
-type Soi struct {
-	Name string   `json:"name"`
-	Uri  string   `json:"link"`
-	Tags []string `json:"tags"`
-}
-
-func Load() (*Sois, error) {
-	s := Sois{}
-	b, err := ioutil.ReadFile("sois.json")
-	if err != nil {
-		return nil, err
-	}
-	err = json.Unmarshal(b, &s)
-	if err != nil {
-		return nil, err
-	}
-	return &s, nil
-}
-
-func Store(s Sois) error {
-	b, err := json.Marshal(s)
-	if err != nil {
-		return err
-	}
-	var prettyBuff bytes.Buffer
-	err = json.Indent(&prettyBuff, b, "", "  ")
-	if err != nil {
-		return err
-	}
-	err = ioutil.WriteFile("sois.json", prettyBuff.Bytes(), 0666)
+	err = registory.Store(*sois)
 	if err != nil {
 		return err
 	}
