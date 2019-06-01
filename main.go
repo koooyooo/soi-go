@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"strings"
 
 	util "github.com/koooyooo/soi-go/comons/uri"
@@ -22,7 +23,9 @@ func main() {
 	case "add":
 		add()
 	case "list":
-
+		list()
+	case "open":
+		open()
 	}
 }
 
@@ -39,6 +42,43 @@ func add() {
 		name = util.DefaultName(uri)
 	}
 	err = service.Add(*name, uri, strings.Split(*tags, ","))
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func list() {
+	flags := flag.NewFlagSet("list", flag.PanicOnError)
+	namePart := flags.String("n", "", "name")
+	err := flags.Parse(os.Args[2:])
+	if err != nil {
+		log.Fatal(err)
+	}
+	sois, err := service.Search(*namePart)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for i, v := range sois {
+		fmt.Printf(" - %02d:  %-18s %s\n", i+1, v.Name, v.Uri)
+	}
+}
+
+func open() {
+	flags := flag.NewFlagSet("open", flag.PanicOnError)
+	namePart := flags.String("n", "", "name")
+	err := flags.Parse(os.Args[2:])
+	if err != nil {
+		log.Fatal(err)
+	}
+	soi, ok, err := service.Get(*namePart)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if !ok {
+		fmt.Println("no data found")
+		return
+	}
+	err = exec.Command("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", soi.Uri).Start()
 	if err != nil {
 		log.Fatal(err)
 	}
