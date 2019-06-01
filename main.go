@@ -7,8 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/koooyooo/soi-go/model"
-	"github.com/koooyooo/soi-go/registory"
+	"github.com/koooyooo/soi-go/service"
 )
 
 func main() {
@@ -30,7 +29,7 @@ func main() {
 		if *name == "" {
 			name = NameFromURI(uri)
 		}
-		err = Add(*name, uri, strings.Split(*tags, ","))
+		err = service.Add(*name, uri, strings.Split(*tags, ","))
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -47,27 +46,4 @@ func NameFromURI(uri string) *string {
 	server := fromStartUri[:idxFromStartServerEnd]
 	server = strings.TrimPrefix(server, "www.")
 	return &server
-}
-
-func Add(name, uri string, tags []string) error {
-	fmt.Printf("soi add name=%s, url=%s \n", name, uri)
-	sois, err := registory.Load()
-	if err != nil {
-		return err
-	}
-	if sois.Contains(name) {
-		sois.Remove(name)
-	}
-	sois.Add(model.Soi{
-		Name: name,
-		Uri:  uri,
-		Tags: tags,
-	})
-
-	fmt.Println(sois) // TODO
-	err = registory.Store(*sois)
-	if err != nil {
-		return err
-	}
-	return nil
 }
