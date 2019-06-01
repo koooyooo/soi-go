@@ -7,6 +7,8 @@ import (
 	"os"
 	"strings"
 
+	util "github.com/koooyooo/soi-go/comons/uri"
+
 	"github.com/koooyooo/soi-go/service"
 )
 
@@ -18,32 +20,26 @@ func main() {
 	cmd := flag.Arg(0)
 	switch cmd {
 	case "add":
-		flags := flag.NewFlagSet("add", flag.PanicOnError)
-		name := flags.String("n", "", "name flag")
-		tags := flags.String("t", "", "tag name")
-		err := flags.Parse(os.Args[2:])
-		if err != nil {
-			log.Fatal(err)
-		}
-		uri := flags.Arg(0)
-		if *name == "" {
-			name = NameFromURI(uri)
-		}
-		err = service.Add(*name, uri, strings.Split(*tags, ","))
-		if err != nil {
-			log.Fatal(err)
-		}
+		add()
+	case "list":
+
 	}
 }
 
-func NameFromURI(uri string) *string {
-	idxURIServerStart := strings.Index(uri, "://") + len("://")
-	fromStartUri := uri[idxURIServerStart:]
-	idxFromStartServerEnd := strings.Index(fromStartUri, "/")
-	if idxFromStartServerEnd == -1 {
-		idxFromStartServerEnd = len(fromStartUri)
+func add() {
+	flags := flag.NewFlagSet("add", flag.PanicOnError)
+	name := flags.String("n", "", "name flag")
+	tags := flags.String("t", "", "tag name")
+	err := flags.Parse(os.Args[2:])
+	if err != nil {
+		log.Fatal(err)
 	}
-	server := fromStartUri[:idxFromStartServerEnd]
-	server = strings.TrimPrefix(server, "www.")
-	return &server
+	uri := flags.Arg(0)
+	if *name == "" {
+		name = util.DefaultName(uri)
+	}
+	err = service.Add(*name, uri, strings.Split(*tags, ","))
+	if err != nil {
+		log.Fatal(err)
+	}
 }
