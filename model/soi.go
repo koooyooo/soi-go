@@ -46,6 +46,27 @@ func FilterByFunc(sois []Soi, f func(Soi) bool) []Soi {
 	return result
 }
 
+func FilterByName(sois []Soi, name string) []Soi {
+	byName := func(s Soi) bool {
+		return s.Name == name
+	}
+	return FilterByFunc(sois, byName)
+}
+
+func FilterByExcludeName(sois []Soi, name string) []Soi {
+	byExcludeName := func(s Soi) bool {
+		return s.Name != name
+	}
+	return FilterByFunc(sois, byExcludeName)
+}
+
+func FilterByNamePart(sois []Soi, namePart string) []Soi {
+	byNamePart := func(s Soi) bool {
+		return strings.Contains(s.Name, namePart)
+	}
+	return FilterByFunc(sois, byNamePart)
+}
+
 func FilterByTags(sois []Soi, tags []string) []Soi {
 	byTags := func(s Soi) bool {
 		for _, t := range tags {
@@ -62,11 +83,4 @@ func FilterByTags(sois []Soi, tags []string) []Soi {
 		return true
 	}
 	return FilterByFunc(sois, byTags)
-}
-
-func FilterByNamePart(sois []Soi, namePart string) []Soi {
-	byNamePart := func(s Soi) bool {
-		return strings.Contains(s.Name, namePart)
-	}
-	return FilterByFunc(sois, byNamePart)
 }

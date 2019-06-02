@@ -47,12 +47,11 @@ func Get(name string) (*model.Soi, bool, error) {
 	if err != nil {
 		return nil, false, err
 	}
-	for _, v := range sois.Sois {
-		if v.Name == name {
-			return &v, true, nil
-		}
+	targetSois := model.FilterByName(sois.Sois, name)
+	if 0 == len(targetSois) {
+		return nil, false, nil
 	}
-	return nil, false, nil
+	return &targetSois[0], true, nil
 }
 
 func Remove(name string) error {
@@ -60,13 +59,8 @@ func Remove(name string) error {
 	if err != nil {
 		return err
 	}
-	var newSoiList []model.Soi
-	for _, v := range sois.Sois {
-		if v.Name != name {
-			newSoiList = append(newSoiList, v)
-		}
-	}
-	sois.Sois = newSoiList
+	removedSois := model.FilterByExcludeName(sois.Sois, name)
+	sois.Sois = removedSois
 	err = registory.Store(*sois)
 	if err != nil {
 		return err
