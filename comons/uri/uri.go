@@ -2,7 +2,7 @@ package util
 
 import "strings"
 
-func DefaultName(uri string) *string {
+func DefaultName(uri string) string {
 	idxURIServerStart := strings.Index(uri, "://") + len("://")
 	fromStartUri := uri[idxURIServerStart:]
 	idxFromStartServerEnd := strings.Index(fromStartUri, "/")
@@ -11,5 +11,5 @@ func DefaultName(uri string) *string {
 	}
 	server := fromStartUri[:idxFromStartServerEnd]
 	wwwLessServer := strings.TrimPrefix(server, "www.")
-	return &wwwLessServer
+	return wwwLessServer
 }

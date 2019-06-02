@@ -45,6 +45,7 @@ func Search(namepart string) ([]model.Soi, error) {
 			result = append(result, v)
 		}
 	}
+	// TODO tagとnamepartの組み合わせに関して仕様を決める
 	return result, nil
 }
 
@@ -59,4 +60,23 @@ func Get(name string) (*model.Soi, bool, error) {
 		}
 	}
 	return nil, false, nil
+}
+
+func Remove(name string) error {
+	sois, err := registory.Load()
+	if err != nil {
+		return err
+	}
+	var newSoiList []model.Soi
+	for _, v := range sois.Sois {
+		if v.Name != name {
+			newSoiList = append(newSoiList, v)
+		}
+	}
+	sois.Sois = newSoiList
+	err = registory.Store(*sois)
+	if err != nil {
+		return err
+	}
+	return nil
 }

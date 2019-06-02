@@ -33,3 +33,23 @@ type Soi struct {
 	Uri  string   `json:"link"`
 	Tags []string `json:"tags"`
 }
+
+func FilterByTags(sois []Soi, tags []string) []Soi {
+	var newSois []Soi
+SOI:
+	for _, v := range sois {
+		for _, t := range tags {
+			findTag := false
+			for _, vt := range v.Tags {
+				if t == vt {
+					findTag = true
+				}
+			}
+			if !findTag {
+				continue SOI
+			}
+		}
+		newSois = append(newSois, v)
+	}
+	return newSois
+}
