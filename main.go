@@ -30,6 +30,8 @@ func main() {
 		open()
 	case "remove":
 		remove()
+	case "tag":
+		tag()
 	}
 }
 
@@ -46,10 +48,11 @@ func add() {
 	if name == "-" {
 		name = util.DefaultName(uri)
 	}
-	err = service.Add(name, uri, strings.Split(*tags, ","))
+	soi, err := service.Add(name, uri, strings.Split(*tags, ","))
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Printf("added %v \n", soi)
 }
 
 func list() {
@@ -95,7 +98,7 @@ func open() {
 }
 
 func remove() {
-	flags := flag.NewFlagSet("open", flag.PanicOnError)
+	flags := flag.NewFlagSet("remove", flag.PanicOnError)
 	err := flags.Parse(os.Args[2:])
 	if err != nil {
 		log.Fatal(err)
@@ -128,11 +131,30 @@ func remove() {
 	}
 }
 
+func tag() {
+	flags := flag.NewFlagSet("tag", flag.PanicOnError)
+	err := flags.Parse(os.Args[2:])
+	if err != nil {
+		log.Fatal(err)
+	}
+	name := flags.Arg(0)
+	tagsStr := flags.Arg(1)
+	tags := strings.Split(tagsStr, ",")
+	soi, ok, err := service.Tag(name, tags)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if !ok {
+		fmt.Println("no target found")
+	}
+	fmt.Printf("%v \n", soi)
+}
+
 func showList(sois []model.Soi) {
 	if len(sois) == 0 {
 		fmt.Println("No Record Found")
 	}
 	for i, v := range sois {
-		fmt.Printf(" - %02d:  %-15s %-45s %v \n", i+1, v.Name, v.Uri, v.Tags)
+		fmt.Printf(" - %02d:  %v", i+1, v)
 	}
 }

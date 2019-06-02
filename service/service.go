@@ -1,17 +1,15 @@
 package service
 
 import (
-	"fmt"
-
 	"github.com/koooyooo/soi-go/model"
 	"github.com/koooyooo/soi-go/registory"
 )
 
-func Add(name, uri string, tags []string) error {
+func Add(name, uri string, tags []string) (*model.Soi, error) {
 	//fmt.Printf("soi add name=%s, url=%s \n", name, uri)
 	sois, err := registory.Load()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if sois.Contains(name) {
 		sois.Remove(name)
@@ -24,10 +22,9 @@ func Add(name, uri string, tags []string) error {
 	sois.Add(soi)
 	err = registory.Store(*sois)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	fmt.Printf("stored: %v\n", soi)
-	return nil
+	return &soi, nil
 }
 
 func Search(namepart string) ([]model.Soi, error) {
@@ -66,4 +63,19 @@ func Remove(name string) error {
 		return err
 	}
 	return nil
+}
+
+func Tag(name string, tags []string) (*model.Soi, bool, error) {
+	target, ok, err := Get(name)
+	if err != nil {
+		return nil, false, err
+	}
+	if !ok {
+		return nil, false, nil
+	}
+	soi, err := Add(target.Name, target.Uri, tags)
+	if err != nil {
+		return nil, true, err
+	}
+	return soi, true, nil
 }

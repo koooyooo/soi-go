@@ -1,6 +1,9 @@
 package model
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type Sois struct {
 	Sois []Soi `json:"sois"`
@@ -34,6 +37,10 @@ type Soi struct {
 	Name string   `json:"name"`
 	Uri  string   `json:"link"`
 	Tags []string `json:"tags"`
+}
+
+func (s Soi) String() string {
+	return fmt.Sprintf("%-15s %-45s %v \n", s.Name, s.Uri, s.Tags)
 }
 
 func FilterByFunc(sois []Soi, f func(Soi) bool) []Soi {
