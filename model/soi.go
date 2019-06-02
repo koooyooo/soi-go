@@ -1,5 +1,7 @@
 package model
 
+import "strings"
+
 type Sois struct {
 	Sois []Soi `json:"sois"`
 }
@@ -34,22 +36,37 @@ type Soi struct {
 	Tags []string `json:"tags"`
 }
 
-func FilterByTags(sois []Soi, tags []string) []Soi {
-	var newSois []Soi
-SOI:
+func FilterByFunc(sois []Soi, f func(Soi) bool) []Soi {
+	var result []Soi
 	for _, v := range sois {
+		if f(v) {
+			result = append(result, v)
+		}
+	}
+	return result
+}
+
+func FilterByTags(sois []Soi, tags []string) []Soi {
+	byTags := func(s Soi) bool {
 		for _, t := range tags {
 			findTag := false
-			for _, vt := range v.Tags {
+			for _, vt := range s.Tags {
 				if t == vt {
 					findTag = true
 				}
 			}
 			if !findTag {
-				continue SOI
+				return false
 			}
 		}
-		newSois = append(newSois, v)
+		return true
 	}
-	return newSois
+	return FilterByFunc(sois, byTags)
+}
+
+func FilterByNamePart(sois []Soi, namePart string) []Soi {
+	byNamePart := func(s Soi) bool {
+		return strings.Contains(s.Name, namePart)
+	}
+	return FilterByFunc(sois, byNamePart)
 }

@@ -2,7 +2,6 @@ package service
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/koooyooo/soi-go/model"
 	"github.com/koooyooo/soi-go/registory"
@@ -39,13 +38,7 @@ func Search(namepart string) ([]model.Soi, error) {
 	if namepart == "" {
 		return sois.Sois, nil
 	}
-	var result []model.Soi
-	for _, v := range sois.Sois {
-		if strings.Contains(v.Name, namepart) {
-			result = append(result, v)
-		}
-	}
-	// TODO tagとnamepartの組み合わせに関して仕様を決める
+	result := model.FilterByNamePart(sois.Sois, namepart)
 	return result, nil
 }
 
