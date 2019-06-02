@@ -6,21 +6,19 @@ import (
 )
 
 func Add(name, uri string, tags []string) (*model.Soi, error) {
-	//fmt.Printf("soi add name=%s, url=%s \n", name, uri)
-	sois, err := registory.Load()
+	soiCup, err := registory.Load()
 	if err != nil {
 		return nil, err
-	}
-	if sois.Contains(name) {
-		sois.Remove(name)
 	}
 	soi := model.Soi{
 		Name: name,
 		Uri:  uri,
 		Tags: tags,
 	}
-	sois.Add(soi)
-	err = registory.Store(*sois)
+	newSois := model.FilterByExcludeName(soiCup.Sois, name)
+	newSois = append(newSois, soi)
+	soiCup.Sois = newSois
+	err = registory.Store(*soiCup)
 	if err != nil {
 		return nil, err
 	}
@@ -28,23 +26,23 @@ func Add(name, uri string, tags []string) (*model.Soi, error) {
 }
 
 func Search(namepart string) ([]model.Soi, error) {
-	sois, err := registory.Load()
+	soiCup, err := registory.Load()
 	if err != nil {
 		return nil, err
 	}
 	if namepart == "" {
-		return sois.Sois, nil
+		return soiCup.Sois, nil
 	}
-	result := model.FilterByNamePart(sois.Sois, namepart)
+	result := model.FilterByNamePart(soiCup.Sois, namepart)
 	return result, nil
 }
 
 func Get(name string) (*model.Soi, bool, error) {
-	sois, err := registory.Load()
+	soiCup, err := registory.Load()
 	if err != nil {
 		return nil, false, err
 	}
-	targetSois := model.FilterByName(sois.Sois, name)
+	targetSois := model.FilterByName(soiCup.Sois, name)
 	if 0 == len(targetSois) {
 		return nil, false, nil
 	}
@@ -52,13 +50,13 @@ func Get(name string) (*model.Soi, bool, error) {
 }
 
 func Remove(name string) error {
-	sois, err := registory.Load()
+	soiCup, err := registory.Load()
 	if err != nil {
 		return err
 	}
-	removedSois := model.FilterByExcludeName(sois.Sois, name)
-	sois.Sois = removedSois
-	err = registory.Store(*sois)
+	removedSois := model.FilterByExcludeName(soiCup.Sois, name)
+	soiCup.Sois = removedSois
+	err = registory.Store(*soiCup)
 	if err != nil {
 		return err
 	}
@@ -66,14 +64,14 @@ func Remove(name string) error {
 }
 
 func Tag(name string, tags []string) (*model.Soi, bool, error) {
-	target, ok, err := Get(name)
+	soiBefore, ok, err := Get(name)
 	if err != nil {
 		return nil, false, err
 	}
 	if !ok {
 		return nil, false, nil
 	}
-	soi, err := Add(target.Name, target.Uri, tags)
+	soi, err := Add(soiBefore.Name, soiBefore.Uri, tags)
 	if err != nil {
 		return nil, true, err
 	}

@@ -44,7 +44,6 @@ func add() {
 	}
 	name := flags.Arg(0)
 	uri := flags.Arg(1)
-
 	if name == "-" {
 		name = util.DefaultName(uri)
 	}

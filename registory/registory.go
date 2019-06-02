@@ -8,8 +8,8 @@ import (
 	"github.com/koooyooo/soi-go/model"
 )
 
-func Load() (*model.Sois, error) {
-	s := model.Sois{}
+func Load() (*model.SoiCup, error) {
+	s := model.SoiCup{}
 	b, err := ioutil.ReadFile("sois.json")
 	if err != nil {
 		return nil, err
@@ -21,7 +21,7 @@ func Load() (*model.Sois, error) {
 	return &s, nil
 }
 
-func Store(s model.Sois) error {
+func Store(s model.SoiCup) error {
 	b, err := json.Marshal(s)
 	if err != nil {
 		return err
