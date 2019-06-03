@@ -21,16 +21,16 @@ func main() {
 		fmt.Println("Not enough argument")
 	}
 	cmd := flag.Arg(0)
-	switch {
-	case cmd == "a" || cmd == "add":
+	switch cmd {
+	case "a", "add":
 		add()
-	case cmd == "l" || cmd == "list":
+	case "l", "list":
 		list()
-	case cmd == "o" || cmd == "open":
+	case "o", "open":
 		open()
-	case cmd == "r" || cmd == "remove":
+	case "r", "remove":
 		remove()
-	case cmd == "t" || cmd == "tag":
+	case "t", "tag":
 		tag()
 	}
 }
