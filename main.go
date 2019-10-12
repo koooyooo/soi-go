@@ -20,22 +20,25 @@ func main() {
 	if flag.NArg() == 0 {
 		fmt.Println("Not enough argument")
 	}
+	service := service.NewSoiService()
+
 	cmd := flag.Arg(0)
 	switch cmd {
 	case "add":
-		add()
+		add(service)
 	case "list":
-		list()
+		list(service)
 	case "open":
-		open()
+		open(service)
 	case "remove":
-		remove()
+		remove(service)
 	case "tag":
-		tag()
+		tag(service)
 	}
 }
 
-func add() {
+// add Link
+func add(s service.SoiService) {
 	flags := flag.NewFlagSet("add", flag.PanicOnError)
 	tags := flags.String("t", "", "tags")
 	err := flags.Parse(os.Args[2:])
@@ -47,14 +50,14 @@ func add() {
 	if name == "-" {
 		name = util.DefaultName(uri)
 	}
-	soi, err := service.Add(name, uri, strings.Split(*tags, ","))
+	soi, err := s.Add(name, uri, strings.Split(*tags, ","))
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Printf("added %v \n", soi)
 }
 
-func list() {
+func list(s service.SoiService) {
 	flags := flag.NewFlagSet("list", flag.PanicOnError)
 	namePart := flags.String("n", "", "name")
 	tagStr := flags.String("t", "", "tags")
@@ -67,7 +70,7 @@ func list() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	sois, err := service.Search(*namePart)
+	sois, err := s.Search(*namePart)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -75,14 +78,14 @@ func list() {
 	showList(filteredSois)
 }
 
-func open() {
+func open(s service.SoiService) {
 	flags := flag.NewFlagSet("open", flag.PanicOnError)
 	err := flags.Parse(os.Args[2:])
 	if err != nil {
 		log.Fatal(err)
 	}
 	namePart := flags.Arg(0)
-	soi, ok, err := service.Get(namePart)
+	soi, ok, err := s.Get(namePart)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -96,30 +99,30 @@ func open() {
 	}
 }
 
-func remove() {
+func remove(s service.SoiService) {
 	flags := flag.NewFlagSet("remove", flag.PanicOnError)
 	err := flags.Parse(os.Args[2:])
 	if err != nil {
 		log.Fatal(err)
 	}
 	namePart := flags.Arg(0)
-	soi, ok, err := service.Get(namePart)
+	soi, ok, err := s.Get(namePart)
 	if err != nil {
 		log.Fatal(err)
 	}
 	if ok {
-		err := service.Remove(soi.Name)
+		err := s.Remove(soi.Name)
 		if err != nil {
 			log.Fatal(err)
 		}
 		fmt.Printf("remove: %s \n", soi.Name)
 	} else {
-		sois, err := service.Search(namePart)
+		sois, err := s.Search(namePart)
 		if err != nil {
 			log.Fatal(err)
 		}
 		if len(sois) == 1 {
-			err = service.Remove(sois[0].Name)
+			err = s.Remove(sois[0].Name)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -130,7 +133,7 @@ func remove() {
 	}
 }
 
-func tag() {
+func tag(s service.SoiService) {
 	flags := flag.NewFlagSet("tag", flag.PanicOnError)
 	err := flags.Parse(os.Args[2:])
 	if err != nil {
@@ -139,7 +142,7 @@ func tag() {
 	name := flags.Arg(0)
 	tagsStr := flags.Arg(1)
 	tags := strings.Split(tagsStr, ",")
-	soi, ok, err := service.Tag(name, tags)
+	soi, ok, err := s.Tag(name, tags)
 	if err != nil {
 		log.Fatal(err)
 	}
