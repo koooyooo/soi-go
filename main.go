@@ -24,15 +24,15 @@ func main() {
 
 	cmd := flag.Arg(0)
 	switch cmd {
-	case "add":
+	case "a", "add":
 		add(service)
-	case "list":
+	case "l", "list":
 		list(service)
-	case "open":
+	case "o", "open":
 		open(service)
-	case "remove":
+	case "r", "remove":
 		remove(service)
-	case "tag":
+	case "t", "tag":
 		tag(service)
 	}
 }
