@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"sort"
 	"strings"
 
 	"github.com/koooyooo/soi-go/model"
@@ -28,6 +29,8 @@ func main() {
 		add(service)
 	case "l", "list":
 		list(service)
+	case "ts", "tags":
+		tags(service)
 	case "o", "open":
 		open(service)
 	case "r", "remove":
@@ -37,7 +40,7 @@ func main() {
 	}
 }
 
-// add Link
+// add is for adding new link to soi
 func add(s service.SoiService) {
 	flags := flag.NewFlagSet("add", flag.PanicOnError)
 	tags := flags.String("t", "", "tags")
@@ -57,6 +60,7 @@ func add(s service.SoiService) {
 	fmt.Printf("added %v \n", soi)
 }
 
+// list is for listing up links
 func list(s service.SoiService) {
 	flags := flag.NewFlagSet("list", flag.PanicOnError)
 	namePart := flags.String("n", "", "name")
@@ -78,6 +82,38 @@ func list(s service.SoiService) {
 	showList(filteredSois)
 }
 
+// tags
+func tags(s service.SoiService) {
+	flags := flag.NewFlagSet("tags", flag.PanicOnError)
+	namePart := flags.String("n", "", "name")
+
+	err := flags.Parse(os.Args[2:])
+	if err != nil {
+		log.Fatal(err)
+	}
+	sois, err := s.Search("")
+	if err != nil {
+		log.Fatal(err)
+	}
+	var tags []string
+	for _, s := range sois {
+		for _, t := range s.Tags {
+			found := false
+			for _, a := range tags {
+				if t == a {
+					found = true
+				}
+			}
+			if !found && t != "" && strings.Contains(t, *namePart) {
+				tags = append(tags, t)
+			}
+		}
+	}
+	sort.Strings(tags)
+	showTags(tags)
+}
+
+// open is for open a specified link
 func open(s service.SoiService) {
 	flags := flag.NewFlagSet("open", flag.PanicOnError)
 	err := flags.Parse(os.Args[2:])
@@ -99,6 +135,7 @@ func open(s service.SoiService) {
 	}
 }
 
+// remove is for removing link
 func remove(s service.SoiService) {
 	flags := flag.NewFlagSet("remove", flag.PanicOnError)
 	err := flags.Parse(os.Args[2:])
@@ -133,6 +170,7 @@ func remove(s service.SoiService) {
 	}
 }
 
+// tag is for adding tag for the link
 func tag(s service.SoiService) {
 	flags := flag.NewFlagSet("tag", flag.PanicOnError)
 	err := flags.Parse(os.Args[2:])
@@ -152,11 +190,18 @@ func tag(s service.SoiService) {
 	fmt.Printf("%v \n", soi)
 }
 
+// showList outputs links which might be filtered
 func showList(sois []model.Soi) {
 	if len(sois) == 0 {
 		fmt.Println("No Record Found")
 	}
 	for i, v := range sois {
-		fmt.Printf(" - %02d:  %v", i+1, v)
+		fmt.Printf(" - %02d:  %v\n", i+1, v)
+	}
+}
+
+func showTags(tags []string) {
+	for i, v := range tags {
+		fmt.Printf("- %02d:  %v\n", i+1, v)
 	}
 }

@@ -25,7 +25,7 @@ type Soi struct {
 }
 
 func (s Soi) String() string {
-	return fmt.Sprintf("%-15s %-45s %v \n", s.Name, s.Uri, s.Tags)
+	return fmt.Sprintf("%-15s %-45s %v", s.Name, s.Uri, s.Tags)
 }
 
 func FilterByFunc(sois []Soi, f func(Soi) bool) []Soi {
