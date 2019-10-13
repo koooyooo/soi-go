@@ -8,7 +8,18 @@ import (
 	"github.com/koooyooo/soi-go/model"
 )
 
-func Load() (*model.SoiCup, error) {
+type Registory interface {
+	Load() (*model.SoiCup, error)
+	Store(s model.SoiCup) error
+}
+
+func NewRegistory() Registory {
+	return localRegistroy{}
+}
+
+type localRegistroy struct{}
+
+func (l localRegistroy) Load() (*model.SoiCup, error) {
 	s := model.SoiCup{}
 	b, err := ioutil.ReadFile("sois.json")
 	if err != nil {
@@ -21,7 +32,7 @@ func Load() (*model.SoiCup, error) {
 	return &s, nil
 }
 
-func Store(s model.SoiCup) error {
+func (l localRegistroy) Store(s model.SoiCup) error {
 	b, err := json.Marshal(s)
 	if err != nil {
 		return err

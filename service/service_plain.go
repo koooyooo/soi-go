@@ -6,13 +6,17 @@ import (
 )
 
 func NewSoiService() SoiService {
-	return plainSoiService{}
+	return plainSoiService{
+		Registory: registory.NewRegistory(),
+	}
 }
 
-type plainSoiService struct{}
+type plainSoiService struct {
+	Registory registory.Registory
+}
 
 func (p plainSoiService) Add(name, uri string, tags []string) (*model.Soi, error) {
-	soiCup, err := registory.Load()
+	soiCup, err := p.Registory.Load()
 	if err != nil {
 		return nil, err
 	}
@@ -24,7 +28,7 @@ func (p plainSoiService) Add(name, uri string, tags []string) (*model.Soi, error
 	newSois := model.FilterByExcludeName(soiCup.Sois, name)
 	newSois = append(newSois, soi)
 	soiCup.Sois = newSois
-	err = registory.Store(*soiCup)
+	err = p.Registory.Store(*soiCup)
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +36,7 @@ func (p plainSoiService) Add(name, uri string, tags []string) (*model.Soi, error
 }
 
 func (p plainSoiService) Search(namepart string) ([]model.Soi, error) {
-	soiCup, err := registory.Load()
+	soiCup, err := p.Registory.Load()
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +48,7 @@ func (p plainSoiService) Search(namepart string) ([]model.Soi, error) {
 }
 
 func (p plainSoiService) Get(name string) (*model.Soi, bool, error) {
-	soiCup, err := registory.Load()
+	soiCup, err := p.Registory.Load()
 	if err != nil {
 		return nil, false, err
 	}
@@ -56,13 +60,13 @@ func (p plainSoiService) Get(name string) (*model.Soi, bool, error) {
 }
 
 func (p plainSoiService) Remove(name string) error {
-	soiCup, err := registory.Load()
+	soiCup, err := p.Registory.Load()
 	if err != nil {
 		return err
 	}
 	removedSois := model.FilterByExcludeName(soiCup.Sois, name)
 	soiCup.Sois = removedSois
-	err = registory.Store(*soiCup)
+	err = p.Registory.Store(*soiCup)
 	if err != nil {
 		return err
 	}
