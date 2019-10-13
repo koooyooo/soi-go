@@ -3,22 +3,23 @@ package service
 import (
 	"github.com/koooyooo/soi-go/model"
 	"github.com/koooyooo/soi-go/registory"
+	"golang.org/x/xerrors"
 )
 
 func NewSoiService() SoiService {
 	return plainSoiService{
-		Registory: registory.NewRegistory(),
+		Registry: registory.NewRegistry(),
 	}
 }
 
 type plainSoiService struct {
-	Registory registory.Registory
+	Registry registory.Registry
 }
 
 func (p plainSoiService) Add(name, uri string, tags []string) (*model.Soi, error) {
-	soiCup, err := p.Registory.Load()
+	soiCup, err := p.Registry.Load()
 	if err != nil {
-		return nil, err
+		return nil, xerrors.Errorf("error while loading registry: %w", err)
 	}
 	soi := model.Soi{
 		Name: name,
@@ -28,7 +29,7 @@ func (p plainSoiService) Add(name, uri string, tags []string) (*model.Soi, error
 	newSois := model.FilterByExcludeName(soiCup.Sois, name)
 	newSois = append(newSois, soi)
 	soiCup.Sois = newSois
-	err = p.Registory.Store(*soiCup)
+	err = p.Registry.Store(*soiCup)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +37,7 @@ func (p plainSoiService) Add(name, uri string, tags []string) (*model.Soi, error
 }
 
 func (p plainSoiService) Search(namepart string) ([]model.Soi, error) {
-	soiCup, err := p.Registory.Load()
+	soiCup, err := p.Registry.Load()
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +49,7 @@ func (p plainSoiService) Search(namepart string) ([]model.Soi, error) {
 }
 
 func (p plainSoiService) Get(name string) (*model.Soi, bool, error) {
-	soiCup, err := p.Registory.Load()
+	soiCup, err := p.Registry.Load()
 	if err != nil {
 		return nil, false, err
 	}
@@ -60,13 +61,13 @@ func (p plainSoiService) Get(name string) (*model.Soi, bool, error) {
 }
 
 func (p plainSoiService) Remove(name string) error {
-	soiCup, err := p.Registory.Load()
+	soiCup, err := p.Registry.Load()
 	if err != nil {
 		return err
 	}
 	removedSois := model.FilterByExcludeName(soiCup.Sois, name)
 	soiCup.Sois = removedSois
-	err = p.Registory.Store(*soiCup)
+	err = p.Registry.Store(*soiCup)
 	if err != nil {
 		return err
 	}
