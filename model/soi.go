@@ -9,13 +9,31 @@ type SoiCup struct {
 	Sois []Soi `json:"sois"`
 }
 
-func (s *SoiCup) Contains(name string) bool {
-	for _, v := range s.Sois {
+func (cup *SoiCup) Contains(name string) bool {
+	for _, v := range cup.Sois {
 		if v.Name == name {
 			return true
 		}
 	}
 	return false
+}
+
+func (cup *SoiCup) TagSet(namePart string) []string {
+	var tags []string
+	for _, s := range cup.Sois {
+		for _, t := range s.Tags {
+			found := false
+			for _, a := range tags {
+				if t == a {
+					found = true
+				}
+			}
+			if !found && t != "" && strings.Contains(t, namePart) {
+				tags = append(tags, t)
+			}
+		}
+	}
+	return tags
 }
 
 type Soi struct {
@@ -60,11 +78,23 @@ func FilterByNamePart(sois []Soi, namePart string) []Soi {
 }
 
 func FilterByTags(sois []Soi, tags []string) []Soi {
+	return filterByTags(sois, tags, func(soiTag, specifiedTag string) bool {
+		return soiTag == specifiedTag
+	})
+}
+
+func FilterByTagsPartial(sois []Soi, tags []string) []Soi {
+	return filterByTags(sois, tags, func(soiTag, specifiedTag string) bool {
+		return strings.Contains(soiTag, specifiedTag)
+	})
+}
+
+func filterByTags(sois []Soi, tags []string, matcher func(string, string) bool) []Soi {
 	byTags := func(s Soi) bool {
-		for _, t := range tags {
+		for _, soiTag := range s.Tags {
 			findTag := false
-			for _, vt := range s.Tags {
-				if t == vt {
+			for _, t := range tags {
+				if matcher(soiTag, t) {
 					findTag = true
 				}
 			}

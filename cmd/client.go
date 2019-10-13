@@ -96,20 +96,7 @@ func tags(s service.SoiService) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	var tags []string
-	for _, s := range sois {
-		for _, t := range s.Tags {
-			found := false
-			for _, a := range tags {
-				if t == a {
-					found = true
-				}
-			}
-			if !found && t != "" && strings.Contains(t, *namePart) {
-				tags = append(tags, t)
-			}
-		}
-	}
+	tags := model.SoiCup{sois}.TagSet(*namePart)
 	sort.Strings(tags)
 	showTags(tags)
 }
