@@ -1,18 +1,41 @@
-# Run
+
+
+## Usage
+
+### Add
+`Add` add a link
+```bash
+# No Tags
+$ soi add wikipedia https://ja.wikipedia.org/wiki/
+
+# With Tags
+$ soi add -t "web,lib" wikipedia https://ja.wikipedia.org/wiki/
+```
+
+### List
+`list` list up links
 ```bash
 $ soi list
- - 01:  google          https://www.google.co.jp                      [search] 
- - 02:  yahoo           https://www.yahoo.co.jp                       [search] 
+ - 01:  google          https://www.google.co.jp                      [search cloud web]
+ - 02:  yahoo           https://www.yahoo.co.jp                       [search]
+ - 03:  youtube         https://www.youtube.com/?gl=JP                [video]
 ```
 
+### Open
+`open` open a link by google chrome
 ```bash
+# open yahoo (by Google Chrome)
 $ soi open yahoo
-  -> (Chrome上で yahooが開きます)
 ```
 
+### Tag
+`tag` add tags to a registered link
 ```bash
-$ soi add wikipedia https://ja.wikipedia.org/wiki/
+$ 
 ```
+### Tags
+
+### Remove
 
 
 # Install

@@ -9,9 +9,9 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/koooyooo/soi-go/model"
+	"github.com/koooyooo/soi-go/comons"
 
-	util "github.com/koooyooo/soi-go/comons/uri"
+	"github.com/koooyooo/soi-go/model"
 
 	"github.com/koooyooo/soi-go/service"
 )
@@ -43,7 +43,7 @@ func main() {
 // add is for adding new link to soi
 func add(s service.SoiService) {
 	flags := flag.NewFlagSet("add", flag.PanicOnError)
-	tags := flags.String("t", "", "tags")
+	opTag := flags.String("t", "", "tags")
 	err := flags.Parse(os.Args[2:])
 	if err != nil {
 		log.Fatal(err)
@@ -51,9 +51,10 @@ func add(s service.SoiService) {
 	name := flags.Arg(0)
 	uri := flags.Arg(1)
 	if name == "-" {
-		name = util.DefaultName(uri)
+		name = commons.DefaultName(uri)
 	}
-	soi, err := s.Add(name, uri, strings.Split(*tags, ","))
+	tags := commons.TrimElements(strings.Split(*opTag, ","))
+	soi, err := s.Add(name, uri, tags)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -179,7 +180,7 @@ func tag(s service.SoiService) {
 	}
 	name := flags.Arg(0)
 	tagsStr := flags.Arg(1)
-	tags := strings.Split(tagsStr, ",")
+	tags := commons.TrimElements(strings.Split(tagsStr, ","))
 	soi, ok, err := s.Tag(name, tags)
 	if err != nil {
 		log.Fatal(err)
