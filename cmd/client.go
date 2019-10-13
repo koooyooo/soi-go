@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -25,6 +26,8 @@ func main() {
 
 	cmd := flag.Arg(0)
 	switch cmd {
+	case "init":
+		initSoi()
 	case "a", "add":
 		add(service)
 	case "l", "list":
@@ -38,6 +41,20 @@ func main() {
 	case "t", "tag":
 		tag(service)
 	}
+}
+
+func initSoi() {
+	if commons.FileExists(commons.SoisFilePath) {
+		r, err := ioutil.ReadFile(commons.SoisFilePath)
+		if err != nil {
+			log.Fatal("failes in reading sois file", err)
+		}
+		ioutil.WriteFile(commons.SoisFilePath+".bk", r, 0600)
+		if err := os.Remove(commons.SoisFilePath); err != nil {
+			log.Fatal("failed in removing old sois file", err)
+		}
+	}
+	ioutil.WriteFile("sois.json", []byte(`{"sois": []}`), 0600)
 }
 
 // add is for adding new link to soi
@@ -191,6 +208,9 @@ func showList(sois []model.Soi) {
 }
 
 func showTags(tags []string) {
+	if len(tags) == 0 {
+		fmt.Println("No Record Found")
+	}
 	for i, v := range tags {
 		fmt.Printf("- %02d:  %v\n", i+1, v)
 	}
