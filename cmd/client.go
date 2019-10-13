@@ -86,7 +86,7 @@ func list(s service.SoiService) {
 
 	err := flags.Parse(os.Args[2:])
 	if err != nil {
-		log.Fatal("failed in parsing args", err)
+		log.Fatalf("failed in parsing args: %+v", err)
 	}
 	var tags []string
 	if *tagStr != "" {

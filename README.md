@@ -1,4 +1,6 @@
 
+# Soi
+soi is a storage of links.
 
 ## Usage
 
@@ -67,9 +69,12 @@ $ brew install go
 $ go build -o soi
 ```
 
-## Make config
+
+## Init
+`init` initialize by creating empty `sois.json`  
+if it already exists, previous file would be stored as `sois.json.bk`.
 ```bash
-$ mv sois.json.template sois.json
+$ soi init
 ```
 
 ## Deploy
