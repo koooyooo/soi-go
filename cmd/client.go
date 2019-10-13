@@ -79,8 +79,10 @@ func list(s service.SoiService) {
 	if err != nil {
 		log.Fatal("failed in searching", err)
 	}
-	filteredSois := model.FilterByTags(sois, tags)
-	showList(filteredSois)
+	if len(tags) > 0 {
+		sois = model.FilterByTags(sois, tags)
+	}
+	showList(sois)
 }
 
 // tags

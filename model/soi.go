@@ -79,6 +79,7 @@ func FilterByNamePart(sois []Soi, namePart string) []Soi {
 
 func FilterByTags(sois []Soi, tags []string) []Soi {
 	return filterByTags(sois, tags, func(soiTag, specifiedTag string) bool {
+		fmt.Println(soiTag, specifiedTag, soiTag == specifiedTag)
 		return soiTag == specifiedTag
 	})
 }
@@ -90,7 +91,7 @@ func FilterByTagsPartial(sois []Soi, tags []string) []Soi {
 }
 
 func filterByTags(sois []Soi, tags []string, matcher func(string, string) bool) []Soi {
-	byTags := func(s Soi) bool {
+	tagMatchFilter := func(s Soi) bool {
 		for _, soiTag := range s.Tags {
 			findTag := false
 			for _, t := range tags {
@@ -98,11 +99,11 @@ func filterByTags(sois []Soi, tags []string, matcher func(string, string) bool) 
 					findTag = true
 				}
 			}
-			if !findTag {
-				return false
+			if findTag {
+				return true
 			}
 		}
-		return true
+		return false
 	}
-	return FilterByFunc(sois, byTags)
+	return FilterByFunc(sois, tagMatchFilter)
 }
