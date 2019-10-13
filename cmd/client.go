@@ -46,7 +46,7 @@ func add(s service.SoiService) {
 	opTag := flags.String("t", "", "tags")
 	err := flags.Parse(os.Args[2:])
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("failed in parsing args", err)
 	}
 	name := flags.Arg(0)
 	uri := flags.Arg(1)
@@ -56,7 +56,7 @@ func add(s service.SoiService) {
 	tags := commons.TrimElements(strings.Split(*opTag, ","))
 	soi, err := s.Add(name, uri, tags)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("failed in adding", err)
 	}
 	fmt.Printf("added %v \n", soi)
 }
@@ -68,16 +68,16 @@ func list(s service.SoiService) {
 	tagStr := flags.String("t", "", "tags")
 
 	err := flags.Parse(os.Args[2:])
+	if err != nil {
+		log.Fatal("failed in parsing args", err)
+	}
 	var tags []string
 	if *tagStr != "" {
 		tags = strings.Split(*tagStr, ",")
 	}
-	if err != nil {
-		log.Fatal(err)
-	}
 	sois, err := s.Search(*namePart)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("failed in searching", err)
 	}
 	filteredSois := model.FilterByTags(sois, tags)
 	showList(filteredSois)
@@ -90,13 +90,13 @@ func tags(s service.SoiService) {
 
 	err := flags.Parse(os.Args[2:])
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("failed in parsing", err)
 	}
 	sois, err := s.Search("")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("failed in searching", err)
 	}
-	tags := model.SoiCup{sois}.TagSet(*namePart)
+	tags := (&model.SoiCup{Sois: sois}).TagSet(*namePart)
 	sort.Strings(tags)
 	showTags(tags)
 }
