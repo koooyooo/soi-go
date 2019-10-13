@@ -29,14 +29,33 @@ $ soi open yahoo
 ```
 
 ### Tag
-`tag` add tags to a registered link
+`tag` update tags of a registered link
 ```bash
-$ 
+$ soi tag yahoo "web, search, shopping"
+  yahoo           https://www.yahoo.co.jp                       [web search shopping] 
 ```
 ### Tags
+`tags` list up all the tags
+```bash
+$ soi tags
+- 01:  charge
+- 02:  cloud
+- 03:  memo
+- 04:  search
+- 05:  shopping
+
+# filter by -n 
+$ soi tags -n s
+- 01:  search
+- 02:  shopping
+```
 
 ### Remove
-
+`remove` remove a link
+```bash
+$ soi remove yahoo
+remove: yahoo
+```
 
 # Install
 ## install golang
