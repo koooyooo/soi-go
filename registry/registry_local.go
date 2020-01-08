@@ -1,4 +1,4 @@
-package registory
+package registry
 
 import (
 	"bytes"
@@ -14,8 +14,12 @@ import (
 type localRegistry struct{}
 
 func (l localRegistry) Load() (*model.SoiCup, error) {
+	soisFilePath, err := commons.SoisFilePath()
+	if err != nil {
+		return nil, err
+	}
 	s := model.SoiCup{}
-	b, err := ioutil.ReadFile(commons.SoisFilePath)
+	b, err := ioutil.ReadFile(soisFilePath)
 	if err != nil {
 		return nil, xerrors.Errorf("error in reading [%s] %v", commons.SoisFilePath, err)
 	}
@@ -36,7 +40,11 @@ func (l localRegistry) Store(s model.SoiCup) error {
 	if err != nil {
 		return xerrors.Errorf("filed in indent json %v", err)
 	}
-	err = ioutil.WriteFile(commons.SoisFilePath, prettyBuff.Bytes(), 0666)
+	soisFilePath, err := commons.SoisFilePath()
+	if err != nil {
+		return err
+	}
+	err = ioutil.WriteFile(soisFilePath, prettyBuff.Bytes(), 0666)
 	if err != nil {
 		return xerrors.Errorf("filed in writing file [%s] %v", commons.SoisFilePath, err)
 	}

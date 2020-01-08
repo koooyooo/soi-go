@@ -1,4 +1,4 @@
-package registory
+package registry
 
 import (
 	"github.com/koooyooo/soi-go/model"

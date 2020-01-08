@@ -44,17 +44,21 @@ func main() {
 }
 
 func initSoi() {
-	if commons.FileExists(commons.SoisFilePath) {
-		r, err := ioutil.ReadFile(commons.SoisFilePath)
+	soisFilePath, err := commons.SoisFilePath()
+	if err != nil {
+		log.Fatal("failed in getting sois file path", err)
+	}
+	if commons.FileExists(soisFilePath) {
+		r, err := ioutil.ReadFile(soisFilePath)
 		if err != nil {
 			log.Fatal("failed in reading sois file", err)
 		}
-		ioutil.WriteFile(commons.SoisFilePath+".bk", r, 0600)
-		if err := os.Remove(commons.SoisFilePath); err != nil {
+		ioutil.WriteFile(soisFilePath+".bk", r, 0600)
+		if err := os.Remove(soisFilePath); err != nil {
 			log.Fatal("failed in removing old sois file", err)
 		}
 	}
-	ioutil.WriteFile(commons.SoisFilePath, []byte(`{"sois": []}`), 0600)
+	ioutil.WriteFile(soisFilePath, []byte(`{"sois": []}`), 0600)
 }
 
 // add is for adding new link to soi

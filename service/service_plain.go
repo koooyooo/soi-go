@@ -2,18 +2,18 @@ package service
 
 import (
 	"github.com/koooyooo/soi-go/model"
-	"github.com/koooyooo/soi-go/registory"
+	"github.com/koooyooo/soi-go/registry"
 	"golang.org/x/xerrors"
 )
 
 func NewSoiService() SoiService {
 	return plainSoiService{
-		Registry: registory.NewRegistry(),
+		Registry: registry.NewRegistry(),
 	}
 }
 
 type plainSoiService struct {
-	Registry registory.Registry
+	Registry registry.Registry
 }
 
 func (p plainSoiService) Add(name, uri string, tags []string) (*model.Soi, error) {
