@@ -36,7 +36,7 @@ func main() {
 		tags(service)
 	case "o", "open":
 		open(service)
-	case "r", "remove":
+	case "r", "remove", "d", "delete":
 		remove(service)
 	case "t", "tag":
 		tag(service)
