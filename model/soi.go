@@ -38,7 +38,7 @@ func (cup *SoiCup) TagSet(namePart string) []string {
 
 type Soi struct {
 	Name string   `json:"name"`
-	Uri  string   `json:"link"`
+	Uri  string   `json:"uri"`
 	Tags []string `json:"tags"`
 }
 
