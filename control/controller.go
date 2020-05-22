@@ -155,6 +155,7 @@ func (c Controller) Tag() {
 	}
 	if !ok {
 		fmt.Println("no target found")
+		return
 	}
 	fmt.Printf("%v \n", soi)
 }

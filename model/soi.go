@@ -79,7 +79,6 @@ func FilterByNamePart(sois []Soi, namePart string) []Soi {
 
 func FilterByTags(sois []Soi, tags []string) []Soi {
 	return filterByTags(sois, tags, func(soiTag, specifiedTag string) bool {
-		fmt.Println(soiTag, specifiedTag, soiTag == specifiedTag)
 		return soiTag == specifiedTag
 	})
 }
