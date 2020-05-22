@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 
-	commons "github.com/koooyooo/soi-go/comons"
+	commons "github.com/koooyooo/soi-go/common"
 	"golang.org/x/xerrors"
 
 	"github.com/koooyooo/soi-go/model"
