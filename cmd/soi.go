@@ -7,11 +7,13 @@ import (
 	"log"
 	"os"
 
-	"github.com/koooyooo/soi-go/control"
+	"github.com/koooyooo/soi-go/pkg/soi"
 
-	"github.com/koooyooo/soi-go/common"
+	"github.com/koooyooo/soi-go/pkg/soi/cmn/soiio"
 
-	"github.com/koooyooo/soi-go/service"
+	"github.com/koooyooo/soi-go/pkg/soi/soicontrol"
+
+	"github.com/koooyooo/soi-go/pkg/soi/soiservice"
 )
 
 // main method of soi
@@ -20,8 +22,8 @@ func main() {
 	if flag.NArg() == 0 {
 		fmt.Println("Not enough argument")
 	}
-	controller := control.Controller{
-		Service: service.NewSoiService(),
+	controller := soicontrol.Controller{
+		Service: soiservice.NewSoiService(),
 	}
 
 	cmd := flag.Arg(0)
@@ -45,11 +47,11 @@ func main() {
 
 // create soi repository
 func initSoi() {
-	soisFilePath, err := common.SoisFilePath()
+	soisFilePath, err := soi.SoisFilePath()
 	if err != nil {
 		log.Fatal("failed in getting sois file path", err)
 	}
-	if common.FileExists(soisFilePath) {
+	if soiio.FileExists(soisFilePath) {
 		r, err := ioutil.ReadFile(soisFilePath)
 		if err != nil {
 			log.Fatal("failed in reading sois file", err)
