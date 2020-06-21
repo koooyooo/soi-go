@@ -24,7 +24,10 @@ func main() {
 	if flag.NArg() == 0 {
 		fmt.Println("Not enough argument")
 	}
-	registry := soiregistry.NewRegistry()
+	registry, ok := soiregistry.NewRegistry(soiregistry.RegistryTypeLocal)
+	if !ok {
+		log.Fatal("no registry found")
+	}
 	controller := soicontrol.Controller{
 		Service: soiservice.NewSoiService(registry),
 	}
