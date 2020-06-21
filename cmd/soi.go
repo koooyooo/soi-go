@@ -9,7 +9,9 @@ import (
 
 	"github.com/koooyooo/soi-go/pkg/soi"
 
-	"github.com/koooyooo/soi-go/pkg/soi/cmn/soiio"
+	"github.com/koooyooo/soi-go/pkg/soi/soiregistry"
+
+	"github.com/koooyooo/soi-go/pkg/fileio"
 
 	"github.com/koooyooo/soi-go/pkg/soi/soicontrol"
 
@@ -22,8 +24,9 @@ func main() {
 	if flag.NArg() == 0 {
 		fmt.Println("Not enough argument")
 	}
+	registry := soiregistry.NewRegistry()
 	controller := soicontrol.Controller{
-		Service: soiservice.NewSoiService(),
+		Service: soiservice.NewSoiService(registry),
 	}
 
 	cmd := flag.Arg(0)
@@ -51,7 +54,7 @@ func initSoi() {
 	if err != nil {
 		log.Fatal("failed in getting sois file path", err)
 	}
-	if soiio.FileExists(soisFilePath) {
+	if fileio.FileExists(soisFilePath) {
 		r, err := ioutil.ReadFile(soisFilePath)
 		if err != nil {
 			log.Fatal("failed in reading sois file", err)
