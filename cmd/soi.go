@@ -28,8 +28,12 @@ func main() {
 	if !ok {
 		log.Fatal("no registry found")
 	}
+	service, ok := soiservice.NewSoiService(soiservice.ServiceTypePlain, registry)
+	if !ok {
+		log.Fatal("no service found")
+	}
 	controller := soicontrol.Controller{
-		Service: soiservice.NewSoiService(registry),
+		Service: service,
 	}
 
 	cmd := flag.Arg(0)
