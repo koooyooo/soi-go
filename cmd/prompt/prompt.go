@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/koooyooo/soi-go/pkg/soi"
@@ -28,6 +29,18 @@ func completer(d prompt.Document) []prompt.Suggest {
 		spaceSepPath := strings.TrimPrefix(textBC, "open ")
 		path := strings.ReplaceAll(spaceSepPath, " ", "/")
 		return readFileInfo(path)
+	}
+	if strings.HasPrefix(textBC, "list") {
+		s = []prompt.Suggest{}
+		dir, _ := soi.SoisDirPath()
+		files := listFiles(dir)
+		for _, f := range files {
+			s = append(s, prompt.Suggest{
+				Text:        strings.TrimPrefix(f, dir+"/"),
+				Description: "",
+			})
+		}
+		return prompt.FilterContains(s, d.GetWordBeforeCursor(), true)
 	}
 	return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
 }
@@ -83,4 +96,22 @@ func main() {
 	fmt.Println("Please select table.")
 	p := prompt.New(executor, completer, prompt.OptionTitle("soi input"), prompt.OptionPrefix("soi> "))
 	p.Run()
+}
+
+func listFiles(dir string) []string {
+	files, err := ioutil.ReadDir(dir)
+	if err != nil {
+		panic(err)
+	}
+
+	var paths []string
+	for _, file := range files {
+		if file.IsDir() {
+			paths = append(paths, listFiles(filepath.Join(dir, file.Name()))...)
+			continue
+		}
+		paths = append(paths, filepath.Join(dir, file.Name()))
+	}
+
+	return paths
 }
