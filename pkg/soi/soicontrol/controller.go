@@ -22,7 +22,7 @@ type Controller struct {
 	Service soiservice.SoiService
 }
 
-// Add is for adding new link to soi
+// Add is for adding new link to soi.go
 func (c Controller) Add() {
 	flags := flag.NewFlagSet("add", flag.PanicOnError)
 	opTag := flags.String("t", "", "tags")

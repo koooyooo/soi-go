@@ -27,7 +27,7 @@ func (sr *singleRegistry) SoiCup(force bool) (*soi.SoiCup, error) {
 	return Load()
 }
 
-// Register registers a soi.
+// Register registers a soi.go.
 func (sr *singleRegistry) Register(s *soi.Soi) error {
 	sc, err := sr.SoiCup(false)
 	if err != nil {

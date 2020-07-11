@@ -18,7 +18,7 @@ import (
 	"github.com/koooyooo/soi-go/pkg/soi/soiservice"
 )
 
-// main method of soi
+// main method of soi.go
 func main() {
 	flag.Parse()
 	if flag.NArg() == 0 {
@@ -55,7 +55,7 @@ func main() {
 	}
 }
 
-// create soi repository
+// create soi.go repository
 func initSoi() {
 	soisFilePath, err := soi.SoisFilePath()
 	if err != nil {

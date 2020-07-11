@@ -8,19 +8,19 @@ import (
 	"github.com/koooyooo/soi-go/pkg/soi/soiregistry"
 )
 
-// SoiService offers soi services
+// SoiService offers soi.go services
 type SoiService interface {
-	// Add adds soi.
+	// Add adds soi.go.
 	Add(*soi.Soi) (*soi.Soi, error)
 	// Search searches sois by its namePart.
 	Search(namePart string) ([]*soi.Soi, error)
 	// SearchByTag searches sois by its tag.
 	SearchByTag(tag string) ([]*soi.Soi, error)
-	// Get finds a soi by its name.
+	// Get finds a soi.go by its name.
 	Get(name string) (*soi.Soi, bool, error)
-	// Remove removes a soi by its name.
+	// Remove removes a soi.go by its name.
 	Remove(name string) error
-	// Tag tags a soi
+	// Tag tags a soi.go
 	Tag(name string, tags []string) (*soi.Soi, bool, error)
 }
 
