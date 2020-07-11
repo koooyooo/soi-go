@@ -20,7 +20,7 @@ func Executor(in string) {
 	switch cmd {
 	case "exit":
 		os.Exit(0)
-	case "open", "list":
+	case "open", "o", "list", "l":
 		relPath := strings.ReplaceAll(subCmd, " ", "/")
 		err := open(relPath)
 		if err != nil {

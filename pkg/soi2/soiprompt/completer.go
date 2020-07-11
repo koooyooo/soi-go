@@ -15,21 +15,24 @@ func Completer(d prompt.Document) []prompt.Suggest {
 	textBC := d.TextBeforeCursor()
 	cmd := strings.Split(textBC, " ")[0]
 	switch cmd {
-	case "":
+	case "add":
+		return suggestAddCmd(d.GetWordBeforeCursor())
+	case "open", "o":
+		cmd := strings.TrimPrefix(textBC, "open ")
+		cmd = strings.TrimPrefix(cmd, "o ")
+		return suggestOpenCmd(cmd)
+	case "list", "l":
+		return suggestListCmd(d.GetWordBeforeCursor())
+	default:
 		s := []prompt.Suggest{
 			{Text: "add", Description: "Add"},
 			{Text: "list", Description: "List"},
 			{Text: "tags", Description: "Tags"},
 			{Text: "open", Description: "Open"},
+			{Text: "o", Description: "Open"},
 			{Text: "tag", Description: "Tag"},
 		}
 		return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
-	case "add":
-		return suggestAddCmd(d.GetWordBeforeCursor())
-	case "open":
-		return suggestOpenCmd(strings.TrimPrefix(textBC, "open "))
-	case "list":
-		return suggestListCmd(d.GetWordBeforeCursor())
 	}
 	return []prompt.Suggest{}
 }
