@@ -12,27 +12,26 @@ import (
 
 // completer は補完を実施します
 func Completer(d prompt.Document) []prompt.Suggest {
-	//fmt.Println("Cmp", d.TextBeforeCursor())
-
-	s := []prompt.Suggest{
-		{Text: "add", Description: "Add"},
-		{Text: "list", Description: "List"},
-		{Text: "tags", Description: "Tags"},
-		{Text: "open", Description: "Open"},
-		{Text: "tag", Description: "Tag"},
-	}
 	textBC := d.TextBeforeCursor()
 	cmd := strings.Split(textBC, " ")[0]
 	switch cmd {
+	case "":
+		s := []prompt.Suggest{
+			{Text: "add", Description: "Add"},
+			{Text: "list", Description: "List"},
+			{Text: "tags", Description: "Tags"},
+			{Text: "open", Description: "Open"},
+			{Text: "tag", Description: "Tag"},
+		}
+		return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
 	case "add":
 		return suggestAddCmd(d.GetWordBeforeCursor())
 	case "open":
-		input := strings.TrimPrefix(textBC, "open ")
-		return suggestOpenCmd(input)
+		return suggestOpenCmd(strings.TrimPrefix(textBC, "open "))
 	case "list":
 		return suggestListCmd(d.GetWordBeforeCursor())
 	}
-	return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
+	return []prompt.Suggest{}
 }
 
 func suggestAddCmd(input string) []prompt.Suggest {
