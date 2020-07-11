@@ -13,8 +13,8 @@ func main() {
 	p := prompt.New(
 		soiprompt.Executor,
 		soiprompt.Completer,
-		prompt.OptionTitle("soi.go input"),
-		prompt.OptionPrefix("soi.go> "),
+		prompt.OptionTitle("soi input"),
+		prompt.OptionPrefix("soi> "),
 		prompt.OptionSelectedSuggestionBGColor(prompt.DarkGray),
 		prompt.OptionSelectedSuggestionTextColor(prompt.White),
 		prompt.OptionSelectedDescriptionBGColor(prompt.DarkGray),

@@ -27,6 +27,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 		s := []prompt.Suggest{
 			{Text: "add", Description: "Add"},
 			{Text: "list", Description: "List"},
+			{Text: "l", Description: "List"},
 			{Text: "tags", Description: "Tags"},
 			{Text: "open", Description: "Open"},
 			{Text: "o", Description: "Open"},
