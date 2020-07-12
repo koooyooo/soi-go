@@ -16,11 +16,9 @@ func Completer(d prompt.Document) []prompt.Suggest {
 	cmd := strings.Split(textBC, " ")[0]
 	switch cmd {
 	case "add":
-		return suggestAddCmd(d.GetWordBeforeCursor())
+		return suggestAddCmd(d)
 	case "open", "o":
-		cmd := strings.TrimPrefix(textBC, "open ")
-		cmd = strings.TrimPrefix(cmd, "o ")
-		return suggestOpenCmd(cmd)
+		return suggestOpenCmd(d)
 	case "list", "l":
 		return suggestListCmd(d.GetWordBeforeCursor())
 	default:
@@ -38,12 +36,17 @@ func Completer(d prompt.Document) []prompt.Suggest {
 	return []prompt.Suggest{}
 }
 
-func suggestAddCmd(input string) []prompt.Suggest {
+// suggestAddCmd は
+func suggestAddCmd(d prompt.Document) []prompt.Suggest {
 	return []prompt.Suggest{}
 }
 
 // suggestOpenCmd は指定した相対Path(soiRoot以降)を元に Suggestを抽出します
-func suggestOpenCmd(input string) []prompt.Suggest {
+func suggestOpenCmd(d prompt.Document) []prompt.Suggest {
+	input := d.TextBeforeCursor()
+	input = strings.TrimPrefix(input, "open ")
+	input = strings.TrimPrefix(input, "o ")
+
 	path := strings.ReplaceAll(input, " ", "/")
 	// 相対パスを元にファイルを抽出
 	rootDir, _ := soi.SoisDirPath()
@@ -78,30 +81,14 @@ func suggestOpenCmd(input string) []prompt.Suggest {
 	return s
 }
 
-// listFiles はsoiRoot配下のファイルを再帰的に追加して Suggestを抽出します
-func listFiles(dir string) []string {
-	files, err := ioutil.ReadDir(dir)
+// suggestListCmd は"list"コマンドの制御を行います
+func suggestListCmd(input string) []prompt.Suggest {
+	var s []prompt.Suggest
+	dir, _ := soi.SoisDirPath()
+	files, err := listFiles(dir)
 	if err != nil {
-		fmt.Println(dir) // TODO
 		panic(err)
 	}
-
-	var paths []string
-	for _, file := range files {
-		if file.IsDir() {
-			paths = append(paths, listFiles(filepath.Join(dir, file.Name()))...)
-			continue
-		}
-		paths = append(paths, filepath.Join(dir, file.Name()))
-	}
-
-	return paths
-}
-
-func suggestListCmd(input string) []prompt.Suggest {
-	s := []prompt.Suggest{}
-	dir, _ := soi.SoisDirPath()
-	files := listFiles(dir)
 	for _, f := range files {
 		s = append(s, prompt.Suggest{
 			Text:        strings.TrimPrefix(f, dir+"/"),
@@ -109,4 +96,27 @@ func suggestListCmd(input string) []prompt.Suggest {
 		})
 	}
 	return prompt.FilterContains(s, input, true)
+}
+
+// listFiles はsoiRoot配下のファイルを再帰的に追加して Suggestを抽出します
+func listFiles(dir string) ([]string, error) {
+	files, err := ioutil.ReadDir(dir)
+	if err != nil {
+		return nil, err
+	}
+
+	var paths []string
+	for _, file := range files {
+		if file.IsDir() {
+			files, err := listFiles(filepath.Join(dir, file.Name()))
+			if err != nil {
+				return nil, err
+			}
+			paths = append(paths, files...)
+			continue
+		}
+		paths = append(paths, filepath.Join(dir, file.Name()))
+	}
+
+	return paths, nil
 }
