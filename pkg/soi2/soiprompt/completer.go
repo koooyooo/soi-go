@@ -38,6 +38,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 
 // suggestAddCmd は
 func suggestAddCmd(d prompt.Document) []prompt.Suggest {
+	// add {URL}
 	return []prompt.Suggest{}
 }
 
