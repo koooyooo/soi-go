@@ -22,13 +22,13 @@ func Completer(d prompt.Document) []prompt.Suggest {
 		return suggestListCmd(d.GetWordBeforeCursor())
 	default:
 		s := []prompt.Suggest{
-			{Text: "add", Description: "Add"},
-			{Text: "list", Description: "List"},
-			{Text: "l", Description: "List"},
-			{Text: "tags", Description: "Tags"},
-			{Text: "open", Description: "Open"},
-			{Text: "o", Description: "Open"},
-			{Text: "tag", Description: "Tag"},
+			{Text: "add", Description: "adds url"},
+			{Text: "list", Description: "(l)ists urls and filter them"},
+			{Text: "l", Description: "(l)ists urls and filter them"},
+			{Text: "tags", Description: "lists up all tags"},
+			{Text: "open", Description: "(0)pens specified url"},
+			{Text: "o", Description: "(0)pens specified url"},
+			{Text: "tag", Description: "adds tags"},
 		}
 		return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
 	}
@@ -39,7 +39,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 func suggestAddCmd(d prompt.Document) []prompt.Suggest {
 	if d.GetWordBeforeCursor() == "-" {
 		return []prompt.Suggest{
-			{Text: "-n", Description: "Name"},
+			{Text: "-n", Description: "logical name of the url"},
 		}
 	}
 	return []prompt.Suggest{}
