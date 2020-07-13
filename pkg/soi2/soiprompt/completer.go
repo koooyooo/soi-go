@@ -60,10 +60,12 @@ func suggestOpenCmd(d prompt.Document) []prompt.Suggest {
 	}
 	files, _ := ioutil.ReadDir(dir)
 
-	endsWithJson := strings.HasSuffix(strings.Trim(input, " "), ".json")
+	if strings.HasSuffix(strings.Trim(input, " "), ".json") {
+		return []prompt.Suggest{}
+	}
 
 	// 絞り込み中も候補を表示する処理
-	if len(files) == 0 && !endsWithJson {
+	if len(files) == 0 {
 		pathElm := strings.Split(path, "/")
 		lastInput := pathElm[len(pathElm)-1]
 		return previousTarget.filter(lastInput)
