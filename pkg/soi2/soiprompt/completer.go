@@ -1,7 +1,6 @@
 package soiprompt
 
 import (
-	"fmt"
 	"io/ioutil"
 	"path/filepath"
 	"strings"
@@ -38,7 +37,11 @@ func Completer(d prompt.Document) []prompt.Suggest {
 
 // suggestAddCmd は
 func suggestAddCmd(d prompt.Document) []prompt.Suggest {
-	// add {URL}
+	if d.GetWordBeforeCursor() == "-" {
+		return []prompt.Suggest{
+			{Text: "-n", Description: "Name"},
+		}
+	}
 	return []prompt.Suggest{}
 }
 
@@ -61,8 +64,7 @@ func suggestOpenCmd(d prompt.Document) []prompt.Suggest {
 	if len(files) == 0 {
 		idx := strings.LastIndex(path, "/")
 		if idx != -1 {
-			prevDir := path[0:idx]
-			fmt.Println("PD", prevDir)
+			// TODO
 		}
 
 		pathElm := strings.Split(path, "/")

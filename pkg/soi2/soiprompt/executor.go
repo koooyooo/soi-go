@@ -2,6 +2,7 @@ package soiprompt
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -23,7 +24,7 @@ func Executor(in string) {
 	case "exit":
 		os.Exit(0)
 	case "add":
-		err := add(subCmd)
+		err := add(in)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -36,16 +37,30 @@ func Executor(in string) {
 	}
 }
 
-func add(uri string) error {
-	title, ok, err := parseTitleByURL(uri)
+func add(in string) error {
+	flags := flag.NewFlagSet("add", flag.ContinueOnError)
+	n := flags.String("n", "", "name of the uri")
+	err := flags.Parse(strings.Split(in, " ")[1:])
 	if err != nil {
 		return err
 	}
-	if !ok {
-		return fmt.Errorf("no url found for: %s", uri)
+
+	uri := flags.Arg(0)
+
+	name := *n
+	if name == "" {
+		title, ok, err := parseTitleByURL(uri)
+		if err != nil {
+			return err
+		}
+		if !ok {
+			return fmt.Errorf("no url found for: %s", uri)
+		}
+		name = title
 	}
+
 	s := soi2.SoiData{
-		Name:    title,
+		Name:    name,
 		URI:     uri,
 		Tags:    []string{},
 		Created: fmt.Sprintf("%v", time.Now()),
@@ -62,8 +77,8 @@ func add(uri string) error {
 	if err = os.MkdirAll(baseDir, 0700); err != nil {
 		return err
 	}
-	fileTitle := strings.ReplaceAll(title, " ", "_")
-	return ioutil.WriteFile(baseDir+"/"+fileTitle+".json", b, 0600)
+	fileName := strings.ReplaceAll(name, " ", "_")
+	return ioutil.WriteFile(baseDir+"/"+fileName+".json", b, 0600)
 }
 
 func open(relPath string) error {
