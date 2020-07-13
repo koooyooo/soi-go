@@ -60,14 +60,10 @@ func suggestOpenCmd(d prompt.Document) []prompt.Suggest {
 	}
 	files, _ := ioutil.ReadDir(dir)
 
-	// ファイルが存在しない場合は直前に保管したSuggestを提示 FIXME: Pathを戻したときの挙動に対応出来ていない
-	if len(files) == 0 {
-		// 絞り込み中も候補を表示する処理
-		idx := strings.LastIndex(path, "/")
-		if idx != -1 {
-			// TODO
-		}
+	endsWithJson := strings.HasSuffix(strings.Trim(input, " "), ".json")
 
+	// 絞り込み中も候補を表示する処理
+	if len(files) == 0 && !endsWithJson {
 		pathElm := strings.Split(path, "/")
 		lastInput := pathElm[len(pathElm)-1]
 		return previousTarget.filter(lastInput)
