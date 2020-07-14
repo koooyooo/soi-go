@@ -60,6 +60,9 @@ func suggestAddCmd(d prompt.Document) []prompt.Suggest {
 			{Text: "-d", Description: "dir to which soi store"},
 		}
 	}
+	if strings.HasSuffix(d.Text, "-n ") {
+		return EmptySuggests
+	}
 	// dir探索
 	if strings.HasSuffix(d.Text, "-d ") {
 		var suggests []prompt.Suggest
