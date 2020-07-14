@@ -45,11 +45,34 @@ func Completer(d prompt.Document) []prompt.Suggest {
 
 // suggestAddCmd
 func suggestAddCmd(d prompt.Document) []prompt.Suggest {
+	// option探索
 	if d.GetWordBeforeCursor() == "-" {
 		return []prompt.Suggest{
 			{Text: "-n", Description: "name of the url"},
 			{Text: "-d", Description: "dir to which soi store"},
 		}
+	}
+	// dir探索
+	if strings.HasSuffix(d.Text, "-d ") {
+		var suggests []prompt.Suggest
+		soiRoot, err := soi.SoisDirPath()
+		if err != nil {
+			log.Fatal(err)
+		}
+		dirs, err := listDirs(soiRoot)
+		for _, d := range dirs {
+			suggests = append(suggests, prompt.Suggest{
+				Text:        strings.TrimPrefix(d, soiRoot+"/"),
+				Description: "",
+			})
+		}
+		return suggests
+	}
+	if strings.HasSuffix(d.Text, " ") {
+		return []prompt.Suggest{{
+			Text:        "https://",
+			Description: "",
+		}}
 	}
 	return EmptySuggests
 }
