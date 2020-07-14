@@ -23,7 +23,7 @@ func Executor(in string) {
 	switch cmd {
 	case "exit":
 		os.Exit(0)
-	case "add":
+	case "add", "a":
 		err := add(in)
 		if err != nil {
 			log.Fatal(err)
@@ -40,6 +40,7 @@ func Executor(in string) {
 func add(in string) error {
 	flags := flag.NewFlagSet("add", flag.ContinueOnError)
 	n := flags.String("n", "", "name of the uri")
+	d := flags.String("d", "/new", "dir to which soi store")
 	err := flags.Parse(strings.Split(in, " ")[1:])
 	if err != nil {
 		return err
@@ -73,7 +74,7 @@ func add(in string) error {
 	if err != nil {
 		return err
 	}
-	baseDir := dir + "/new"
+	baseDir := dir + *d
 	if err = os.MkdirAll(baseDir, 0700); err != nil {
 		return err
 	}

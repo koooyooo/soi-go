@@ -9,12 +9,16 @@ import (
 	"github.com/koooyooo/soi-go/pkg/soi"
 )
 
+var (
+	EmptySuggests = []prompt.Suggest{}
+)
+
 // completer は補完を実施します
 func Completer(d prompt.Document) []prompt.Suggest {
 	textBC := d.TextBeforeCursor()
 	cmd := strings.Split(textBC, " ")[0]
 	switch cmd {
-	case "add":
+	case "add", "a":
 		return suggestAddCmd(d)
 	case "open", "o":
 		return suggestOpenCmd(d)
@@ -22,27 +26,26 @@ func Completer(d prompt.Document) []prompt.Suggest {
 		return suggestListCmd(d.GetWordBeforeCursor())
 	default:
 		s := []prompt.Suggest{
-			{Text: "add", Description: "adds url"},
+			{Text: "add", Description: "(a)dds url"},
 			{Text: "list", Description: "(l)ists urls and filter them"},
-			{Text: "l", Description: "(l)ists urls and filter them"},
 			{Text: "tags", Description: "lists up all tags"},
 			{Text: "open", Description: "(0)pens specified url"},
-			{Text: "o", Description: "(0)pens specified url"},
 			{Text: "tag", Description: "adds tags"},
 		}
 		return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
 	}
-	return []prompt.Suggest{}
+	return EmptySuggests
 }
 
 // suggestAddCmd は
 func suggestAddCmd(d prompt.Document) []prompt.Suggest {
 	if d.GetWordBeforeCursor() == "-" {
 		return []prompt.Suggest{
-			{Text: "-n", Description: "logical name of the url"},
+			{Text: "-n", Description: "name of the url"},
+			{Text: "-d", Description: "dir to which soi store"},
 		}
 	}
-	return []prompt.Suggest{}
+	return EmptySuggests
 }
 
 // suggestOpenCmd は指定した相対Path(soiRoot以降)を元に Suggestを抽出します
@@ -58,17 +61,20 @@ func suggestOpenCmd(d prompt.Document) []prompt.Suggest {
 	if path != " " {
 		dir = rootDir + "/" + path
 	}
-	files, _ := ioutil.ReadDir(dir)
+	files, err := ioutil.ReadDir(dir)
+	// 絞り込み中も候補を表示する処理
+	if err != nil && strings.Contains(err.Error(), "no such file or directory") {
+		pathElm := strings.Split(path, "/")
+		lastInput := pathElm[len(pathElm)-1]
+		return previousTarget.filter(lastInput)
+	}
 
 	if strings.HasSuffix(strings.Trim(input, " "), ".json") {
 		return []prompt.Suggest{}
 	}
 
-	// 絞り込み中も候補を表示する処理
 	if len(files) == 0 {
-		pathElm := strings.Split(path, "/")
-		lastInput := pathElm[len(pathElm)-1]
-		return previousTarget.filter(lastInput)
+		return EmptySuggests
 	}
 
 	// ファイルが存在する場合は候補に保存の上、直前のSuggestとして保管
