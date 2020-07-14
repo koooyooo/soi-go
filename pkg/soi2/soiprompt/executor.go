@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -45,7 +46,7 @@ func Executor(in string) {
 func add(in string) error {
 	flags := flag.NewFlagSet("add", flag.PanicOnError)
 	n := flags.String("n", "", "name of the uri")
-	d := flags.String("d", "/new", "dir to which soi store")
+	d := flags.String("d", "new", "soiRoot to which soi store")
 	err := flags.Parse(strings.Split(in, " ")[1:])
 	if err != nil {
 		return err
@@ -75,11 +76,11 @@ func add(in string) error {
 	if err != nil {
 		return err
 	}
-	dir, err := soi.SoisDirPath()
+	soiRoot, err := soi.SoisDirPath()
 	if err != nil {
 		return err
 	}
-	baseDir := dir + *d
+	baseDir := filepath.Join(soiRoot, *d)
 	if err = os.MkdirAll(baseDir, 0700); err != nil {
 		return err
 	}
