@@ -30,12 +30,12 @@ func Completer(d prompt.Document) []prompt.Suggest {
 	default:
 		s := []prompt.Suggest{
 			{Text: "add", Description: "(a)dds url"},
-			{Text: "mv", Description: "move file to dir"},
 			{Text: "list", Description: "(l)ists urls and filter them"},
-			{Text: "tags", Description: "lists up all tags"},
+			{Text: "mv", Description: "move file to dir"},
+			//{Text: "tags", Description: "lists up all tags"}, TODO implements as "list -t"
 			{Text: "open", Description: "(o)pens specified url"},
-			{Text: "tag", Description: "adds tags"},
 			{Text: "quit", Description: "(q)uit soi"},
+			{Text: "tag", Description: "adds tags"},
 		}
 		return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
 	}
