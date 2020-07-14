@@ -17,16 +17,15 @@ var (
 
 // completer は補完を実施します
 func Completer(d prompt.Document) []prompt.Suggest {
-	textBC := d.TextBeforeCursor()
-	cmd := strings.Split(textBC, " ")[0]
-	switch cmd {
-	case "add", "a":
+	text := d.TextBeforeCursor()
+	switch {
+	case hasPrefixes(text, "add ", "a "):
 		return suggestAddCmd(d)
-	case "mv":
+	case hasPrefixes(text, "mv "):
 		return suggestMvCmd(d)
-	case "open", "o":
+	case hasPrefixes(text, "open ", "o "):
 		return suggestOpenCmd(d)
-	case "list", "l":
+	case hasPrefixes(text, "list ", "l "):
 		return suggestListCmd(d.GetWordBeforeCursor())
 	default:
 		s := []prompt.Suggest{
@@ -41,6 +40,15 @@ func Completer(d prompt.Document) []prompt.Suggest {
 		return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
 	}
 	return EmptySuggests
+}
+
+func hasPrefixes(in string, prefixes ...string) bool {
+	for _, p := range prefixes {
+		if strings.HasPrefix(in, p) {
+			return true
+		}
+	}
+	return false
 }
 
 // suggestAddCmd

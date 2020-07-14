@@ -17,12 +17,13 @@ import (
 )
 
 func Executor(in string) {
-	fmt.Printf("EXEC: %s\n", in)
+	//fmt.Printf("EXEC: %s\n", in)
 	in = strings.Trim(in, " ")
 	cmd := strings.Split(in, " ")[0]
 	subCmd := strings.TrimPrefix(in, cmd+" ")
 	switch cmd {
 	case "quit", "q", "exit":
+		fmt.Println("quit")
 		os.Exit(0)
 	case "add", "a":
 		err := add(in)
