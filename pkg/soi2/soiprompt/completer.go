@@ -2,6 +2,8 @@ package soiprompt
 
 import (
 	"io/ioutil"
+	"log"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -20,6 +22,8 @@ func Completer(d prompt.Document) []prompt.Suggest {
 	switch cmd {
 	case "add", "a":
 		return suggestAddCmd(d)
+	case "mv":
+		return suggestMvCmd(d)
 	case "open", "o":
 		return suggestOpenCmd(d)
 	case "list", "l":
@@ -27,6 +31,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 	default:
 		s := []prompt.Suggest{
 			{Text: "add", Description: "(a)dds url"},
+			{Text: "mv", Description: "move file to dir"},
 			{Text: "list", Description: "(l)ists urls and filter them"},
 			{Text: "tags", Description: "lists up all tags"},
 			{Text: "open", Description: "(0)pens specified url"},
@@ -38,7 +43,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 	return EmptySuggests
 }
 
-// suggestAddCmd は
+// suggestAddCmd
 func suggestAddCmd(d prompt.Document) []prompt.Suggest {
 	if d.GetWordBeforeCursor() == "-" {
 		return []prompt.Suggest{
@@ -49,9 +54,42 @@ func suggestAddCmd(d prompt.Document) []prompt.Suggest {
 	return EmptySuggests
 }
 
+// suggestMvCmd
+func suggestMvCmd(d prompt.Document) []prompt.Suggest {
+	var s []prompt.Suggest
+
+	text := d.Text
+	is2ndArg := 2 < len(strings.Split(text, " "))
+
+	word := d.GetWordBeforeCursor()
+	word = strings.TrimPrefix(word, "mv ")
+
+	dir, _ := soi.SoisDirPath()
+	var files []string
+	var err error
+	if is2ndArg {
+		files, err = listDirs(dir)
+	} else {
+		files, err = listFiles(dir)
+	}
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, f := range files {
+		s = append(s, prompt.Suggest{
+			Text:        strings.TrimPrefix(f, dir+"/"),
+			Description: "",
+		})
+	}
+	return prompt.FilterContains(s, word, true)
+
+	return EmptySuggests
+}
+
 // suggestOpenCmd は指定した相対Path(soiRoot以降)を元に Suggestを抽出します
 func suggestOpenCmd(d prompt.Document) []prompt.Suggest {
 	input := d.TextBeforeCursor()
+	// コマンド部分を除去
 	input = strings.TrimPrefix(input, "open ")
 	input = strings.TrimPrefix(input, "o ")
 
@@ -109,23 +147,27 @@ func suggestListCmd(input string) []prompt.Suggest {
 
 // listFiles はsoiRoot配下のファイルを再帰的に追加して Suggestを抽出します
 func listFiles(dir string) ([]string, error) {
-	files, err := ioutil.ReadDir(dir)
+	var files []string
+	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if !info.IsDir() {
+			files = append(files, path)
+		}
+		return nil
+	})
+	return files, err
+}
+
+func listDirs(dir string) ([]string, error) {
+	soiRoot, err := soi.SoisDirPath()
 	if err != nil {
 		return nil, err
 	}
-
-	var paths []string
-	for _, file := range files {
-		if file.IsDir() {
-			files, err := listFiles(filepath.Join(dir, file.Name()))
-			if err != nil {
-				return nil, err
-			}
-			paths = append(paths, files...)
-			continue
+	var files []string
+	err = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if info.IsDir() && path != soiRoot {
+			files = append(files, path)
 		}
-		paths = append(paths, filepath.Join(dir, file.Name()))
-	}
-
-	return paths, nil
+		return nil
+	})
+	return files, err
 }

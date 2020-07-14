@@ -28,6 +28,11 @@ func Executor(in string) {
 		if err != nil {
 			log.Fatal(err)
 		}
+	case "mv":
+		err := mv(in)
+		if err != nil {
+			log.Fatal(err)
+		}
 	case "open", "o", "list", "l":
 		relPath := strings.ReplaceAll(subCmd, " ", "/")
 		err := open(relPath)
@@ -38,7 +43,7 @@ func Executor(in string) {
 }
 
 func add(in string) error {
-	flags := flag.NewFlagSet("add", flag.ContinueOnError)
+	flags := flag.NewFlagSet("add", flag.PanicOnError)
 	n := flags.String("n", "", "name of the uri")
 	d := flags.String("d", "/new", "dir to which soi store")
 	err := flags.Parse(strings.Split(in, " ")[1:])
@@ -82,6 +87,18 @@ func add(in string) error {
 	return ioutil.WriteFile(baseDir+"/"+fileName+".json", b, 0600)
 }
 
+func mv(in string) error {
+	baseDir, err := soi.SoisDirPath()
+	if err != nil {
+		return err
+	}
+	flags := flag.NewFlagSet("mv", flag.PanicOnError)
+	flags.Parse(strings.Split(in, " ")[1:])
+	from := strings.TrimPrefix(flags.Arg(0), "/")
+	to := strings.TrimPrefix(flags.Arg(1), "/")
+	return exec.Command("mv", baseDir+"/"+from, baseDir+"/"+to).Start()
+}
+
 func open(relPath string) error {
 	dir, err := soi.SoisDirPath()
 	if err != nil {
@@ -97,9 +114,5 @@ func open(relPath string) error {
 	if err != nil {
 		return err
 	}
-	err = exec.Command("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", soi.URI).Start()
-	if err != nil {
-		return err
-	}
-	return nil
+	return exec.Command("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", soi.URI).Start()
 }
