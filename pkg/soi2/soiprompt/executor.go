@@ -21,7 +21,7 @@ func Executor(in string) {
 	cmd := strings.Split(in, " ")[0]
 	subCmd := strings.TrimPrefix(in, cmd+" ")
 	switch cmd {
-	case "exit":
+	case "quit", "q", "exit":
 		os.Exit(0)
 	case "add", "a":
 		err := add(in)

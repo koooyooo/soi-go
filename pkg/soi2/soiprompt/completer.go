@@ -31,6 +31,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 			{Text: "tags", Description: "lists up all tags"},
 			{Text: "open", Description: "(0)pens specified url"},
 			{Text: "tag", Description: "adds tags"},
+			{Text: "quit", Description: "(q)uit soi"},
 		}
 		return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
 	}

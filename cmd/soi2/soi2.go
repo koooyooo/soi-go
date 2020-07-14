@@ -1,15 +1,12 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/koooyooo/soi-go/pkg/soi2/soiprompt"
 
 	"github.com/c-bata/go-prompt"
 )
 
 func main() {
-	fmt.Println("Please select table.")
 	p := prompt.New(
 		soiprompt.Executor,
 		soiprompt.Completer,
