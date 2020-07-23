@@ -44,7 +44,7 @@ func Executor(in string) {
 			fmt.Println(err)
 			return
 		}
-	case "open", "o", "list", "l":
+	case "open", "o", "list", "l", "pp":
 		relPath := strings.ReplaceAll(subCmd, " ", "/")
 		err := open(relPath)
 		if err != nil {

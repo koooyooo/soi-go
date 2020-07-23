@@ -1,11 +1,14 @@
 package soiprompt
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
+	"path/filepath"
 	"sort"
 	"strings"
+
+	"github.com/koooyooo/soi-go/pkg/fileio"
 
 	"github.com/c-bata/go-prompt"
 	"github.com/koooyooo/soi-go/pkg/soi"
@@ -27,7 +30,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 		return suggestRmCmd(d)
 	case hasPrefixes(text, "open ", "o "):
 		return suggestOpenCmd(d)
-	case hasPrefixes(text, "pp"):
+	case hasPrefixes(text, "pp "):
 		return suggestPpCmd(d)
 	case hasPrefixes(text, "list ", "l "):
 		return suggestListCmd(d.GetWordBeforeCursor())
@@ -66,7 +69,7 @@ func suggestAddCmd(d prompt.Document) []prompt.Suggest {
 		if err != nil {
 			log.Fatal(err)
 		}
-		dirs, err := listDirs(soiRoot, false)
+		dirs, err := listDirsRecursively(soiRoot, false)
 		for _, d := range dirs {
 			suggests = append(suggests, prompt.Suggest{
 				Text:        strings.TrimPrefix(d, soiRoot+"/"),
@@ -98,9 +101,9 @@ func suggestMvCmd(d prompt.Document) []prompt.Suggest {
 
 	var files []string
 	if is2ndArg {
-		files, err = listDirs(dir, true)
+		files, err = listDirsRecursively(dir, true)
 	} else {
-		files, err = listFiles(dir)
+		files, err = listFilesRecursively(dir)
 	}
 	if err != nil {
 		log.Fatal(err)
@@ -118,13 +121,13 @@ func suggestRmCmd(d prompt.Document) []prompt.Suggest {
 	}
 	var fileDirs []string
 	// ファイル系を追加
-	files, err := listFiles(dir)
+	files, err := listFilesRecursively(dir)
 	if err != nil {
 		log.Fatal(err)
 	}
 	fileDirs = append(fileDirs, files...)
 	// ディレクトリ系を追加
-	dirs, err := listDirs(dir, false)
+	dirs, err := listDirsRecursively(dir, false)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -178,16 +181,37 @@ func suggestOpenCmd(d prompt.Document) []prompt.Suggest {
 }
 
 func suggestPpCmd(d prompt.Document) []prompt.Suggest {
-	input := d.TextBeforeCursor()
+	input := d.GetWordBeforeCursor()
 	input = strings.TrimPrefix(input, "pp ")
 
-	rootDir, _ := soi.SoisDirPath()
+	soisDir, _ := soi.SoisDirPath()
 
-	// case-1: 直近のフォルダ・ファイルに前方一致 => ファイル・フォルダの一覧を表示 (フォルダは末尾に "/"を付与)
-	// case-2: 直近のフォルダに完全一致
-	// case-3: 直近のファイルに完全一致
+	path := filepath.Join(soisDir, d.GetWordBeforeCursor())
+	var found bool
+	isDir, err := fileio.IsDir(strings.TrimSuffix(path, "/"))
+	if err != nil {
+		switch err.(type) {
+		case *os.PathError:
+			found = false
+			// 対象ファイルが見つからないだけの場合はスルー
+		default:
+			log.Fatal(err)
+		}
+	} else {
+		found = true
+	}
+	switch {
+	case !found || isDir:
+		if !found {
+			path = finalDirFromPath(path)
+		}
+		dirs, err := listFileDirs(path, true)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return filePathsToSuggests(soisDir, dirs, input)
+	}
 
-	fmt.Println(input, rootDir) // TODO Remote Later
 	return EmptySuggests
 }
 
@@ -195,7 +219,7 @@ func suggestPpCmd(d prompt.Document) []prompt.Suggest {
 func suggestListCmd(input string) []prompt.Suggest {
 	var s []prompt.Suggest
 	dir, _ := soi.SoisDirPath()
-	files, err := listFiles(dir)
+	files, err := listFilesRecursively(dir)
 	if err != nil {
 		panic(err)
 	}
