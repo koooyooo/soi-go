@@ -53,7 +53,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 // suggestAddCmd
 func suggestAddCmd(d prompt.Document) []prompt.Suggest {
 	// option探索
-	if d.GetWordBeforeCursor() == "-" {
+	if strings.HasPrefix(d.GetWordBeforeCursor(), "-") {
 		return []prompt.Suggest{
 			{Text: "-n", Description: "name of the url"},
 			{Text: "-d", Description: "dir to which soi store"},
@@ -79,10 +79,11 @@ func suggestAddCmd(d prompt.Document) []prompt.Suggest {
 		return suggests
 	}
 	if strings.HasSuffix(d.Text, " ") {
-		return []prompt.Suggest{{
-			Text:        "https://",
-			Description: "",
-		}}
+		return []prompt.Suggest{
+			{Text: "https://", Description: "target url"},
+			{Text: "-n", Description: "name of the url"},
+			{Text: "-d", Description: "dir to which soi store"},
+		}
 	}
 	return EmptySuggests
 }
