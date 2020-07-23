@@ -23,6 +23,8 @@ func Completer(d prompt.Document) []prompt.Suggest {
 		return suggestAddCmd(d)
 	case hasPrefixes(text, "mv "):
 		return suggestMvCmd(d)
+	case hasPrefixes(text, "rm "):
+
 	case hasPrefixes(text, "open ", "o "):
 		return suggestOpenCmd(d)
 	case hasPrefixes(text, "list ", "l "):
@@ -90,8 +92,6 @@ func suggestAddCmd(d prompt.Document) []prompt.Suggest {
 
 // suggestMvCmd
 func suggestMvCmd(d prompt.Document) []prompt.Suggest {
-	var s []prompt.Suggest
-
 	text := d.Text
 	is2ndArg := 2 < len(strings.Split(text, " "))
 
@@ -109,15 +109,18 @@ func suggestMvCmd(d prompt.Document) []prompt.Suggest {
 	if err != nil {
 		log.Fatal(err)
 	}
+	return filePathsToSuggests(dir, files, word)
+}
+
+func filePathsToSuggests(soisDir string, files []string, word string) []prompt.Suggest {
+	var s []prompt.Suggest
 	for _, f := range files {
 		s = append(s, prompt.Suggest{
-			Text:        strings.TrimPrefix(f, dir+"/"),
+			Text:        strings.TrimPrefix(f, soisDir+"/"),
 			Description: "",
 		})
 	}
 	return prompt.FilterContains(s, word, true)
-
-	return EmptySuggests
 }
 
 // suggestOpenCmd は指定した相対Path(soiRoot以降)を元に Suggestを抽出します

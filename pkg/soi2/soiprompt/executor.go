@@ -37,6 +37,11 @@ func Executor(in string) {
 		if err != nil {
 			log.Fatal(err)
 		}
+	case "rm":
+		err := rm(in)
+		if err != nil {
+			log.Fatal(err)
+		}
 	case "open", "o", "list", "l":
 		relPath := strings.ReplaceAll(subCmd, " ", "/")
 		err := open(relPath)
@@ -109,6 +114,22 @@ func mv(in string) error {
 		}
 	}
 	return exec.Command("mv", from, to).Start()
+}
+
+func rm(in string) error {
+	baseDir, err := soi.SoisDirPath()
+	if err != nil {
+		return err
+	}
+	flags := flag.NewFlagSet("rm", flag.PanicOnError)
+	flags.Parse(strings.Split(in, " ")[1:])
+
+	target := filepath.Join(baseDir, flags.Arg(0))
+	if !fileio.FileExists(target) {
+		fmt.Println("No file or dir found.")
+		return nil
+	}
+	return exec.Command("rm", "-rf", target).Start()
 }
 
 func open(relPath string) error {
