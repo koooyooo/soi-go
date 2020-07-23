@@ -32,6 +32,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 			{Text: "add", Description: "(a)dds url"},
 			{Text: "list", Description: "(l)ists urls and filter them"},
 			{Text: "mv", Description: "move file to dir"},
+			{Text: "rm", Description: "remove file or dir"},
 			//{Text: "tags", Description: "lists up all tags"}, TODO implements as "list -t"
 			{Text: "open", Description: "(o)pens specified url"},
 			{Text: "quit", Description: "(q)uit soi"},
