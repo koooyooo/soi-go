@@ -24,8 +24,11 @@ func Executor(in string) {
 	subCmd := strings.TrimPrefix(in, cmd+" ")
 	switch cmd {
 	case "quit", "q", "exit":
-		fmt.Println("quit")
-		os.Exit(0)
+		err := quit(in)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 	case "add", "a":
 		err := add(in)
 		if err != nil {
@@ -96,6 +99,7 @@ func add(in string) error {
 		return err
 	}
 	fileName := strings.ReplaceAll(name, " ", "_")
+	fileName = strings.ReplaceAll(name, "/", "／")
 	return ioutil.WriteFile(baseDir+"/"+fileName+".json", b, 0600)
 }
 
@@ -151,4 +155,10 @@ func open(relPath string) error {
 		return err
 	}
 	return exec.Command("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", soi.URI).Start()
+}
+
+func quit(in string) error {
+	fmt.Println("quit soi!")
+	os.Exit(0)
+	return nil
 }
