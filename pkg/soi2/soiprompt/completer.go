@@ -1,6 +1,7 @@
 package soiprompt
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"sort"
@@ -26,6 +27,8 @@ func Completer(d prompt.Document) []prompt.Suggest {
 		return suggestRmCmd(d)
 	case hasPrefixes(text, "open ", "o "):
 		return suggestOpenCmd(d)
+	case hasPrefixes(text, "pp"):
+		return suggestPpCmd(d)
 	case hasPrefixes(text, "list ", "l "):
 		return suggestListCmd(d.GetWordBeforeCursor())
 	default:
@@ -42,15 +45,6 @@ func Completer(d prompt.Document) []prompt.Suggest {
 		return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
 	}
 	return EmptySuggests
-}
-
-func hasPrefixes(in string, prefixes ...string) bool {
-	for _, p := range prefixes {
-		if strings.HasPrefix(in, p) {
-			return true
-		}
-	}
-	return false
 }
 
 // suggestAddCmd
@@ -72,7 +66,7 @@ func suggestAddCmd(d prompt.Document) []prompt.Suggest {
 		if err != nil {
 			log.Fatal(err)
 		}
-		dirs, err := listDirs(soiRoot)
+		dirs, err := listDirs(soiRoot, false)
 		for _, d := range dirs {
 			suggests = append(suggests, prompt.Suggest{
 				Text:        strings.TrimPrefix(d, soiRoot+"/"),
@@ -104,7 +98,7 @@ func suggestMvCmd(d prompt.Document) []prompt.Suggest {
 
 	var files []string
 	if is2ndArg {
-		files, err = listDirs(dir)
+		files, err = listDirs(dir, true)
 	} else {
 		files, err = listFiles(dir)
 	}
@@ -130,7 +124,7 @@ func suggestRmCmd(d prompt.Document) []prompt.Suggest {
 	}
 	fileDirs = append(fileDirs, files...)
 	// ディレクトリ系を追加
-	dirs, err := listDirs(dir)
+	dirs, err := listDirs(dir, false)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -181,6 +175,20 @@ func suggestOpenCmd(d prompt.Document) []prompt.Suggest {
 		Suggests: s,
 	}
 	return s
+}
+
+func suggestPpCmd(d prompt.Document) []prompt.Suggest {
+	input := d.TextBeforeCursor()
+	input = strings.TrimPrefix(input, "pp ")
+
+	rootDir, _ := soi.SoisDirPath()
+
+	// case-1: 直近のフォルダ・ファイルに前方一致 => ファイル・フォルダの一覧を表示 (フォルダは末尾に "/"を付与)
+	// case-2: 直近のフォルダに完全一致
+	// case-3: 直近のファイルに完全一致
+
+	fmt.Println(input, rootDir) // TODO Remote Later
+	return EmptySuggests
 }
 
 // suggestListCmd は"list"コマンドの制御を行います

@@ -9,6 +9,15 @@ import (
 	"github.com/koooyooo/soi-go/pkg/soi"
 )
 
+func hasPrefixes(in string, prefixes ...string) bool {
+	for _, p := range prefixes {
+		if strings.HasPrefix(in, p) {
+			return true
+		}
+	}
+	return false
+}
+
 // listFiles はsoiRoot配下のファイルを再帰的に追加して Suggestを抽出します
 func listFiles(dir string) ([]string, error) {
 	var files []string
@@ -21,7 +30,7 @@ func listFiles(dir string) ([]string, error) {
 	return files, err
 }
 
-func listDirs(dir string) ([]string, error) {
+func listDirs(dir string, lastSlash bool) ([]string, error) {
 	soiRoot, err := soi.SoisDirPath()
 	if err != nil {
 		return nil, err
@@ -29,6 +38,9 @@ func listDirs(dir string) ([]string, error) {
 	var files []string
 	err = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() && path != soiRoot {
+			if lastSlash {
+				path = path + "/"
+			}
 			files = append(files, path)
 		}
 		return nil
