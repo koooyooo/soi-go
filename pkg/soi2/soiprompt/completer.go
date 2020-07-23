@@ -3,6 +3,7 @@ package soiprompt
 import (
 	"io/ioutil"
 	"log"
+	"sort"
 	"strings"
 
 	"github.com/c-bata/go-prompt"
@@ -22,7 +23,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 	case hasPrefixes(text, "mv "):
 		return suggestMvCmd(d)
 	case hasPrefixes(text, "rm "):
-
+		return suggestRmCmd(d)
 	case hasPrefixes(text, "open ", "o "):
 		return suggestOpenCmd(d)
 	case hasPrefixes(text, "list ", "l "):
@@ -94,12 +95,14 @@ func suggestMvCmd(d prompt.Document) []prompt.Suggest {
 	text := d.Text
 	is2ndArg := 2 < len(strings.Split(text, " "))
 
-	word := d.GetWordBeforeCursor()
-	word = strings.TrimPrefix(word, "mv ")
+	word := strings.TrimPrefix(d.GetWordBeforeCursor(), "mv ")
 
-	dir, _ := soi.SoisDirPath()
+	dir, err := soi.SoisDirPath()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	var files []string
-	var err error
 	if is2ndArg {
 		files, err = listDirs(dir)
 	} else {
@@ -109,6 +112,33 @@ func suggestMvCmd(d prompt.Document) []prompt.Suggest {
 		log.Fatal(err)
 	}
 	return filePathsToSuggests(dir, files, word)
+}
+
+// suggestRmCmd
+func suggestRmCmd(d prompt.Document) []prompt.Suggest {
+	word := strings.TrimPrefix(d.GetWordBeforeCursor(), "rm ")
+
+	dir, err := soi.SoisDirPath()
+	if err != nil {
+		log.Fatal(err)
+	}
+	var fileDirs []string
+	// ファイル系を追加
+	files, err := listFiles(dir)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fileDirs = append(fileDirs, files...)
+	// ディレクトリ系を追加
+	dirs, err := listDirs(dir)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fileDirs = append(fileDirs, dirs...)
+
+	sort.Sort(sort.StringSlice(fileDirs))
+
+	return filePathsToSuggests(dir, fileDirs, word)
 }
 
 // suggestOpenCmd は指定した相対Path(soiRoot以降)を元に Suggestを抽出します
