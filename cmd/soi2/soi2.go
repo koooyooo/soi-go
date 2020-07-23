@@ -19,6 +19,7 @@ func main() {
 		prompt.OptionSuggestionTextColor(prompt.Black),
 		prompt.OptionDescriptionBGColor(prompt.LightGray),
 		prompt.OptionScrollbarBGColor(prompt.Blue),
+		prompt.OptionMaxSuggestion(15),
 	)
 	p.Run()
 }
