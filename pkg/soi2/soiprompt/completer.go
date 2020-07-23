@@ -3,8 +3,6 @@ package soiprompt
 import (
 	"io/ioutil"
 	"log"
-	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/c-bata/go-prompt"
@@ -112,17 +110,6 @@ func suggestMvCmd(d prompt.Document) []prompt.Suggest {
 	return filePathsToSuggests(dir, files, word)
 }
 
-func filePathsToSuggests(soisDir string, files []string, word string) []prompt.Suggest {
-	var s []prompt.Suggest
-	for _, f := range files {
-		s = append(s, prompt.Suggest{
-			Text:        strings.TrimPrefix(f, soisDir+"/"),
-			Description: "",
-		})
-	}
-	return prompt.FilterContains(s, word, true)
-}
-
 // suggestOpenCmd は指定した相対Path(soiRoot以降)を元に Suggestを抽出します
 func suggestOpenCmd(d prompt.Document) []prompt.Suggest {
 	input := d.TextBeforeCursor()
@@ -180,31 +167,4 @@ func suggestListCmd(input string) []prompt.Suggest {
 		})
 	}
 	return prompt.FilterContains(s, input, true)
-}
-
-// listFiles はsoiRoot配下のファイルを再帰的に追加して Suggestを抽出します
-func listFiles(dir string) ([]string, error) {
-	var files []string
-	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
-		if !info.IsDir() {
-			files = append(files, path)
-		}
-		return nil
-	})
-	return files, err
-}
-
-func listDirs(dir string) ([]string, error) {
-	soiRoot, err := soi.SoisDirPath()
-	if err != nil {
-		return nil, err
-	}
-	var files []string
-	err = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
-		if info.IsDir() && path != soiRoot {
-			files = append(files, path)
-		}
-		return nil
-	})
-	return files, err
 }
