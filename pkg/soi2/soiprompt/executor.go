@@ -103,7 +103,7 @@ func mv(in string) error {
 
 	toDir := to[0:strings.LastIndex(to, "/")]
 	if !fileio.FileExists(toDir) {
-		err = os.Mkdir(toDir, 0700)
+		err = os.MkdirAll(toDir, 0700)
 		if err != nil {
 			return err
 		}
