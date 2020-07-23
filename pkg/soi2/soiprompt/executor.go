@@ -12,6 +12,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/koooyooo/soi-go/pkg/fileio"
+
 	"github.com/koooyooo/soi-go/pkg/soi"
 	"github.com/koooyooo/soi-go/pkg/soi2"
 )
@@ -96,9 +98,17 @@ func mv(in string) error {
 	}
 	flags := flag.NewFlagSet("mv", flag.PanicOnError)
 	flags.Parse(strings.Split(in, " ")[1:])
-	from := strings.TrimPrefix(flags.Arg(0), "/")
-	to := strings.TrimPrefix(flags.Arg(1), "/")
-	return exec.Command("mv", baseDir+"/"+from, baseDir+"/"+to).Start()
+	from := baseDir + "/" + strings.TrimPrefix(flags.Arg(0), "/")
+	to := baseDir + "/" + strings.TrimPrefix(flags.Arg(1), "/")
+
+	toDir := to[0:strings.LastIndex(to, "/")]
+	if !fileio.FileExists(toDir) {
+		err = os.Mkdir(toDir, 0700)
+		if err != nil {
+			return err
+		}
+	}
+	return exec.Command("mv", from, to).Start()
 }
 
 func open(relPath string) error {
