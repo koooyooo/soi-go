@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -30,23 +29,27 @@ func Executor(in string) {
 	case "add", "a":
 		err := add(in)
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(err)
+			return
 		}
 	case "mv":
 		err := mv(in)
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(err)
+			return
 		}
 	case "rm":
 		err := rm(in)
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(err)
+			return
 		}
 	case "open", "o", "list", "l":
 		relPath := strings.ReplaceAll(subCmd, " ", "/")
 		err := open(relPath)
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(err)
+			return
 		}
 	}
 }
@@ -69,7 +72,7 @@ func add(in string) error {
 			return err
 		}
 		if !ok {
-			return fmt.Errorf("no url found for: %s", uri)
+			return fmt.Errorf("no name(title) found in the url: %s\nplease specify the name with -n option\n", uri)
 		}
 		name = title
 	}
@@ -78,7 +81,7 @@ func add(in string) error {
 		Name:    name,
 		URI:     uri,
 		Tags:    []string{},
-		Created: fmt.Sprintf("%v", time.Now()),
+		Created: time.Now().Format("2006-01-02T15:04:05Z07:00"),
 	}
 	b, err := json.Marshal(&s)
 	if err != nil {
