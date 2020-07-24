@@ -26,15 +26,16 @@ func toLeafDirPath(path string) string {
 	return path[0:lastSlashIdx]
 }
 
-// toStorablePath はPathを保存可能なPathに変換します
-func toStorablePath(path string) string {
-	// path として意味を持ってしまう文字列を変換します
-	path = strings.ReplaceAll(path, " ", "_")
-	path = strings.ReplaceAll(path, "/", "／")
-	if !strings.HasSuffix(path, ".json") {
-		path = path + ".json"
+// toStorableName はファイル名を保存可能な形式に変換します
+func toStorableName(n string) string {
+	// pathの予約語系を変換します
+	n = strings.ReplaceAll(n, " ", "_")
+	n = strings.ReplaceAll(n, "/", "／")
+	// 拡張子がなければ追加します
+	if !strings.HasSuffix(n, ".json") {
+		n = n + ".json"
 	}
-	return path
+	return n
 }
 
 // listFileDirs は
