@@ -21,7 +21,6 @@ func Executor(in string) {
 	//fmt.Printf("EXEC: %s\n", in)
 	in = strings.Trim(in, " ")
 	cmd := strings.Split(in, " ")[0]
-	subCmd := strings.TrimPrefix(in, cmd+" ")
 	switch cmd {
 	case "quit", "q", "exit":
 		err := quit(in)
@@ -48,8 +47,7 @@ func Executor(in string) {
 			return
 		}
 	case "open", "o", "list", "l", "pp":
-		relPath := strings.ReplaceAll(subCmd, " ", "/")
-		err := open(relPath)
+		err := open(in)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -137,12 +135,20 @@ func rm(in string) error {
 	return exec.Command("rm", "-rf", target).Start()
 }
 
-func open(relPath string) error {
+func open(in string) error {
+	flags := flag.NewFlagSet("open", flag.PanicOnError)
+	//chrome := flags.Bool("c", false, "use chrome")
+	firefox := flags.Bool("f", false, "use firefox")
+	safari := flags.Bool("s", false, "use safari")
+	flags.Parse(strings.Split(in, " ")[1:])
+	fmt.Println(in)           // TODO
+	fmt.Println(flags.Arg(0)) // TODO
+
 	dir, err := soi.SoisDirPath()
 	if err != nil {
 		return err
 	}
-	fullPath := dir + "/" + relPath
+	fullPath := dir + "/" + strings.ReplaceAll(flags.Arg(0), " ", "/") // open コマンド対策
 	b, err := ioutil.ReadFile(fullPath)
 	if err != nil {
 		return err
@@ -151,6 +157,12 @@ func open(relPath string) error {
 	err = json.Unmarshal(b, &soi)
 	if err != nil {
 		return err
+	}
+	if *firefox {
+		return exec.Command("open", "-a", "Firefox", soi.URI).Start()
+	}
+	if *safari {
+		return exec.Command("open", "-a", "Safari", soi.URI).Start()
 	}
 	return exec.Command("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", soi.URI).Start()
 }
