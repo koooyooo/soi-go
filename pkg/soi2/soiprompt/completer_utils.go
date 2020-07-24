@@ -24,6 +24,16 @@ func finalDirFromPath(path string) string {
 	return path[0:lastSlashIdx]
 }
 
+func fixFilePath(path string) string {
+	// path として意味を持ってしまう文字列を変換します
+	path = strings.ReplaceAll(path, " ", "_")
+	path = strings.ReplaceAll(path, "/", "／")
+	if !strings.HasSuffix(path, ".json") {
+		path = path + ".json"
+	}
+	return path
+}
+
 func listFileDirs(dir string, lastSlash bool) ([]string, error) {
 	fileinfos, err := ioutil.ReadDir(dir)
 	if err != nil {
