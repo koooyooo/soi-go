@@ -35,12 +35,12 @@ func fixFilePath(path string) string {
 }
 
 func listFileDirs(dir string, lastSlash bool) ([]string, error) {
-	fileinfos, err := ioutil.ReadDir(dir)
+	fileInfos, err := ioutil.ReadDir(dir)
 	if err != nil {
 		return nil, err
 	}
 	var paths []string
-	for _, fi := range fileinfos {
+	for _, fi := range fileInfos {
 		path := fi.Name()
 		if fi.IsDir() && lastSlash {
 			path = filepath.Join(dir, path) + "/"
