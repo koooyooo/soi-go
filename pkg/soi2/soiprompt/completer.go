@@ -33,7 +33,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 	case hasPrefixes(text, "pp "):
 		return suggestPpCmd(d)
 	case hasPrefixes(text, "list ", "l "):
-		return suggestListCmd(d.GetWordBeforeCursor())
+		return suggestListCmd(d)
 	default:
 		s := []prompt.Suggest{
 			{Text: "add", Description: "(a)dds url"},
@@ -217,7 +217,7 @@ func suggestPpCmd(d prompt.Document) []prompt.Suggest {
 }
 
 // suggestListCmd は"list"コマンドの制御を行います
-func suggestListCmd(input string) []prompt.Suggest {
+func suggestListCmd(d prompt.Document) []prompt.Suggest {
 	var s []prompt.Suggest
 	dir, _ := soi.SoisDirPath()
 	files, err := listFilesRecursively(dir)
@@ -230,5 +230,5 @@ func suggestListCmd(input string) []prompt.Suggest {
 			Description: "",
 		})
 	}
-	return prompt.FilterContains(s, input, true)
+	return prompt.FilterContains(s, d.GetWordBeforeCursor(), true)
 }
