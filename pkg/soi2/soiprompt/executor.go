@@ -98,7 +98,7 @@ func add(in string) error {
 	if err = os.MkdirAll(baseDir, 0700); err != nil {
 		return err
 	}
-	return ioutil.WriteFile(fixFilePath(baseDir+"/"+name), b, 0600)
+	return ioutil.WriteFile(toStorablePath(baseDir+"/"+name), b, 0600)
 }
 
 func mv(in string) error {

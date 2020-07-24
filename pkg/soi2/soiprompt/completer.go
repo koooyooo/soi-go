@@ -18,7 +18,7 @@ var (
 	EmptySuggests = []prompt.Suggest{}
 )
 
-// completer は補完を実施します
+// completer はSuggest候補を提示することで補完を実施します
 func Completer(d prompt.Document) []prompt.Suggest {
 	text := d.TextBeforeCursor()
 	switch {
@@ -50,7 +50,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 	return EmptySuggests
 }
 
-// suggestAddCmd
+// suggestAddCmd はaddコマンド系のSuggestを提示します
 func suggestAddCmd(d prompt.Document) []prompt.Suggest {
 	// option探索
 	if strings.HasPrefix(d.GetWordBeforeCursor(), "-") {
@@ -88,7 +88,7 @@ func suggestAddCmd(d prompt.Document) []prompt.Suggest {
 	return EmptySuggests
 }
 
-// suggestMvCmd
+// suggestMvCmd はmvコマンド系のSuggestを提示します
 func suggestMvCmd(d prompt.Document) []prompt.Suggest {
 	text := d.Text
 	is2ndArg := 2 < len(strings.Split(text, " "))
@@ -112,7 +112,7 @@ func suggestMvCmd(d prompt.Document) []prompt.Suggest {
 	return filePathsToSuggests(dir, files, word)
 }
 
-// suggestRmCmd
+// suggestRmCmd はrmコマンド系のSuggestを提示します
 func suggestRmCmd(d prompt.Document) []prompt.Suggest {
 	word := strings.TrimPrefix(d.GetWordBeforeCursor(), "rm ")
 
@@ -139,7 +139,7 @@ func suggestRmCmd(d prompt.Document) []prompt.Suggest {
 	return filePathsToSuggests(dir, fileDirs, word)
 }
 
-// suggestOpenCmd は指定した相対Path(soiRoot以降)を元に Suggestを抽出します
+// suggestOpenCmd はopenコマンド系のSuggestを提示します
 func suggestOpenCmd(d prompt.Document) []prompt.Suggest {
 	input := d.TextBeforeCursor()
 	// コマンド部分を除去
@@ -181,6 +181,7 @@ func suggestOpenCmd(d prompt.Document) []prompt.Suggest {
 	return s
 }
 
+// suggestPpCmd はppコマンド系のSuggestを提示します
 func suggestPpCmd(d prompt.Document) []prompt.Suggest {
 	input := d.GetWordBeforeCursor()
 	input = strings.TrimPrefix(input, "pp ")
@@ -204,7 +205,7 @@ func suggestPpCmd(d prompt.Document) []prompt.Suggest {
 	switch {
 	case !found || isDir:
 		if !found {
-			path = finalDirFromPath(path)
+			path = toLeafDirPath(path)
 		}
 		dirs, err := listFileDirs(path, true)
 		if err != nil {
@@ -216,7 +217,7 @@ func suggestPpCmd(d prompt.Document) []prompt.Suggest {
 	return EmptySuggests
 }
 
-// suggestListCmd は"list"コマンドの制御を行います
+// suggestListCmd はlistコマンド系のSuggestを提示します
 func suggestListCmd(d prompt.Document) []prompt.Suggest {
 	var s []prompt.Suggest
 	dir, _ := soi.SoisDirPath()

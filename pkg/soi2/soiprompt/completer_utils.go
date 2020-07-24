@@ -10,6 +10,7 @@ import (
 	"github.com/koooyooo/soi-go/pkg/soi"
 )
 
+// hasPrefixes は引数の文字列に接頭語が含まれているものがあるかを調査します
 func hasPrefixes(in string, prefixes ...string) bool {
 	for _, p := range prefixes {
 		if strings.HasPrefix(in, p) {
@@ -19,12 +20,14 @@ func hasPrefixes(in string, prefixes ...string) bool {
 	return false
 }
 
-func finalDirFromPath(path string) string {
+// toLeafDirPath はPathを末端ディレクトリのPathに変換します
+func toLeafDirPath(path string) string {
 	lastSlashIdx := strings.LastIndex(path, "/")
 	return path[0:lastSlashIdx]
 }
 
-func fixFilePath(path string) string {
+// toStorablePath はPathを保存可能なPathに変換します
+func toStorablePath(path string) string {
 	// path として意味を持ってしまう文字列を変換します
 	path = strings.ReplaceAll(path, " ", "_")
 	path = strings.ReplaceAll(path, "/", "／")
@@ -34,6 +37,7 @@ func fixFilePath(path string) string {
 	return path
 }
 
+// listFileDirs は
 func listFileDirs(dir string, lastSlash bool) ([]string, error) {
 	fileInfos, err := ioutil.ReadDir(dir)
 	if err != nil {
