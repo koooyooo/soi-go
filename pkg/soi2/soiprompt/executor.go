@@ -98,8 +98,9 @@ func add(in string) error {
 	if err = os.MkdirAll(baseDir, 0700); err != nil {
 		return err
 	}
-	fileName := strings.ReplaceAll(name, " ", "_")
-	fileName = strings.ReplaceAll(name, "/", "／")
+	fileName := name
+	fileName = strings.ReplaceAll(fileName, " ", "_")
+	fileName = strings.ReplaceAll(fileName, "/", "／")
 	return ioutil.WriteFile(baseDir+"/"+fileName+".json", b, 0600)
 }
 
