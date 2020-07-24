@@ -3,3 +3,4 @@ run:
 install:
 	@ go install cmd/soi2/soi2.go
 
+

@@ -56,7 +56,7 @@ func listFileDirs(dir string, lastSlash bool) ([]string, error) {
 	return paths, nil
 }
 
-// listFilesRecursively はsoiRoot配下のファイルを再帰的に追加して Suggestを抽出します
+// listFilesRecursively は引数のdir配下を再帰的に走査してFileのPathを収集します
 func listFilesRecursively(dir string) ([]string, error) {
 	var files []string
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
@@ -68,6 +68,7 @@ func listFilesRecursively(dir string) ([]string, error) {
 	return files, err
 }
 
+// listDirsRecursively は引数のdir配下を再帰的に走査してDirectoryのPathを収集します
 func listDirsRecursively(dir string, lastSlash bool) ([]string, error) {
 	soiRoot, err := soi.SoisDirPath()
 	if err != nil {
@@ -86,10 +87,10 @@ func listDirsRecursively(dir string, lastSlash bool) ([]string, error) {
 	return files, err
 }
 
-// filePathsToSuggests はファイルパスの配列を元に Suggestの配列を生成します
-func filePathsToSuggests(soisDir string, files []string, word string) []prompt.Suggest {
+// filePathsToSuggests は引数のfilePath配列を元に Suggestの配列を生成します
+func filePathsToSuggests(soisDir string, filePaths []string, word string) []prompt.Suggest {
 	var s []prompt.Suggest
-	for _, f := range files {
+	for _, f := range filePaths {
 		s = append(s, prompt.Suggest{
 			Text:        strings.TrimPrefix(f, soisDir+"/"),
 			Description: "",
