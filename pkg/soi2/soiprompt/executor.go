@@ -148,7 +148,7 @@ func open(in string) error {
 	if err != nil {
 		return err
 	}
-	fullPath := dir + "/" + strings.ReplaceAll(flags.Arg(0), " ", "/") // open コマンド対策
+	fullPath := dir + "/" + strings.ReplaceAll(flags.Arg(0), " ", "/") // open コマンド時にスペース区切りとなる対策
 	b, err := ioutil.ReadFile(fullPath)
 	if err != nil {
 		return err
