@@ -1,7 +1,8 @@
 package soiprompt
 
 import (
-	"io/ioutil"
+	"flag"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -142,43 +143,27 @@ func suggestRmCmd(d prompt.Document) []prompt.Suggest {
 // suggestOpenCmd はopenコマンド系のSuggestを提示します
 func suggestOpenCmd(d prompt.Document) []prompt.Suggest {
 	input := d.TextBeforeCursor()
-	// コマンド部分を除去
-	input = strings.TrimPrefix(input, "open ")
-	input = strings.TrimPrefix(input, "o ")
+	inputs := strings.Split(input, " ")
 
-	path := strings.ReplaceAll(input, " ", "/")
-	// 相対パスを元にファイルを抽出
-	rootDir, _ := soi.SoisDirPath()
-	var dir string
-	if path != " " {
-		dir = rootDir + "/" + path
-	}
-	files, err := ioutil.ReadDir(dir)
-	// 絞り込み中も候補を表示する処理
-	if err != nil && strings.Contains(err.Error(), "no such file or directory") {
-		pathElm := strings.Split(path, "/")
-		lastInput := pathElm[len(pathElm)-1]
-		return previousTarget.filter(lastInput)
-	}
-
-	if strings.HasSuffix(strings.Trim(input, " "), ".json") {
-		return []prompt.Suggest{}
-	}
-
-	if len(files) == 0 {
+	fmt.Println("1.Inputs:", inputs) // TODO
+	if len(inputs) < 2 {
 		return EmptySuggests
 	}
+	// 利用しないフラグもパースの関係上宣言を行う
+	flags := flag.NewFlagSet("open", flag.PanicOnError)
+	flags.Bool("f", false, "open w/ firefox")
+	flags.Bool("s", false, "open w/ safari")
+	flags.Parse(inputs[1:])
 
-	// ファイルが存在する場合は候補に保存の上、直前のSuggestとして保管
-	var s []prompt.Suggest
-	for _, f := range files {
-		s = append(s, prompt.Suggest{Text: f.Name(), Description: ""})
-	}
-	previousTarget = PreviousTarget{
-		Path:     dir,
-		Suggests: s,
-	}
-	return s
+	path := filepath.Join(flags.Args()...)
+
+	// 相対パスを元にファイルを抽出
+	soisDir, _ := soi.SoisDirPath()
+
+	fmt.Println("2.Path:", path) // TODO
+
+	return suggestByPath(soisDir, filepath.Join(soisDir, path), d.GetWordBeforeCursor(), false)
+
 }
 
 // suggestPpCmd はppコマンド系のSuggestを提示します
@@ -189,6 +174,10 @@ func suggestPpCmd(d prompt.Document) []prompt.Suggest {
 	soisDir, _ := soi.SoisDirPath()
 
 	path := filepath.Join(soisDir, d.GetWordBeforeCursor())
+	return suggestByPath(soisDir, path, input, true)
+}
+
+func suggestByPath(soisDir, path, input string, showDir bool) []prompt.Suggest {
 	var found bool
 	isDir, err := fileio.IsDir(strings.TrimSuffix(path, "/"))
 	if err != nil {
@@ -207,13 +196,12 @@ func suggestPpCmd(d prompt.Document) []prompt.Suggest {
 		if !found {
 			path = toLeafDirPath(path)
 		}
-		dirs, err := listFileDirs(path, true)
+		dirs, err := listFileDirs(path, showDir, true)
 		if err != nil {
 			log.Fatal(err)
 		}
 		return filePathsToSuggests(soisDir, dirs, input)
 	}
-
 	return EmptySuggests
 }
 

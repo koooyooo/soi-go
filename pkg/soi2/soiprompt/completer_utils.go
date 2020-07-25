@@ -23,6 +23,9 @@ func hasPrefixes(in string, prefixes ...string) bool {
 // toLeafDirPath はPathを末端ディレクトリのPathに変換します
 func toLeafDirPath(path string) string {
 	lastSlashIdx := strings.LastIndex(path, "/")
+	if lastSlashIdx == -1 {
+		return ""
+	}
 	return path[0:lastSlashIdx]
 }
 
@@ -39,7 +42,7 @@ func toStorableName(n string) string {
 }
 
 // listFileDirs は
-func listFileDirs(dir string, lastSlash bool) ([]string, error) {
+func listFileDirs(dir string, addDir, dirLastSlash bool) ([]string, error) {
 	fileInfos, err := ioutil.ReadDir(dir)
 	if err != nil {
 		return nil, err
@@ -47,10 +50,16 @@ func listFileDirs(dir string, lastSlash bool) ([]string, error) {
 	var paths []string
 	for _, fi := range fileInfos {
 		path := fi.Name()
-		if fi.IsDir() && lastSlash {
-			path = filepath.Join(dir, path) + "/"
+		if fi.IsDir() && dirLastSlash {
+			if addDir {
+				path = filepath.Join(dir, path) + "/"
+			} else {
+				path = path + "/"
+			}
 		} else {
-			path = filepath.Join(dir, path)
+			if addDir {
+				path = filepath.Join(dir, path)
+			}
 		}
 		paths = append(paths, path)
 	}
