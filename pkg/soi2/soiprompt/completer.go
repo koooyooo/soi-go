@@ -36,11 +36,11 @@ func Completer(d prompt.Document) []prompt.Suggest {
 		return suggestListCmd(d)
 	default:
 		s := []prompt.Suggest{
-			{Text: "add", Description: "(a)dds url"},
-			{Text: "open", Description: "(o)pens urls (complement path by args)"},
+			{Text: "add", Description: "(a)dd url"},
+			{Text: "open", Description: "(o)pen urls (complement path by args)"},
 			{Text: "dig", Description: "(d)ig urls (complement path by -> key)"},
-			{Text: "list", Description: "(l)ists urls and filter them"},
-			{Text: "tag", Description: "adds tags (not implemented yet)"},
+			{Text: "list", Description: "(l)ist urls and filter them"},
+			{Text: "tag", Description: "add tags (not implemented yet)"},
 			{Text: "mv", Description: "move file to dir"},
 			{Text: "rm", Description: "remove file or dir"},
 			//{Text: "tags", Description: "lists up all tags"}, TODO implements as "list -t"
