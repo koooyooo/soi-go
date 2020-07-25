@@ -166,7 +166,7 @@ func open(in string) error {
 }
 
 func quit(in string) error {
-	fmt.Println("quit soi!")
+	fmt.Println("bye!!")
 	os.Exit(0)
 	return nil
 }
