@@ -53,7 +53,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 // suggestAddCmd はaddコマンド系のSuggestを提示します
 func suggestAddCmd(d prompt.Document) []prompt.Suggest {
 	// option探索
-	if strings.HasPrefix(d.GetWordBeforeCursor(), "-") {
+	if isOptionWord(d) {
 		return []prompt.Suggest{
 			{Text: "-n", Description: "name of the url"},
 			{Text: "-d", Description: "dir to which soi store"},
@@ -142,11 +142,8 @@ func suggestRmCmd(d prompt.Document) []prompt.Suggest {
 // suggestOpenCmd はopenコマンド系のSuggestを提示します
 func suggestOpenCmd(d prompt.Document) []prompt.Suggest {
 	// option探索
-	if strings.HasPrefix(d.GetWordBeforeCursor(), "-") {
-		return []prompt.Suggest{
-			{Text: "-f", Description: "open w/ firefox"},
-			{Text: "-s", Description: "open w/ safari"},
-		}
+	if isOptionWord(d) {
+		return browserOptSuggests
 	}
 	input := d.TextBeforeCursor()
 	inputs := strings.Split(input, " ")
@@ -171,11 +168,8 @@ func suggestOpenCmd(d prompt.Document) []prompt.Suggest {
 // suggestDigCmd はppコマンド系のSuggestを提示します
 func suggestDigCmd(d prompt.Document) []prompt.Suggest {
 	// option探索
-	if strings.HasPrefix(d.GetWordBeforeCursor(), "-") {
-		return []prompt.Suggest{
-			{Text: "-f", Description: "dig w/ firefox"},
-			{Text: "-s", Description: "dig w/ safari"},
-		}
+	if isOptionWord(d) {
+		return browserOptSuggests
 	}
 	input := d.TextBeforeCursor()
 	inputs := strings.Split(input, " ")
@@ -219,6 +213,10 @@ func suggestByPath(soisDir, path, input string, showDir bool) []prompt.Suggest {
 
 // suggestListCmd はlistコマンド系のSuggestを提示します
 func suggestListCmd(d prompt.Document) []prompt.Suggest {
+	// option探索
+	if strings.HasPrefix(d.GetWordBeforeCursor(), "-") {
+		return browserOptSuggests
+	}
 	var s []prompt.Suggest
 	dir, _ := fileio.SoisDirPath()
 	files, err := listFilesRecursively(dir)
@@ -232,4 +230,13 @@ func suggestListCmd(d prompt.Document) []prompt.Suggest {
 		})
 	}
 	return prompt.FilterContains(s, d.GetWordBeforeCursor(), true)
+}
+
+func isOptionWord(d prompt.Document) bool {
+	return strings.HasPrefix(d.GetWordBeforeCursor(), "-")
+}
+
+var browserOptSuggests = []prompt.Suggest{
+	{Text: "-f", Description: "open w/ firefox"},
+	{Text: "-s", Description: "open w/ safari"},
 }
