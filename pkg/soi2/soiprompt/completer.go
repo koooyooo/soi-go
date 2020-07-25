@@ -30,8 +30,8 @@ func Completer(d prompt.Document) []prompt.Suggest {
 		return suggestRmCmd(d)
 	case hasPrefixes(text, "open ", "o "):
 		return suggestOpenCmd(d)
-	case hasPrefixes(text, "pp "):
-		return suggestPpCmd(d)
+	case hasPrefixes(text, "dig ", "d "):
+		return suggestDigCmd(d)
 	case hasPrefixes(text, "list ", "l "):
 		return suggestListCmd(d)
 	default:
@@ -41,7 +41,8 @@ func Completer(d prompt.Document) []prompt.Suggest {
 			{Text: "mv", Description: "move file to dir"},
 			{Text: "rm", Description: "remove file or dir"},
 			//{Text: "tags", Description: "lists up all tags"}, TODO implements as "list -t"
-			{Text: "open", Description: "(o)pens specified url"},
+			{Text: "open", Description: "(o)pens urls (search by space sep dirs)"},
+			{Text: "dig", Description: "(d)ig urls (search by tmp path and → key)"},
 			{Text: "quit", Description: "(q)uit soi"},
 			{Text: "tag", Description: "adds tags"},
 		}
@@ -168,19 +169,19 @@ func suggestOpenCmd(d prompt.Document) []prompt.Suggest {
 
 }
 
-// suggestPpCmd はppコマンド系のSuggestを提示します
-func suggestPpCmd(d prompt.Document) []prompt.Suggest {
+// suggestDigCmd はppコマンド系のSuggestを提示します
+func suggestDigCmd(d prompt.Document) []prompt.Suggest {
 	// option探索
 	if strings.HasPrefix(d.GetWordBeforeCursor(), "-") {
 		return []prompt.Suggest{
-			{Text: "-f", Description: "open w/ firefox"},
-			{Text: "-s", Description: "open w/ safari"},
+			{Text: "-f", Description: "dig w/ firefox"},
+			{Text: "-s", Description: "dig w/ safari"},
 		}
 	}
 	input := d.TextBeforeCursor()
 	inputs := strings.Split(input, " ")
 
-	flags := flag.NewFlagSet("pp", flag.PanicOnError)
+	flags := flag.NewFlagSet("dig", flag.PanicOnError)
 	flags.Bool("f", false, "open w/ firefox")
 	flags.Bool("s", false, "open w/ safari")
 	flags.Parse(inputs[1:])
