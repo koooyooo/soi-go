@@ -11,7 +11,6 @@ import (
 	"github.com/koooyooo/soi-go/pkg/fileio"
 
 	"github.com/c-bata/go-prompt"
-	"github.com/koooyooo/soi-go/pkg/soi"
 )
 
 var (
@@ -66,7 +65,7 @@ func suggestAddCmd(d prompt.Document) []prompt.Suggest {
 	// dir探索
 	if strings.HasSuffix(d.Text, "-d ") {
 		var suggests []prompt.Suggest
-		soiRoot, err := soi.SoisDirPath()
+		soiRoot, err := fileio.SoisDirPath()
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -96,7 +95,7 @@ func suggestMvCmd(d prompt.Document) []prompt.Suggest {
 
 	word := strings.TrimPrefix(d.GetWordBeforeCursor(), "mv ")
 
-	dir, err := soi.SoisDirPath()
+	dir, err := fileio.SoisDirPath()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -117,7 +116,7 @@ func suggestMvCmd(d prompt.Document) []prompt.Suggest {
 func suggestRmCmd(d prompt.Document) []prompt.Suggest {
 	word := strings.TrimPrefix(d.GetWordBeforeCursor(), "rm ")
 
-	dir, err := soi.SoisDirPath()
+	dir, err := fileio.SoisDirPath()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -164,7 +163,7 @@ func suggestOpenCmd(d prompt.Document) []prompt.Suggest {
 	path := filepath.Join(flags.Args()...)
 
 	// 相対パスを元にファイルを抽出
-	soisDir, _ := soi.SoisDirPath()
+	soisDir, _ := fileio.SoisDirPath()
 	return suggestByPath(soisDir, filepath.Join(soisDir, path), d.GetWordBeforeCursor(), false)
 
 }
@@ -186,7 +185,7 @@ func suggestDigCmd(d prompt.Document) []prompt.Suggest {
 	flags.Bool("s", false, "open w/ safari")
 	flags.Parse(inputs[1:])
 
-	soisDir, _ := soi.SoisDirPath()
+	soisDir, _ := fileio.SoisDirPath()
 	return suggestByPath(soisDir, filepath.Join(soisDir, flags.Arg(0)), d.GetWordBeforeCursor(), true)
 }
 
@@ -221,7 +220,7 @@ func suggestByPath(soisDir, path, input string, showDir bool) []prompt.Suggest {
 // suggestListCmd はlistコマンド系のSuggestを提示します
 func suggestListCmd(d prompt.Document) []prompt.Suggest {
 	var s []prompt.Suggest
-	dir, _ := soi.SoisDirPath()
+	dir, _ := fileio.SoisDirPath()
 	files, err := listFilesRecursively(dir)
 	if err != nil {
 		panic(err)

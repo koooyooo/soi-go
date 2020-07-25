@@ -1,4 +1,4 @@
-package soi
+package fileio
 
 import (
 	"path/filepath"

@@ -6,8 +6,9 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/koooyooo/soi-go/pkg/fileio"
+
 	"github.com/c-bata/go-prompt"
-	"github.com/koooyooo/soi-go/pkg/soi"
 )
 
 // hasPrefixes は引数の文字列に接頭語が含まれているものがあるかを調査します
@@ -80,7 +81,7 @@ func listFilesRecursively(dir string) ([]string, error) {
 
 // listDirsRecursively は引数のdir配下を再帰的に走査してDirectoryのPathを収集します
 func listDirsRecursively(dir string, lastSlash bool) ([]string, error) {
-	soiRoot, err := soi.SoisDirPath()
+	soiRoot, err := fileio.SoisDirPath()
 	if err != nil {
 		return nil, err
 	}

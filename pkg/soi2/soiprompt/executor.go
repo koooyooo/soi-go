@@ -13,7 +13,6 @@ import (
 
 	"github.com/koooyooo/soi-go/pkg/fileio"
 
-	"github.com/koooyooo/soi-go/pkg/soi"
 	"github.com/koooyooo/soi-go/pkg/soi2"
 )
 
@@ -88,7 +87,7 @@ func add(in string) error {
 	if err != nil {
 		return err
 	}
-	soiRoot, err := soi.SoisDirPath()
+	soiRoot, err := fileio.SoisDirPath()
 	if err != nil {
 		return err
 	}
@@ -100,7 +99,7 @@ func add(in string) error {
 }
 
 func mv(in string) error {
-	baseDir, err := soi.SoisDirPath()
+	baseDir, err := fileio.SoisDirPath()
 	if err != nil {
 		return err
 	}
@@ -120,7 +119,7 @@ func mv(in string) error {
 }
 
 func rm(in string) error {
-	baseDir, err := soi.SoisDirPath()
+	baseDir, err := fileio.SoisDirPath()
 	if err != nil {
 		return err
 	}
@@ -142,7 +141,7 @@ func open(in string) error {
 	safari := flags.Bool("s", false, "use safari")
 	flags.Parse(strings.Split(in, " ")[1:])
 
-	soisDir, err := soi.SoisDirPath()
+	soisDir, err := fileio.SoisDirPath()
 	if err != nil {
 		return err
 	}

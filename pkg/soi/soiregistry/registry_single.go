@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"strings"
 
+	"github.com/koooyooo/soi-go/pkg/fileio"
+
 	"github.com/koooyooo/soi-go/pkg/soi"
 
 	"golang.org/x/xerrors"
@@ -100,14 +102,14 @@ func (sr *singleRegistry) Remove(name string) error {
 }
 
 func Load() (*soi.SoiCup, error) {
-	soisFilePath, err := soi.SoisFilePath()
+	soisFilePath, err := fileio.SoisFilePath()
 	if err != nil {
 		return nil, err
 	}
 	s := soi.SoiCup{}
 	b, err := ioutil.ReadFile(soisFilePath)
 	if err != nil {
-		return nil, xerrors.Errorf("error in reading [%s] %v", soi.SoisFilePath, err)
+		return nil, xerrors.Errorf("error in reading [%s] %v", fileio.SoisFilePath, err)
 	}
 	err = json.Unmarshal(b, &s)
 	if err != nil {
@@ -126,13 +128,13 @@ func Store(s *soi.SoiCup) error {
 	if err != nil {
 		return xerrors.Errorf("filed in indent json %v", err)
 	}
-	soisFilePath, err := soi.SoisFilePath()
+	soisFilePath, err := fileio.SoisFilePath()
 	if err != nil {
 		return err
 	}
 	err = ioutil.WriteFile(soisFilePath, prettyBuff.Bytes(), 0666)
 	if err != nil {
-		return xerrors.Errorf("filed in writing file [%s] %v", soi.SoisFilePath, err)
+		return xerrors.Errorf("filed in writing file [%s] %v", fileio.SoisFilePath, err)
 	}
 	return nil
 }

@@ -7,8 +7,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/koooyooo/soi-go/pkg/soi"
-
 	"github.com/koooyooo/soi-go/pkg/soi/soiregistry"
 
 	"github.com/koooyooo/soi-go/pkg/fileio"
@@ -57,7 +55,7 @@ func main() {
 
 // create soi.go repository
 func initSoi() {
-	soisFilePath, err := soi.SoisFilePath()
+	soisFilePath, err := fileio.SoisFilePath()
 	if err != nil {
 		log.Fatal("failed in getting sois file path", err)
 	}

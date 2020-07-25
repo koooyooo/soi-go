@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/koooyooo/soi-go/pkg/fileio"
+
 	"github.com/koooyooo/soi-go/pkg/soi"
 )
 
@@ -17,7 +19,7 @@ func (mr multiRegistry) Register(s *soi.Soi) error {
 	if err != nil {
 		return err
 	}
-	soisDir, err := soi.SoisDirPath()
+	soisDir, err := fileio.SoisDirPath()
 	if err != nil {
 		return err
 	}
@@ -25,7 +27,7 @@ func (mr multiRegistry) Register(s *soi.Soi) error {
 }
 
 func (mr multiRegistry) FindByName(name string) ([]*soi.Soi, error) {
-	soisDir, err := soi.SoisDirPath()
+	soisDir, err := fileio.SoisDirPath()
 	if err != nil {
 		return nil, err
 	}
