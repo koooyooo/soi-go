@@ -141,6 +141,13 @@ func suggestRmCmd(d prompt.Document) []prompt.Suggest {
 
 // suggestOpenCmd はopenコマンド系のSuggestを提示します
 func suggestOpenCmd(d prompt.Document) []prompt.Suggest {
+	// option探索
+	if strings.HasPrefix(d.GetWordBeforeCursor(), "-") {
+		return []prompt.Suggest{
+			{Text: "-f", Description: "open w/ firefox"},
+			{Text: "-s", Description: "open w/ safari"},
+		}
+	}
 	input := d.TextBeforeCursor()
 	inputs := strings.Split(input, " ")
 
@@ -163,6 +170,13 @@ func suggestOpenCmd(d prompt.Document) []prompt.Suggest {
 
 // suggestPpCmd はppコマンド系のSuggestを提示します
 func suggestPpCmd(d prompt.Document) []prompt.Suggest {
+	// option探索
+	if strings.HasPrefix(d.GetWordBeforeCursor(), "-") {
+		return []prompt.Suggest{
+			{Text: "-f", Description: "open w/ firefox"},
+			{Text: "-s", Description: "open w/ safari"},
+		}
+	}
 	input := d.TextBeforeCursor()
 	inputs := strings.Split(input, " ")
 
