@@ -2,7 +2,6 @@ package soiprompt
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -145,7 +144,6 @@ func suggestOpenCmd(d prompt.Document) []prompt.Suggest {
 	input := d.TextBeforeCursor()
 	inputs := strings.Split(input, " ")
 
-	fmt.Println("1.Inputs:", inputs) // TODO
 	if len(inputs) < 2 {
 		return EmptySuggests
 	}
@@ -159,22 +157,22 @@ func suggestOpenCmd(d prompt.Document) []prompt.Suggest {
 
 	// 相対パスを元にファイルを抽出
 	soisDir, _ := soi.SoisDirPath()
-
-	fmt.Println("2.Path:", path) // TODO
-
 	return suggestByPath(soisDir, filepath.Join(soisDir, path), d.GetWordBeforeCursor(), false)
 
 }
 
 // suggestPpCmd はppコマンド系のSuggestを提示します
 func suggestPpCmd(d prompt.Document) []prompt.Suggest {
-	input := d.GetWordBeforeCursor()
-	input = strings.TrimPrefix(input, "pp ")
+	input := d.TextBeforeCursor()
+	inputs := strings.Split(input, " ")
+
+	flags := flag.NewFlagSet("pp", flag.PanicOnError)
+	flags.Bool("f", false, "open w/ firefox")
+	flags.Bool("s", false, "open w/ safari")
+	flags.Parse(inputs[1:])
 
 	soisDir, _ := soi.SoisDirPath()
-
-	path := filepath.Join(soisDir, d.GetWordBeforeCursor())
-	return suggestByPath(soisDir, path, input, true)
+	return suggestByPath(soisDir, filepath.Join(soisDir, flags.Arg(0)), d.GetWordBeforeCursor(), true)
 }
 
 func suggestByPath(soisDir, path, input string, showDir bool) []prompt.Suggest {
