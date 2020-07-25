@@ -46,7 +46,7 @@ func Executor(in string) {
 			fmt.Println(err)
 			return
 		}
-	case "open", "o", "list", "l", "pp":
+	case "open", "o", "list", "l", "dig", "d":
 		err := open(in)
 		if err != nil {
 			fmt.Println(err)
