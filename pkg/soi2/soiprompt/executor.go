@@ -141,14 +141,12 @@ func open(in string) error {
 	firefox := flags.Bool("f", false, "use firefox")
 	safari := flags.Bool("s", false, "use safari")
 	flags.Parse(strings.Split(in, " ")[1:])
-	fmt.Println(in)                              // TODO
-	fmt.Println(strings.Join(flags.Args(), "/")) // TODO
 
-	dir, err := soi.SoisDirPath()
+	soisDir, err := soi.SoisDirPath()
 	if err != nil {
 		return err
 	}
-	fullPath := dir + "/" + strings.Join(flags.Args(), "/") // open コマンド時にスペース区切りとなる対策
+	fullPath := filepath.Join(soisDir, filepath.Join(flags.Args()...))
 	b, err := ioutil.ReadFile(fullPath)
 	if err != nil {
 		return err
