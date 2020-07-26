@@ -115,6 +115,15 @@ func mv(in string) error {
 			return err
 		}
 	}
+
+	// 末尾JSONの付与
+	toIsDir, err := fileio.IsDir(to)
+	if err != nil {
+		return err
+	}
+	if !toIsDir && strings.HasSuffix(to, ".json") {
+		to = to + ".json"
+	}
 	return exec.Command("mv", from, to).Start()
 }
 
