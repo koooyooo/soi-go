@@ -1,5 +1,5 @@
 #!/bin/sh
 
-cd $(dirname $0)
+cd $(dirname "$0") || exit
 
-go install ../cmd/soi.go
+go install ../cmd/soi2/soi2.go
