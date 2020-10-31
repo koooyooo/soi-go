@@ -1,4 +1,4 @@
-MAIN_MOD="cmd/soi2/soi2.go"
+MAIN_MOD="cmd/cli/main.go"
 EX_FILE="./soi2"
 
 .PHONY: run
