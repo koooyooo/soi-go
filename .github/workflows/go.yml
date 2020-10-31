@@ -31,7 +31,7 @@ jobs:
         fi
 
     - name: Build
-      run: go build -v cmd/cli/main.go
+      run: go build -v cmd/cli/soi.go
 
     - name: Test
       run: go test -v ./...

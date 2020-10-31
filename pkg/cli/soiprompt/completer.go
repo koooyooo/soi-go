@@ -42,6 +42,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 			{Text: "mv", Description: "move file to dir"},
 			{Text: "rm", Description: "remove file or dir"},
 			//{Text: "tags", Description: "lists up all tags"}, TODO implements as "list -t"
+			{Text: "help", Description: "(h)elp document"},
 			{Text: "quit", Description: "(q)uit soi"},
 		}
 		return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
@@ -209,7 +210,6 @@ func suggestListCmd(d prompt.Document) []prompt.Suggest {
 }
 
 func suggestHelpCmd(d prompt.Document) []prompt.Suggest {
-
 	return EmptySuggests
 }
 

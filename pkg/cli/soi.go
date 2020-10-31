@@ -7,3 +7,7 @@ type SoiData struct {
 	Tags    []string `json:"tags"`
 	Created string   `json:"created"`
 }
+
+type Client struct {
+	WorkingDir string
+}
