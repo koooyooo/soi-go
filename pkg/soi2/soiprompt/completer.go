@@ -27,8 +27,6 @@ func Completer(d prompt.Document) []prompt.Suggest {
 		return suggestMvCmd(d)
 	case hasPrefixes(text, "rm "):
 		return suggestRmCmd(d)
-	case hasPrefixes(text, "open ", "o "):
-		return suggestOpenCmd(d)
 	case hasPrefixes(text, "dig ", "d "):
 		return suggestDigCmd(d)
 	case hasPrefixes(text, "list ", "l "):
@@ -36,10 +34,9 @@ func Completer(d prompt.Document) []prompt.Suggest {
 	default:
 		s := []prompt.Suggest{
 			{Text: "add", Description: "(a)dd url"},
-			{Text: "open", Description: "(o)pen urls (complement path by args)"},
-			{Text: "dig", Description: "(d)ig urls (complement path by -> key)"},
-			{Text: "list", Description: "(l)ist urls and filter them"},
-			{Text: "tag", Description: "add tags (not implemented yet)"},
+			{Text: "dig", Description: "(d)ig urls"},
+			{Text: "list", Description: "(l)ist and filter urls"},
+			{Text: "tag", Description: "add tags (TODO)"},
 			{Text: "mv", Description: "move file to dir"},
 			{Text: "rm", Description: "remove file or dir"},
 			//{Text: "tags", Description: "lists up all tags"}, TODO implements as "list -t"
@@ -138,34 +135,6 @@ func suggestRmCmd(d prompt.Document) []prompt.Suggest {
 	sort.Strings(fileDirs)
 
 	return filePathsToSuggests(dir, fileDirs, word)
-}
-
-// suggestOpenCmd はopenコマンド系のSuggestを提示します
-func suggestOpenCmd(d prompt.Document) []prompt.Suggest {
-	// option探索
-	if isOptionWord(d) {
-		return browserOptSuggests
-	}
-	input := d.TextBeforeCursor()
-	inputs := strings.Split(input, " ")
-
-	if len(inputs) < 2 {
-		return EmptySuggests
-	}
-	// 利用しないフラグもパースの関係上宣言を行う
-	flags := flag.NewFlagSet("open", flag.PanicOnError)
-	flags.Bool("f", false, "open w/ firefox")
-	flags.Bool("s", false, "open w/ safari")
-	if err := flags.Parse(inputs[1:]); err != nil {
-		log.Fatal(err)
-	}
-
-	path := filepath.Join(flags.Args()...)
-
-	// 相対パスを元にファイルを抽出
-	soisDir, _ := fileio.SoisDirPath()
-	return suggestByPath(soisDir, filepath.Join(soisDir, path), d.GetWordBeforeCursor(), false)
-
 }
 
 // suggestDigCmd はppコマンド系のSuggestを提示します
