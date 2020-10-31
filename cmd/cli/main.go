@@ -2,7 +2,7 @@ package main
 
 import (
 	prompt "github.com/c-bata/go-prompt"
-	"github.com/koooyooo/soi-go/pkg/soi2/soiprompt"
+	"github.com/koooyooo/soi-go/pkg/cli/soiprompt"
 )
 
 func main() {

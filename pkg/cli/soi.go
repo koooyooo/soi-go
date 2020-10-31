@@ -1,4 +1,4 @@
-package soi2
+package cli
 
 type SoiData struct {
 	Name    string   `json:"name"`

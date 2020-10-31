@@ -31,6 +31,8 @@ func Completer(d prompt.Document) []prompt.Suggest {
 		return suggestDigCmd(d)
 	case hasPrefixes(text, "list ", "l "):
 		return suggestListCmd(d)
+	case hasPrefixes(text, "help ", "h "):
+		return suggestHelpCmd(d)
 	default:
 		s := []prompt.Suggest{
 			{Text: "add", Description: "(a)dd url"},
@@ -204,6 +206,11 @@ func suggestListCmd(d prompt.Document) []prompt.Suggest {
 		})
 	}
 	return prompt.FilterContains(s, d.GetWordBeforeCursor(), true)
+}
+
+func suggestHelpCmd(d prompt.Document) []prompt.Suggest {
+
+	return EmptySuggests
 }
 
 func isOptionWord(d prompt.Document) bool {

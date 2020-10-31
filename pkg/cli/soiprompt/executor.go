@@ -13,7 +13,7 @@ import (
 
 	"github.com/koooyooo/soi-go/pkg/fileio"
 
-	"github.com/koooyooo/soi-go/pkg/soi2"
+	"github.com/koooyooo/soi-go/pkg/cli"
 )
 
 func Executor(in string) {
@@ -77,7 +77,7 @@ func add(in string) error {
 		name = title
 	}
 
-	s := soi2.SoiData{
+	s := cli.SoiData{
 		Name:    name,
 		URI:     uri,
 		Tags:    []string{},
@@ -170,7 +170,7 @@ func open(in string) error {
 	if err != nil {
 		return err
 	}
-	var soi soi2.SoiData
+	var soi cli.SoiData
 	err = json.Unmarshal(b, &soi)
 	if err != nil {
 		return err
@@ -185,7 +185,7 @@ func open(in string) error {
 }
 
 func quit(in string) error {
-	fmt.Println("bye!!")
+	fmt.Println("bye!")
 	os.Exit(0)
 	return nil
 }
