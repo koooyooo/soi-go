@@ -155,7 +155,9 @@ func suggestOpenCmd(d prompt.Document) []prompt.Suggest {
 	flags := flag.NewFlagSet("open", flag.PanicOnError)
 	flags.Bool("f", false, "open w/ firefox")
 	flags.Bool("s", false, "open w/ safari")
-	flags.Parse(inputs[1:])
+	if err := flags.Parse(inputs[1:]); err != nil {
+		log.Fatal(err)
+	}
 
 	path := filepath.Join(flags.Args()...)
 
@@ -177,7 +179,9 @@ func suggestDigCmd(d prompt.Document) []prompt.Suggest {
 	flags := flag.NewFlagSet("dig", flag.PanicOnError)
 	flags.Bool("f", false, "open w/ firefox")
 	flags.Bool("s", false, "open w/ safari")
-	flags.Parse(inputs[1:])
+	if err := flags.Parse(inputs[1:]); err != nil {
+		log.Fatal(err)
+	}
 
 	soisDir, _ := fileio.SoisDirPath()
 	return suggestByPath(soisDir, filepath.Join(soisDir, flags.Arg(0)), d.GetWordBeforeCursor(), true)
