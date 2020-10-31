@@ -47,7 +47,6 @@ func Completer(d prompt.Document) []prompt.Suggest {
 		}
 		return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
 	}
-	return EmptySuggests
 }
 
 // suggestAddCmd はaddコマンド系のSuggestを提示します
@@ -70,6 +69,9 @@ func suggestAddCmd(d prompt.Document) []prompt.Suggest {
 			log.Fatal(err)
 		}
 		dirs, err := listDirsRecursively(soiRoot, false)
+		if err != nil {
+			log.Fatal(err)
+		}
 		for _, d := range dirs {
 			suggests = append(suggests, prompt.Suggest{
 				Text:        strings.TrimPrefix(d, soiRoot+"/"),
@@ -133,8 +135,7 @@ func suggestRmCmd(d prompt.Document) []prompt.Suggest {
 		log.Fatal(err)
 	}
 	fileDirs = append(fileDirs, dirs...)
-
-	sort.Sort(sort.StringSlice(fileDirs))
+	sort.Strings(fileDirs)
 
 	return filePathsToSuggests(dir, fileDirs, word)
 }
