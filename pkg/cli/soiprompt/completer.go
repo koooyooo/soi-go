@@ -210,7 +210,6 @@ func suggestListCmd(d prompt.Document) []prompt.Suggest {
 }
 
 func suggestHelpCmd(d prompt.Document) []prompt.Suggest {
-
 	return EmptySuggests
 }
 

@@ -1,4 +1,5 @@
 MAIN_MOD="cmd/cli/soi.go"
+SERV_MOD="cmd/srv/soi-server.go"
 EX_FILE="./soi"
 
 .PHONY: run
@@ -16,3 +17,7 @@ install:
 .PHONY: clean
 clean:
 	@ rm "$(EX_FILE)"
+
+.PHONY: run-server
+run-server:
+	@ go run "$(SERV_MOD)"

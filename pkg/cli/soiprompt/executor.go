@@ -21,33 +21,33 @@ func Executor(in string) {
 	in = strings.Trim(in, " ")
 	cmd := strings.Split(in, " ")[0]
 	switch cmd {
-	case "quit", "q", "exit":
-		err := quit(in)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
 	case "add", "a":
-		err := add(in)
-		if err != nil {
+		if err := add(in); err != nil {
 			fmt.Println(err)
 			return
 		}
 	case "mv":
-		err := mv(in)
-		if err != nil {
+		if err := mv(in); err != nil {
 			fmt.Println(err)
 			return
 		}
 	case "rm":
-		err := rm(in)
-		if err != nil {
+		if err := rm(in); err != nil {
 			fmt.Println(err)
 			return
 		}
 	case "open", "o", "list", "l", "dig", "d":
-		err := open(in)
-		if err != nil {
+		if err := open(in); err != nil {
+			fmt.Println(err)
+			return
+		}
+	case "help", "h":
+		if err := help(in); err != nil {
+			fmt.Println(err)
+			return
+		}
+	case "quit", "q", "exit":
+		if err := quit(in); err != nil {
 			fmt.Println(err)
 			return
 		}
@@ -182,6 +182,42 @@ func open(in string) error {
 		return exec.Command("open", "-a", "Safari", soi.URI).Start()
 	}
 	return exec.Command("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", soi.URI).Start()
+}
+
+func help(in string) error {
+	fmt.Println(`
+General:
+      Soi is a url management CLI system. which could add url, find url and rename url.
+
+Commands:
+
+  [add]: 
+      Desc:  add url to soi
+      Usage: add (URL)
+      Option:
+        -n: logical name of the url    (default: <title> of the URL)
+        -d: directory to store the url (default: "new")
+
+  [dig]: 
+      Desc:  dig url directory with [Tab] key completion and [→] key listing next suggestions
+      Usage: dig (URL Completion with [Tab] and [→] key listing next suggestions)
+
+  [list]:
+      Desc:  list all urls with filtering
+      Usage: list (free words)
+		
+  [tag]:
+      Desc:  not implemented now
+
+  [mv]:
+      Desc:  move file to dir 
+      Usage: mv (current path) to (dir)
+
+  [quit]:
+      Desc:  quit soi> and go back to console. Ctrl+D works too.
+      Usage: quit
+`)
+	return nil
 }
 
 func quit(in string) error {
