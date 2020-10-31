@@ -215,8 +215,7 @@ Commands:
 
   [quit]:
       Desc:  quit soi> and go back to console. Ctrl+D works too.
-      Usage: quit
-`)
+      Usage: quit`)
 	return nil
 }
 
