@@ -104,7 +104,9 @@ func mv(in string) error {
 		return err
 	}
 	flags := flag.NewFlagSet("mv", flag.PanicOnError)
-	flags.Parse(strings.Split(in, " ")[1:])
+	if err = flags.Parse(strings.Split(in, " ")[1:]); err != nil {
+		return err
+	}
 	from := filepath.Join(baseDir, flags.Arg(0))
 	to := filepath.Join(baseDir, flags.Arg(1))
 
@@ -138,7 +140,9 @@ func rm(in string) error {
 		return err
 	}
 	flags := flag.NewFlagSet("rm", flag.PanicOnError)
-	flags.Parse(strings.Split(in, " ")[1:])
+	if err = flags.Parse(strings.Split(in, " ")[1:]); err != nil {
+		return err
+	}
 
 	target := filepath.Join(baseDir, flags.Arg(0))
 	if !fileio.FileExists(target) {
@@ -153,7 +157,9 @@ func open(in string) error {
 	//chrome := flags.Bool("c", false, "use chrome")
 	firefox := flags.Bool("f", false, "use firefox")
 	safari := flags.Bool("s", false, "use safari")
-	flags.Parse(strings.Split(in, " ")[1:])
+	if err := flags.Parse(strings.Split(in, " ")[1:]); err != nil {
+		return err
+	}
 
 	soisDir, err := fileio.SoisDirPath()
 	if err != nil {
