@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// Normal Test for parseTitle
 func TestParseTitleByURL(t *testing.T) {
 	var buff bytes.Buffer
 	buff.WriteString(`<html><head><meta charSet="utf-8"/><title>MyTitle</title></head><body></body></html>`)
