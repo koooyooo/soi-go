@@ -42,7 +42,12 @@ func showHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusOK)
-	w.Write(b)
+	_, err = w.Write(b)
+	if err != nil {
+		log.Printf("error @show's writting: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 }
 
 func storeHandler(w http.ResponseWriter, r *http.Request) {
