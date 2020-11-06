@@ -41,8 +41,7 @@ func (f FileRepository) StoreAll(ctx context.Context, sb *cli.SoiBucket) error {
 	if err != nil {
 		return err
 	}
-	ioutil.WriteFile(path.Join(f.BasePath, "repo.json"), b, 0600)
-	return nil
+	return ioutil.WriteFile(path.Join(f.BasePath, "repo.json"), b, 0600)
 }
 
 func (f FileRepository) LoadAll(ctx context.Context) (*cli.SoiBucket, error) {
