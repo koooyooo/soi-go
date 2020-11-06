@@ -8,6 +8,16 @@ type SoiData struct {
 	Created string   `json:"created"`
 }
 
+type SoiWithPath struct {
+	*SoiData
+	Path string `json:"path"`
+}
+
+type SoiBucket struct {
+	Sois []*SoiWithPath `json:"sois"`
+}
+
+// TODO implement later
 type Client struct {
 	WorkingDir string
 }
