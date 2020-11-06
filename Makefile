@@ -1,26 +1,31 @@
-MAIN_MOD="cmd/cli/soi.go"
+CLI_MOD="cmd/cli/soi.go"
 SERV_MOD="cmd/srv/soi-server.go"
-EX_FILE="./soi"
+CLI_EX="./soi"
+SERV_EX="./soi-server"
 
 .PHONY: run
 run:
-	@ go run "$(MAIN_MOD)"
+	@ go run "$(CLI_MOD)"
 
 .PHONY: build
 build:
-	@ go build -o "$(EX_FILE)" "$(MAIN_MOD)"
+	@ go build -o "$(CLI_EX)" "$(CLI_MOD)"
 
 .PHONY: install
 install:
-	@ go install "$(MAIN_MOD)"
+	@ go install "$(CLI_MOD)"
 
 .PHONY: clean
 clean:
-	@ rm "$(EX_FILE)"
+	@ rm "$(CLI_EX)"
 
 .PHONY: run-server
 run-server:
 	@ go run "$(SERV_MOD)"
+
+.PHONY: build-server
+build-server:
+	@ go build -o "$(SERV_EX)" "$(SERV_MOD)"
 
 .PHONY: send-server
 send-server:
