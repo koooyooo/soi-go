@@ -9,7 +9,7 @@ type SoiData struct {
 }
 
 type SoiWithPath struct {
-	SoiData
+	*SoiData
 	Path string `json:"path"`
 }
 

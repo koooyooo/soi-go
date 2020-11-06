@@ -21,3 +21,7 @@ clean:
 .PHONY: run-server
 run-server:
 	@ go run "$(SERV_MOD)"
+
+.PHONY: send-server
+send-server:
+	@ curl -X POST -d '{"name":"Name","title":"Title","uri":"URI","tags":["tag1","tag2"],"created":"created","path":"/path"}' http://localhost:8080/store
