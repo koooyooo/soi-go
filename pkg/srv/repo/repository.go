@@ -13,9 +13,9 @@ import (
 
 type (
 	Repository interface {
-		Store(context.Context, *cli.SoiWithPath) error
-		StoreAll(context.Context, *cli.SoiBucket) error
-		LoadAll(context.Context) (*cli.SoiBucket, error)
+		Store(context.Context, *cli.SoiVirtual) error
+		StoreAll(context.Context, *cli.SoiVirtualBucket) error
+		LoadAll(context.Context) (*cli.SoiVirtualBucket, error)
 	}
 
 	FileRepository struct {
@@ -29,7 +29,7 @@ func NewRepository() Repository {
 	}
 }
 
-func (f FileRepository) Store(ctx context.Context, s *cli.SoiWithPath) error {
+func (f FileRepository) Store(ctx context.Context, s *cli.SoiVirtual) error {
 	sb, err := f.LoadAll(ctx)
 	if err != nil {
 		return nil
@@ -38,7 +38,7 @@ func (f FileRepository) Store(ctx context.Context, s *cli.SoiWithPath) error {
 	return f.StoreAll(ctx, sb)
 }
 
-func (f FileRepository) StoreAll(ctx context.Context, sb *cli.SoiBucket) error {
+func (f FileRepository) StoreAll(ctx context.Context, sb *cli.SoiVirtualBucket) error {
 	b, err := json.MarshalIndent(sb, "", "  ")
 	if err != nil {
 		return err
@@ -46,16 +46,16 @@ func (f FileRepository) StoreAll(ctx context.Context, sb *cli.SoiBucket) error {
 	return ioutil.WriteFile(path.Join(f.BasePath, "repo.json"), b, 0600)
 }
 
-func (f FileRepository) LoadAll(ctx context.Context) (*cli.SoiBucket, error) {
+func (f FileRepository) LoadAll(ctx context.Context) (*cli.SoiVirtualBucket, error) {
 	path := path.Join(f.BasePath, "repo.json")
 	if !fileio.FileExists(path) {
-		return &cli.SoiBucket{}, nil
+		return &cli.SoiVirtualBucket{}, nil
 	}
 	b, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
-	var soiBucket cli.SoiBucket
+	var soiBucket cli.SoiVirtualBucket
 	if err := json.Unmarshal(b, &soiBucket); err != nil {
 		return nil, err
 	}

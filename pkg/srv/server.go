@@ -58,7 +58,7 @@ func storeHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 	fmt.Println(string(b)) // TODO
-	var s cli.SoiWithPath
+	var s cli.SoiVirtual
 	if err = json.Unmarshal(b, &s); err != nil {
 		log.Printf("error @store's unmarshal: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
