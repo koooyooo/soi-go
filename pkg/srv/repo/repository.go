@@ -59,10 +59,7 @@ func (f FileRepository) StoreAll(ctx context.Context, sb *cli.SoiVirtualBucket) 
 		buff.WriteString("\n")
 	}
 	buff.WriteString("]}\n")
-	//b, err := json.MarshalIndent(sb, "", "  ")
-	//if err != nil {
-	//	return err
-	//}
+
 	userID, err := getUserID(ctx)
 	if err != nil {
 		return err
