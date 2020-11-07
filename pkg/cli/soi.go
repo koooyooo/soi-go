@@ -8,13 +8,13 @@ type SoiData struct {
 	Created string   `json:"created"`
 }
 
-type SoiWithPath struct {
+type SoiVirtual struct {
 	*SoiData
 	Path string `json:"path"`
 }
 
-type SoiBucket struct {
-	Sois []*SoiWithPath `json:"sois"`
+type SoiVirtualBucket struct {
+	Sois []*SoiVirtual `json:"sois"`
 }
 
 // TODO implement later

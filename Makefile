@@ -23,10 +23,15 @@ clean:
 run-server:
 	@ go run "$(SERV_MOD)"
 
+.PHONY: send-request
+send-request:
+	@ curl -X POST -d '{"name":"Name","title":"Title","uri":"URI","tags":["tag1","tag2"],"created":"created","path":"/path"}' http://localhost:8080/store
+
 .PHONY: build-server
 build-server:
 	@ go build -o "$(SERV_EX)" "$(SERV_MOD)"
 
-.PHONY: send-server
-send-server:
-	@ curl -X POST -d '{"name":"Name","title":"Title","uri":"URI","tags":["tag1","tag2"],"created":"created","path":"/path"}' http://localhost:8080/store
+.PHONY: push-image
+push-image:
+	@ docker build -t gcr.io/soi-cloud/soi-server:latest . ;\
+	  docker push gcr.io/soi-cloud/soi-server:latest
