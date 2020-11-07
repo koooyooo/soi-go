@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -44,10 +45,24 @@ func (f FileRepository) Store(ctx context.Context, s *cli.SoiVirtual) error {
 }
 
 func (f FileRepository) StoreAll(ctx context.Context, sb *cli.SoiVirtualBucket) error {
-	b, err := json.MarshalIndent(sb, "", "  ")
-	if err != nil {
-		return err
+	var buff bytes.Buffer
+	buff.WriteString("{\"sois\":[\n")
+	for i, sv := range sb.Sois {
+		svb, err := json.Marshal(sv)
+		if err != nil {
+			return err
+		}
+		buff.WriteString("  " + string(svb))
+		if i != len(sb.Sois)-1 {
+			buff.WriteString(",")
+		}
+		buff.WriteString("\n")
 	}
+	buff.WriteString("]}\n")
+	//b, err := json.MarshalIndent(sb, "", "  ")
+	//if err != nil {
+	//	return err
+	//}
 	userID, err := getUserID(ctx)
 	if err != nil {
 		return err
@@ -56,7 +71,7 @@ func (f FileRepository) StoreAll(ctx context.Context, sb *cli.SoiVirtualBucket) 
 	if err = os.MkdirAll(p, 0700); err != nil {
 		return err
 	}
-	return ioutil.WriteFile(path.Join(p, "sois.json"), b, 0600)
+	return ioutil.WriteFile(path.Join(p, "sois.json"), buff.Bytes(), 0600)
 }
 
 func (f FileRepository) LoadAll(ctx context.Context) (*cli.SoiVirtualBucket, error) {
