@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"path"
 
+	"github.com/koooyooo/soi-go/pkg/fileio"
+
 	"github.com/koooyooo/soi-go/pkg/cli"
 )
 
@@ -45,7 +47,11 @@ func (f FileRepository) StoreAll(ctx context.Context, sb *cli.SoiBucket) error {
 }
 
 func (f FileRepository) LoadAll(ctx context.Context) (*cli.SoiBucket, error) {
-	b, err := ioutil.ReadFile(path.Join(f.BasePath, "repo.json"))
+	path := path.Join(f.BasePath, "repo.json")
+	if !fileio.FileExists(path) {
+		return &cli.SoiBucket{}, nil
+	}
+	b, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}

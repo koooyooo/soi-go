@@ -1,6 +1,10 @@
 FROM golang:alpine AS build
 WORKDIR /go/src/github.com/koooyooo/soi-go
 COPY . .
+ENV GO111MODULE=on
+RUN apk update && apk add git
+RUN go mod download
+RUN go mod verify
 RUN GOOS=linux go build -o soi-server cmd/srv/soi-server.go
 
 
