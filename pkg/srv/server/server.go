@@ -1,4 +1,4 @@
-package srv
+package server
 
 import (
 	"context"
@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	"github.com/koooyooo/soi-go/pkg/srv"
 
 	"github.com/gin-gonic/gin"
 
@@ -66,7 +68,7 @@ func storeHandlerG(c *gin.Context) {
 
 func createContext(ctx context.Context, gc *gin.Context) context.Context {
 	if userID := gc.Param("user_id"); userID != "" {
-		ctx = context.WithValue(ctx, "user_id", userID)
+		ctx = context.WithValue(ctx, srv.CtxKeyUserID, userID)
 	}
 	// TODO 認証情報の埋め込み
 	return ctx

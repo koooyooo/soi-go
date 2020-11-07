@@ -9,6 +9,8 @@ import (
 	"path"
 	"strings"
 
+	"github.com/koooyooo/soi-go/pkg/srv"
+
 	"github.com/koooyooo/soi-go/pkg/fileio"
 
 	"github.com/koooyooo/soi-go/pkg/cli"
@@ -78,7 +80,7 @@ func (f FileRepository) LoadAll(ctx context.Context) (*cli.SoiVirtualBucket, err
 }
 
 func getUserID(ctx context.Context) (string, error) {
-	userID, ok := ctx.Value("user_id").(string)
+	userID, ok := ctx.Value(srv.CtxKeyUserID).(string)
 	if !ok {
 		return "", fmt.Errorf("no user found: %v", userID)
 	}
