@@ -3,8 +3,13 @@ package repo
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
+	"os"
 	"path"
+	"strings"
+
+	"github.com/koooyooo/soi-go/pkg/srv"
 
 	"github.com/koooyooo/soi-go/pkg/fileio"
 
@@ -25,7 +30,7 @@ type (
 
 func NewRepository() Repository {
 	return FileRepository{
-		BasePath: ".",
+		BasePath: "./repo/",
 	}
 }
 
@@ -43,11 +48,23 @@ func (f FileRepository) StoreAll(ctx context.Context, sb *cli.SoiVirtualBucket) 
 	if err != nil {
 		return err
 	}
-	return ioutil.WriteFile(path.Join(f.BasePath, "repo.json"), b, 0600)
+	userID, err := getUserID(ctx)
+	if err != nil {
+		return err
+	}
+	p := path.Join(f.BasePath, userID)
+	if err = os.MkdirAll(p, 0700); err != nil {
+		return err
+	}
+	return ioutil.WriteFile(path.Join(p, "sois.json"), b, 0600)
 }
 
 func (f FileRepository) LoadAll(ctx context.Context) (*cli.SoiVirtualBucket, error) {
-	path := path.Join(f.BasePath, "repo.json")
+	userID, err := getUserID(ctx)
+	if err != nil {
+		return nil, err
+	}
+	path := path.Join(f.BasePath, userID, "sois.json")
 	if !fileio.FileExists(path) {
 		return &cli.SoiVirtualBucket{}, nil
 	}
@@ -60,4 +77,15 @@ func (f FileRepository) LoadAll(ctx context.Context) (*cli.SoiVirtualBucket, err
 		return nil, err
 	}
 	return &soiBucket, nil
+}
+
+func getUserID(ctx context.Context) (string, error) {
+	userID, ok := ctx.Value(srv.CtxKeyUserID).(string)
+	if !ok {
+		return "", fmt.Errorf("no user found: %v", userID)
+	}
+	if strings.Contains(userID, "..") {
+		return "", fmt.Errorf("invalid user id: %v", userID)
+	}
+	return userID, nil
 }
