@@ -3,10 +3,11 @@ package srv
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 
 	"github.com/koooyooo/soi-go/pkg/srv/repo"
 
@@ -14,58 +15,49 @@ import (
 )
 
 func Run() {
-	m := http.NewServeMux()
-	m.HandleFunc("/", handler)
-	m.HandleFunc("/show", showHandler)
-	m.HandleFunc("/store", storeHandler)
-	if err := http.ListenAndServe(":8080", m); err != nil {
-		log.Fatal(err)
+	r := gin.Default()
+	r.GET("/", root)
+	r.GET("/show", showHandlerG)
+	r.POST("/store", storeHandlerG)
+
+	if err := r.Run(":8080"); err != nil {
+		log.Fatalf("run server fails: %v", err)
 	}
 }
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello, World")
+func root(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"Hello": "World",
+	})
 }
 
-func showHandler(w http.ResponseWriter, r *http.Request) {
+func showHandlerG(c *gin.Context) {
 	repo := repo.NewRepository()
 	sb, err := repo.LoadAll(context.Background())
 	if err != nil {
-		log.Printf("error @show's loading : %v", err)
-		w.WriteHeader(http.StatusInternalServerError)
+		_ = c.AbortWithError(500, err)
 		return
 	}
-	b, err := json.Marshal(sb)
-	if err != nil {
-		log.Printf("error @show's marshaling: %v", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	w.WriteHeader(http.StatusOK)
-	_, err = w.Write(b)
-	if err != nil {
-		log.Printf("error @show's writting: %v", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+	c.JSON(200, sb)
 }
 
-func storeHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello, World!!")
-	b, err := ioutil.ReadAll(r.Body)
+func storeHandlerG(c *gin.Context) {
+	b, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
-		log.Printf("error @store's read-body: %v", err)
-		w.WriteHeader(http.StatusInternalServerError)
+		_ = c.AbortWithError(500, err)
+		return
 	}
-	fmt.Println(string(b)) // TODO
 	var s cli.SoiVirtual
 	if err = json.Unmarshal(b, &s); err != nil {
-		log.Printf("error @store's unmarshal: %v", err)
-		w.WriteHeader(http.StatusInternalServerError)
+		_ = c.AbortWithError(500, err)
+		return
 	}
 	repo := repo.NewRepository()
 	if err = repo.Store(context.Background(), &s); err != nil {
-		log.Printf("error @store's storing: %v", err)
-		w.WriteHeader(http.StatusInternalServerError)
+		_ = c.AbortWithError(500, err)
+		return
 	}
+	c.JSON(http.StatusOK, gin.H{
+		"Store": "OK",
+	})
 }
