@@ -33,5 +33,6 @@ build-server:
 
 .PHONY: push-image
 push-image:
-	@ docker build -t gcr.io/soi-cloud/soi-server:latest . ;\
+	@ cat "${HOME}/.gcp/soi-cloud-708d1b5c40f7.json" | docker login -u _json_key --password-stdin https://gcr.io; \
+      docker build -t gcr.io/soi-cloud/soi-server:latest . ;\
 	  docker push gcr.io/soi-cloud/soi-server:latest
