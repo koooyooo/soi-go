@@ -3,8 +3,8 @@ package soi
 import "time"
 
 var (
-	UsageTypeUpdated = UsageType("updated")
-	UsageTypeUsed    = UsageType("used")
+	UsageTypeUpdate = UsageType("update")
+	UsageTypeOpen   = UsageType("open")
 )
 
 type (
@@ -13,7 +13,7 @@ type (
 		Title     string     `json:"title"`
 		URI       string     `json:"uri"`
 		Tags      []string   `json:"tags"`
-		Created   time.Time  `json:"created_at"`
+		CreatedAt time.Time  `json:"created_at"`
 		UsageLogs []UsageLog `json:"usage_log"`
 	}
 

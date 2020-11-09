@@ -78,10 +78,10 @@ func add(in string) error {
 	}
 
 	s := soi.SoiData{
-		Name:    name,
-		URI:     uri,
-		Tags:    []string{},
-		Created: time.Now(), // .Format("2006-01-02T15:04:05Z07:00"),
+		Name:      name,
+		URI:       uri,
+		Tags:      []string{},
+		CreatedAt: time.Now(), // .Format("2006-01-02T15:04:05Z07:00"),
 	}
 	b, err := json.Marshal(&s)
 	if err != nil {
@@ -166,22 +166,37 @@ func open(in string) error {
 		return err
 	}
 	fullPath := filepath.Join(soisDir, filepath.Join(flags.Args()...))
+
+	// ファイルを読み込み
 	b, err := ioutil.ReadFile(fullPath)
 	if err != nil {
 		return err
 	}
-	var soi soi.SoiData
-	err = json.Unmarshal(b, &soi)
+	var s soi.SoiData
+	err = json.Unmarshal(b, &s)
 	if err != nil {
 		return err
 	}
+	// 利用ログを追加して再登録
+	s.UsageLogs = append(s.UsageLogs, soi.UsageLog{
+		Type:   soi.UsageTypeOpen,
+		UsedAt: time.Now(),
+	})
+	ub, err := json.Marshal(s)
+	if err != nil {
+		return err
+	}
+	if err := ioutil.WriteFile(fullPath, ub, 0600); err != nil {
+		return err
+	}
+
 	if *firefox {
-		return exec.Command("open", "-a", "Firefox", soi.URI).Start()
+		return exec.Command("open", "-a", "Firefox", s.URI).Start()
 	}
 	if *safari {
-		return exec.Command("open", "-a", "Safari", soi.URI).Start()
+		return exec.Command("open", "-a", "Safari", s.URI).Start()
 	}
-	return exec.Command("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", soi.URI).Start()
+	return exec.Command("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", s.URI).Start()
 }
 
 func help(in string) error {
