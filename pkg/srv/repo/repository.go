@@ -10,18 +10,18 @@ import (
 	"path"
 	"strings"
 
+	"github.com/koooyooo/soi-go/pkg/soi"
+
 	"github.com/koooyooo/soi-go/pkg/srv"
 
 	"github.com/koooyooo/soi-go/pkg/fileio"
-
-	"github.com/koooyooo/soi-go/pkg/cli"
 )
 
 type (
 	Repository interface {
-		Store(context.Context, *cli.SoiVirtual) error
-		StoreAll(context.Context, *cli.SoiVirtualBucket) error
-		LoadAll(context.Context) (*cli.SoiVirtualBucket, error)
+		Store(context.Context, *soi.SoiVirtual) error
+		StoreAll(context.Context, *soi.SoiVirtualBucket) error
+		LoadAll(context.Context) (*soi.SoiVirtualBucket, error)
 	}
 
 	FileRepository struct {
@@ -35,7 +35,7 @@ func NewRepository() Repository {
 	}
 }
 
-func (f FileRepository) Store(ctx context.Context, s *cli.SoiVirtual) error {
+func (f FileRepository) Store(ctx context.Context, s *soi.SoiVirtual) error {
 	sb, err := f.LoadAll(ctx)
 	if err != nil {
 		return nil
@@ -44,7 +44,7 @@ func (f FileRepository) Store(ctx context.Context, s *cli.SoiVirtual) error {
 	return f.StoreAll(ctx, sb)
 }
 
-func (f FileRepository) StoreAll(ctx context.Context, sb *cli.SoiVirtualBucket) error {
+func (f FileRepository) StoreAll(ctx context.Context, sb *soi.SoiVirtualBucket) error {
 	var buff bytes.Buffer
 	buff.WriteString("{\"sois\":[\n")
 	for i, sv := range sb.Sois {
@@ -71,20 +71,20 @@ func (f FileRepository) StoreAll(ctx context.Context, sb *cli.SoiVirtualBucket) 
 	return ioutil.WriteFile(path.Join(p, "sois.json"), buff.Bytes(), 0600)
 }
 
-func (f FileRepository) LoadAll(ctx context.Context) (*cli.SoiVirtualBucket, error) {
+func (f FileRepository) LoadAll(ctx context.Context) (*soi.SoiVirtualBucket, error) {
 	userID, err := getUserID(ctx)
 	if err != nil {
 		return nil, err
 	}
 	path := path.Join(f.BasePath, userID, "sois.json")
 	if !fileio.FileExists(path) {
-		return &cli.SoiVirtualBucket{}, nil
+		return &soi.SoiVirtualBucket{}, nil
 	}
 	b, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
-	var soiBucket cli.SoiVirtualBucket
+	var soiBucket soi.SoiVirtualBucket
 	if err := json.Unmarshal(b, &soiBucket); err != nil {
 		return nil, err
 	}

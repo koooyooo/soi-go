@@ -1,6 +1,6 @@
 module github.com/koooyooo/soi-go
 
-go 1.14
+go 1.15
 
 require (
 	github.com/c-bata/go-prompt v0.2.3
@@ -20,7 +20,6 @@ require (
 	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897 // indirect
 	golang.org/x/net v0.0.0-20200707034311-ab3426394381
 	golang.org/x/sys v0.0.0-20201107080550-4d91cf3a1aaf // indirect
-	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543
 	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 )

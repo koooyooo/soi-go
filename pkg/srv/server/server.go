@@ -7,13 +7,13 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/koooyooo/soi-go/pkg/soi"
+
 	"github.com/koooyooo/soi-go/pkg/srv"
 
 	"github.com/gin-gonic/gin"
 
 	"github.com/koooyooo/soi-go/pkg/srv/repo"
-
-	"github.com/koooyooo/soi-go/pkg/cli"
 )
 
 func Run() {
@@ -51,7 +51,7 @@ func storeHandlerG(c *gin.Context) {
 		_ = c.AbortWithError(500, err)
 		return
 	}
-	var s cli.SoiVirtual
+	var s soi.SoiVirtual
 	if err = json.Unmarshal(b, &s); err != nil {
 		_ = c.AbortWithError(500, err)
 		return
