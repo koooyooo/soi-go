@@ -11,9 +11,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/koooyooo/soi-go/pkg/fileio"
+	"github.com/koooyooo/soi-go/pkg/soi"
 
-	"github.com/koooyooo/soi-go/pkg/cli"
+	"github.com/koooyooo/soi-go/pkg/fileio"
 )
 
 func Executor(in string) {
@@ -77,7 +77,7 @@ func add(in string) error {
 		name = title
 	}
 
-	s := cli.SoiData{
+	s := soi.SoiData{
 		Name:    name,
 		URI:     uri,
 		Tags:    []string{},
@@ -170,7 +170,7 @@ func open(in string) error {
 	if err != nil {
 		return err
 	}
-	var soi cli.SoiData
+	var soi soi.SoiData
 	err = json.Unmarshal(b, &soi)
 	if err != nil {
 		return err
