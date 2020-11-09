@@ -81,7 +81,7 @@ func add(in string) error {
 		Name:    name,
 		URI:     uri,
 		Tags:    []string{},
-		Created: time.Now().Format("2006-01-02T15:04:05Z07:00"),
+		Created: time.Now(), // .Format("2006-01-02T15:04:05Z07:00"),
 	}
 	b, err := json.Marshal(&s)
 	if err != nil {
