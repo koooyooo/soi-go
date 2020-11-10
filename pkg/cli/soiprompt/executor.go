@@ -46,6 +46,8 @@ func Executor(in string) {
 			fmt.Println(err)
 			return
 		}
+	case "pull":
+	case "push":
 	case "quit", "q", "exit":
 		if err := quit(in); err != nil {
 			fmt.Println(err)

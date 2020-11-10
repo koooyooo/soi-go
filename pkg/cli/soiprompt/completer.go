@@ -42,6 +42,8 @@ func Completer(d prompt.Document) []prompt.Suggest {
 			{Text: "mv", Description: "move file to dir"},
 			{Text: "rm", Description: "remove file or dir"},
 			//{Text: "tags", Description: "lists up all tags"}, TODO implements as "list -t"
+			{Text: "pull", Description: "pull urls from repos"},
+			{Text: "push", Description: "push urls to repos"},
 			{Text: "help", Description: "(h)elp document"},
 			{Text: "quit", Description: "(q)uit soi"},
 		}
