@@ -21,7 +21,7 @@ func Run() {
 	r.GET("/api/v1/", root)
 	r.GET("/api/v1/:user_id/sois", showHandlerG)
 	r.POST("/api/v1/:user_id/sois", storeHandlerG)
-
+	r.POST("/api/v1/:user_id/sois:all", storeAllHandlerG)
 	if err := r.Run(":8080"); err != nil {
 		log.Fatalf("run server fails: %v", err)
 	}
@@ -63,6 +63,28 @@ func storeHandlerG(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"Store": "OK",
+	})
+}
+
+func storeAllHandlerG(c *gin.Context) {
+	ctx := createContext(context.Background(), c)
+	b, err := ioutil.ReadAll(c.Request.Body)
+	if err != nil {
+		_ = c.AbortWithError(500, err)
+		return
+	}
+	var svb soi.SoiVirtualBucket
+	if err = json.Unmarshal(b, &svb); err != nil {
+		_ = c.AbortWithError(500, err)
+		return
+	}
+	repo := repo.NewRepository()
+	if err = repo.StoreAll(ctx, &svb); err != nil {
+		_ = c.AbortWithError(500, err)
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"StoreAll": "OK",
 	})
 }
 

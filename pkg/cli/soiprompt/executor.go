@@ -243,7 +243,7 @@ func push(in string) error {
 		return err
 	}
 	fmt.Println("sb:", sb)
-	// TODO 送信処理
+	// TODO 送信処理 storeALlを実装してそこを叩く
 	return nil
 }
 
