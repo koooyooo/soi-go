@@ -47,7 +47,15 @@ func Executor(in string) {
 			return
 		}
 	case "pull":
+		if err := pull(in); err != nil {
+			fmt.Println(err)
+			return
+		}
 	case "push":
+		if err := push(in); err != nil {
+			fmt.Println(err)
+			return
+		}
 	case "quit", "q", "exit":
 		if err := quit(in); err != nil {
 			fmt.Println(err)
@@ -199,6 +207,44 @@ func open(in string) error {
 		return exec.Command("open", "-a", "Safari", s.URI).Start()
 	}
 	return exec.Command("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", s.URI).Start()
+}
+
+func pull(in string) error {
+	return nil
+}
+
+func push(in string) error {
+	soisDir, err := fileio.SoisDirPath()
+	if err != nil {
+		return err
+	}
+	var sb soi.SoiVirtualBucket
+	if err := filepath.Walk(soisDir, func(path string, info os.FileInfo, err error) error {
+		if info.IsDir() {
+			return nil
+		}
+		if !strings.HasSuffix(path, ".json") {
+			return nil
+		}
+		b, err := ioutil.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		var s soi.SoiData
+		if err = json.Unmarshal(b, &s); err != nil {
+			return err
+		}
+		sb.Sois = append(sb.Sois, &soi.SoiVirtual{
+			SoiData: &s,
+			Path:    path,
+		})
+		return nil
+	}); err != nil {
+		return err
+	}
+	fmt.Println("sb:", sb)
+	// TODO 送信処理
+	return nil
 }
 
 func help(in string) error {

@@ -1,6 +1,9 @@
 package soi
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 var (
 	UsageTypeUpdate = UsageType("update")
@@ -38,3 +41,11 @@ type (
 		WorkingDir string
 	}
 )
+
+func (s SoiVirtualBucket) String() string {
+	b, err := json.Marshal(s)
+	if err != nil {
+		return err.Error()
+	}
+	return string(b)
+}
