@@ -270,7 +270,7 @@ func push(_ string) error {
 		return err
 	}
 	var sb soi.SoiVirtualBucket
-	if err := filepath.Walk(soisDir, func(path string, info os.FileInfo, err error) error {
+	if err := filepath.Walk(soisDir, func(path string, info os.FileInfo, _ error) error {
 		if info.IsDir() {
 			return nil
 		}
