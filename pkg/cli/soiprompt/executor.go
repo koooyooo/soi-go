@@ -19,7 +19,6 @@ import (
 )
 
 func Executor(in string) {
-	//fmt.Printf("EXEC: %s\n", in)
 	in = strings.Trim(in, " ")
 	cmd := strings.Split(in, " ")[0]
 	switch cmd {
