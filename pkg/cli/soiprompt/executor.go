@@ -5,8 +5,10 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"os/exec"
+	"path"
 	"path/filepath"
 	"strings"
 	"time"
@@ -122,7 +124,7 @@ func mv(in string) error {
 
 	// 移動先のディレクトリが存在しない場合は作成
 	toDir := to[0:strings.LastIndex(to, "/")]
-	if !fileio.FileExists(toDir) {
+	if !fileio.Exists(toDir) {
 		err = os.MkdirAll(toDir, 0700)
 		if err != nil {
 			return err
@@ -155,7 +157,7 @@ func rm(in string) error {
 	}
 
 	target := filepath.Join(baseDir, flags.Arg(0))
-	if !fileio.FileExists(target) {
+	if !fileio.Exists(target) {
 		fmt.Println("No file or dir found.")
 		return nil
 	}
@@ -209,11 +211,60 @@ func open(in string) error {
 	return exec.Command("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", s.URI).Start()
 }
 
-func pull(in string) error {
+func pull(_ string) error {
+	soisDir, err := fileio.SoisDirPath()
+	if err != nil {
+		return err
+	}
+	// SoisDirが空でなければバックアップを取得
+	empty, err := fileio.IsEmpty(soisDir)
+	if err != nil {
+		return err
+	}
+	if !empty {
+		if err := os.RemoveAll(soisDir + ".bk"); err != nil {
+			return err
+		}
+		if err := os.Rename(soisDir, soisDir+".bk"); err != nil {
+			return err
+		}
+	}
+	resp, err := http.Get("http://localhost:8080/api/v1/sample_user/sois")
+	if err != nil {
+		return err
+	}
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+	var sb soi.SoiVirtualBucket
+	if err = json.Unmarshal(b, &sb); err != nil {
+		return err
+	}
+	if !fileio.Exists(soisDir) {
+		if err := os.Mkdir(soisDir, 0700); err != nil {
+			return err
+		}
+	}
+	for _, sv := range sb.Sois {
+		fmt.Println("load:", sv.Path)
+		b, err := json.Marshal(sv.SoiData)
+		if err != nil {
+			return err
+		}
+		dir, _ := path.Split(sv.Path)
+		if err := os.MkdirAll(dir, 0700); err != nil {
+			return err
+		}
+		if err := ioutil.WriteFile(sv.Path, b, 0644); err != nil {
+			return err
+		}
+	}
+	fmt.Println("pulled")
 	return nil
 }
 
-func push(in string) error {
+func push(_ string) error {
 	soisDir, err := fileio.SoisDirPath()
 	if err != nil {
 		return err
@@ -242,8 +293,13 @@ func push(in string) error {
 	}); err != nil {
 		return err
 	}
-	fmt.Println("sb:", sb)
-	// TODO 送信処理 storeALlを実装してそこを叩く
+	resp, err := http.Post("http://localhost:8080/api/v1/sample_user/sois:replace", "application/json", strings.NewReader(sb.String()))
+	if err != nil {
+		return err
+	}
+	if resp.StatusCode == http.StatusOK {
+		fmt.Println("pushed")
+	}
 	return nil
 }
 

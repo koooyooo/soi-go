@@ -77,7 +77,7 @@ func (f FileRepository) LoadAll(ctx context.Context) (*soi.SoiVirtualBucket, err
 		return nil, err
 	}
 	path := path.Join(f.BasePath, userID, "sois.json")
-	if !fileio.FileExists(path) {
+	if !fileio.Exists(path) {
 		return &soi.SoiVirtualBucket{}, nil
 	}
 	b, err := ioutil.ReadFile(path)
