@@ -54,11 +54,14 @@ func (gr GCSRepository) LoadAll(ctx context.Context) (*soi.SoiVirtualBucket, err
 		return nil, err
 	}
 	r, err := bkt.Object(objName).NewReader(ctx)
-	defer r.Close()
 	if err != nil {
 		return nil, err
 	}
+	defer r.Close()
 	b, err := ioutil.ReadAll(r)
+	if err != nil {
+		return nil, err
+	}
 	var svb soi.SoiVirtualBucket
 	if err := json.Unmarshal(b, &svb); err != nil {
 		return nil, err
