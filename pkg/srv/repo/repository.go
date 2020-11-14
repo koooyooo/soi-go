@@ -20,7 +20,7 @@ type (
 )
 
 func NewRepository() Repository {
-	repoType := 1
+	repoType := 2
 	switch repoType {
 	case 1:
 		return newFileRepository("./repo/")

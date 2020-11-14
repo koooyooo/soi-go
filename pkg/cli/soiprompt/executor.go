@@ -251,11 +251,12 @@ func pull(_ string) error {
 		if err != nil {
 			return err
 		}
-		dir, _ := path.Split(sv.Path)
-		if err := os.MkdirAll(dir, 0700); err != nil {
+		relDir, file := path.Split(sv.Path)
+		fullDir := filepath.Join(soisDir, relDir)
+		if err := os.MkdirAll(fullDir, 0700); err != nil {
 			return err
 		}
-		if err := ioutil.WriteFile(sv.Path, b, 0644); err != nil {
+		if err := ioutil.WriteFile(filepath.Join(fullDir, file), b, 0644); err != nil {
 			return err
 		}
 	}
@@ -286,7 +287,7 @@ func push(_ string) error {
 		}
 		sb.Sois = append(sb.Sois, &soi.SoiVirtual{
 			SoiData: &s,
-			Path:    path,
+			Path:    strings.TrimPrefix(path, soisDir+"/"),
 		})
 		return nil
 	}); err != nil {
