@@ -3,6 +3,7 @@ module github.com/koooyooo/soi-go
 go 1.15
 
 require (
+	cloud.google.com/go/storage v1.12.0
 	github.com/c-bata/go-prompt v0.2.3
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.4.1 // indirect
@@ -18,8 +19,7 @@ require (
 	github.com/stretchr/testify v1.6.1
 	github.com/ugorji/go v1.1.13 // indirect
 	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897 // indirect
-	golang.org/x/net v0.0.0-20200707034311-ab3426394381
+	golang.org/x/net v0.0.0-20200904194848-62affa334b73
 	golang.org/x/sys v0.0.0-20201107080550-4d91cf3a1aaf // indirect
-	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 )

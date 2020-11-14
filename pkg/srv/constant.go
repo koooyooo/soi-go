@@ -1,7 +1,12 @@
 package srv
 
+const (
+	CtxKeyUserID      = CtxKey("user_id")
+	CtxKeySoiBucketID = CtxKey("soi_bucket_id")
+)
+
 type CtxKey string
 
-const (
-	CtxKeyUserID = CtxKey("user_id")
-)
+func (ck CtxKey) String() string {
+	return string(ck)
+}

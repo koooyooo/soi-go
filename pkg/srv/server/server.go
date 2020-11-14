@@ -19,9 +19,9 @@ import (
 func Run() {
 	r := gin.Default()
 	r.GET("/api/v1/", root)
-	r.GET("/api/v1/:user_id/sois", listHandler)
-	r.POST("/api/v1/:user_id/sois", postHandler)
-	r.POST("/api/v1/:user_id/sois:replace", replaceHandler)
+	r.GET("/api/v1/:user_id/:soi_bucket_id/sois", listHandler)
+	r.POST("/api/v1/:user_id/:soi_bucket_id/sois", postHandler)
+	r.POST("/api/v1/:user_id/:soi_bucket_id/sois:replace", replaceHandler)
 	if err := r.Run(":8080"); err != nil {
 		log.Fatalf("run server fails: %v", err)
 	}
@@ -91,6 +91,9 @@ func replaceHandler(c *gin.Context) {
 func createContext(ctx context.Context, gc *gin.Context) context.Context {
 	if userID := gc.Param("user_id"); userID != "" {
 		ctx = context.WithValue(ctx, srv.CtxKeyUserID, userID)
+	}
+	if soiBucketID := gc.Param("soi_bucket_id"); soiBucketID != "" {
+		ctx = context.WithValue(ctx, srv.CtxKeySoiBucketID, soiBucketID)
 	}
 	// TODO 認証情報の埋め込み
 	return ctx

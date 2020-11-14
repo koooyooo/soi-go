@@ -228,7 +228,7 @@ func pull(_ string) error {
 			return err
 		}
 	}
-	resp, err := http.Get("http://localhost:8080/api/v1/sample_user/sois")
+	resp, err := http.Get("http://localhost:8080/api/v1/sample_user/sample_bucket/sois")
 	if err != nil {
 		return err
 	}
@@ -292,7 +292,7 @@ func push(_ string) error {
 	}); err != nil {
 		return err
 	}
-	resp, err := http.Post("http://localhost:8080/api/v1/sample_user/sois:replace", "application/json", strings.NewReader(sb.String()))
+	resp, err := http.Post("http://localhost:8080/api/v1/sample_user/sample_bucket/sois:replace", "application/json", strings.NewReader(sb.String()))
 	if err != nil {
 		return err
 	}
