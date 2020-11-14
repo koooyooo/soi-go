@@ -12,9 +12,9 @@ import (
 	"github.com/koooyooo/soi-go/pkg/soi"
 )
 
-func newFileRepository() FileRepository {
+func newFileRepository(basePath string) FileRepository {
 	return FileRepository{
-		BasePath: "./repo/",
+		BasePath: basePath,
 	}
 }
 
@@ -23,12 +23,7 @@ type FileRepository struct {
 }
 
 func (f FileRepository) Store(ctx context.Context, s *soi.SoiVirtual) error {
-	sb, err := f.LoadAll(ctx)
-	if err != nil {
-		return nil
-	}
-	sb.Sois = append(sb.Sois, s)
-	return f.StoreAll(ctx, sb)
+	return store(f, ctx, s)
 }
 
 func (f FileRepository) StoreAll(ctx context.Context, sb *soi.SoiVirtualBucket) error {

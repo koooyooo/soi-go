@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/koooyooo/soi-go/pkg/soi"
@@ -19,7 +20,14 @@ type (
 )
 
 func NewRepository() Repository {
-	return newFileRepository()
+	repoType := 1
+	switch repoType {
+	case 1:
+		return newFileRepository("./repo/")
+	case 2:
+		return newGCSRepository(os.Getenv("SOI_BUCKET_NAME"))
+	}
+	return nil
 }
 
 func getUserID(ctx context.Context) (string, error) {
@@ -39,4 +47,13 @@ func getValue(ctx context.Context, key srv.CtxKey) (string, error) {
 		return "", fmt.Errorf("no value found for key: %v", key)
 	}
 	return val, nil
+}
+
+func store(r Repository, ctx context.Context, s *soi.SoiVirtual) error {
+	sb, err := r.LoadAll(ctx)
+	if err != nil {
+		return nil
+	}
+	sb.Sois = append(sb.Sois, s)
+	return r.StoreAll(ctx, sb)
 }
