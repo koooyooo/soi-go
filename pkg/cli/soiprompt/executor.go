@@ -283,11 +283,21 @@ func pull(_ string) error {
 func generateAuthValues() (user string, pass string, authValue string, err error) {
 	user = constant.EnvKeySoiUserName.Get()
 	if user == "" {
-		return "", "", "", fmt.Errorf("not environment variable found: %s", constant.EnvKeySoiUserName)
+		fmt.Println("username?")
+		fmt.Print("> ")
+		fmt.Scan(&user)
+		if user == "" {
+			return "", "", "", fmt.Errorf("not environment variable found: %s", constant.EnvKeySoiUserName)
+		}
 	}
 	pass = constant.EnvKeySoiUserPass.Get()
 	if pass == "" {
-		return "", "", "", fmt.Errorf("not environment variable found: %s", constant.EnvKeySoiUserPass)
+		fmt.Println("password?")
+		fmt.Print("> ")
+		fmt.Scan(&pass)
+		if pass == "" {
+			return "", "", "", fmt.Errorf("not environment variable found: %s", constant.EnvKeySoiUserPass)
+		}
 	}
 	return user, pass, "Basic " + base64.StdEncoding.EncodeToString([]byte(user+":"+pass)), nil
 }
