@@ -1,4 +1,4 @@
-package srv
+package constant
 
 const (
 	CtxKeyUserID      = CtxKey("user_id")

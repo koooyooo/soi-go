@@ -1,6 +1,7 @@
 package soiprompt
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -12,6 +13,8 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/koooyooo/soi-go/pkg/cli/constant"
 
 	"github.com/koooyooo/soi-go/pkg/soi"
 
@@ -228,10 +231,23 @@ func pull(_ string) error {
 			return err
 		}
 	}
-	resp, err := http.Get("http://localhost:8080/api/v1/sample_user/sample_bucket/sois")
+
+	// リクエスト作成
+	user, _, headerVal, err := generateAuthValues()
 	if err != nil {
 		return err
 	}
+	req, err := http.NewRequest("GET", fmt.Sprintf("http://localhost:8080/api/v1/%s/default/sois", user), nil)
+	if err != nil {
+		return err
+	}
+	req.Header.Add("Authorization", headerVal)
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
+
+	// レスポンス処理
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return err
@@ -264,6 +280,18 @@ func pull(_ string) error {
 	return nil
 }
 
+func generateAuthValues() (user string, pass string, authValue string, err error) {
+	user = constant.EnvKeySoiUserName.Get()
+	if user == "" {
+		return "", "", "", fmt.Errorf("not environment variable found: %s", constant.EnvKeySoiUserName)
+	}
+	pass = constant.EnvKeySoiUserPass.Get()
+	if pass == "" {
+		return "", "", "", fmt.Errorf("not environment variable found: %s", constant.EnvKeySoiUserPass)
+	}
+	return user, pass, "Basic " + base64.StdEncoding.EncodeToString([]byte(user+":"+pass)), nil
+}
+
 func push(_ string) error {
 	soisDir, err := fileio.SoisDirPath()
 	if err != nil {
@@ -293,7 +321,19 @@ func push(_ string) error {
 	}); err != nil {
 		return err
 	}
-	resp, err := http.Post("http://localhost:8080/api/v1/sample_user/sample_bucket/sois:replace", "application/json", strings.NewReader(sb.String()))
+
+	// リクエスト作成
+	user, _, headerVal, err := generateAuthValues()
+	if err != nil {
+		return err
+	}
+	req, err := http.NewRequest("POST", fmt.Sprintf("http://localhost:8080/api/v1/%s/default/sois:replace", user), strings.NewReader(sb.String()))
+	if err != nil {
+		return err
+	}
+	req.Header.Add("Authorization", headerVal)
+	req.Header.Add("ContentType", "application/json")
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return err
 	}

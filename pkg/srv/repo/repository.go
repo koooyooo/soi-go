@@ -3,12 +3,11 @@ package repo
 import (
 	"context"
 	"fmt"
-	"os"
 	"strings"
 
-	"github.com/koooyooo/soi-go/pkg/soi"
+	"github.com/koooyooo/soi-go/pkg/srv/constant"
 
-	"github.com/koooyooo/soi-go/pkg/srv"
+	"github.com/koooyooo/soi-go/pkg/soi"
 )
 
 type (
@@ -25,20 +24,20 @@ func NewRepository() Repository {
 	case 1:
 		return newFileRepository("./repo/")
 	case 2:
-		return newGCSRepository(os.Getenv("SOI_BUCKET_NAME"))
+		return newGCSRepository(constant.EnvKeySoiBucketName.Get())
 	}
 	return nil
 }
 
 func getUserID(ctx context.Context) (string, error) {
-	return getValue(ctx, srv.CtxKeyUserID)
+	return getValue(ctx, constant.CtxKeyUserID)
 }
 
 func getSoiBucketID(ctx context.Context) (string, error) {
-	return getValue(ctx, srv.CtxKeySoiBucketID)
+	return getValue(ctx, constant.CtxKeySoiBucketID)
 }
 
-func getValue(ctx context.Context, key srv.CtxKey) (string, error) {
+func getValue(ctx context.Context, key constant.CtxKey) (string, error) {
 	if strings.Contains(key.String(), "..") {
 		return "", fmt.Errorf("invalid key: %v", key)
 	}

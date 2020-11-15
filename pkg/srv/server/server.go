@@ -7,9 +7,11 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/koooyooo/soi-go/pkg/soi"
+	"github.com/koooyooo/soi-go/pkg/srv/auth"
 
-	"github.com/koooyooo/soi-go/pkg/srv"
+	"github.com/koooyooo/soi-go/pkg/srv/constant"
+
+	"github.com/koooyooo/soi-go/pkg/soi"
 
 	"github.com/gin-gonic/gin"
 
@@ -34,6 +36,17 @@ func root(c *gin.Context) {
 }
 
 func listHandler(c *gin.Context) {
+	// 認証
+	authResult, err := auth.Authorize(c)
+	if !authResult {
+		c.AbortWithError(404, err)
+		return
+	}
+	if err != nil {
+		c.AbortWithError(500, err)
+		return
+	}
+
 	ctx := createContext(context.Background(), c)
 	repo := repo.NewRepository()
 	sb, err := repo.LoadAll(ctx)
@@ -45,6 +58,17 @@ func listHandler(c *gin.Context) {
 }
 
 func postHandler(c *gin.Context) {
+	// 認証
+	authResult, err := auth.Authorize(c)
+	if !authResult {
+		c.AbortWithError(404, err)
+		return
+	}
+	if err != nil {
+		c.AbortWithError(500, err)
+		return
+	}
+
 	ctx := createContext(context.Background(), c)
 	b, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
@@ -67,6 +91,17 @@ func postHandler(c *gin.Context) {
 }
 
 func replaceHandler(c *gin.Context) {
+	// 認証
+	authResult, err := auth.Authorize(c)
+	if !authResult {
+		c.AbortWithError(404, err)
+		return
+	}
+	if err != nil {
+		c.AbortWithError(500, err)
+		return
+	}
+
 	ctx := createContext(context.Background(), c)
 	b, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
@@ -90,10 +125,10 @@ func replaceHandler(c *gin.Context) {
 
 func createContext(ctx context.Context, gc *gin.Context) context.Context {
 	if userID := gc.Param("user_id"); userID != "" {
-		ctx = context.WithValue(ctx, srv.CtxKeyUserID, userID)
+		ctx = context.WithValue(ctx, constant.CtxKeyUserID, userID)
 	}
 	if soiBucketID := gc.Param("soi_bucket_id"); soiBucketID != "" {
-		ctx = context.WithValue(ctx, srv.CtxKeySoiBucketID, soiBucketID)
+		ctx = context.WithValue(ctx, constant.CtxKeySoiBucketID, soiBucketID)
 	}
 	// TODO 認証情報の埋め込み
 	return ctx
