@@ -37,6 +37,7 @@ func getSoiBucketID(ctx context.Context) (string, error) {
 	return getValue(ctx, constant.CtxKeySoiBucketID)
 }
 
+// Contextより値を取得する
 func getValue(ctx context.Context, key constant.CtxKey) (string, error) {
 	if strings.Contains(key.String(), "..") {
 		return "", fmt.Errorf("invalid key: %v", key)
@@ -48,6 +49,7 @@ func getValue(ctx context.Context, key constant.CtxKey) (string, error) {
 	return val, nil
 }
 
+// Storeの簡易実装 LoadAllと StoreAllを利用する
 func store(r Repository, ctx context.Context, s *soi.SoiVirtual) error {
 	sb, err := r.LoadAll(ctx)
 	if err != nil {

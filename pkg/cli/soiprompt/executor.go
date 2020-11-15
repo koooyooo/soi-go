@@ -14,6 +14,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/koooyooo/soi-go/pkg/cli/hash"
+
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
 
 	"github.com/koooyooo/soi-go/pkg/soi"
@@ -237,7 +239,13 @@ func pull(_ string) error {
 	if err != nil {
 		return err
 	}
-	req, err := http.NewRequest("GET", fmt.Sprintf("http://localhost:8080/api/v1/%s/default/sois", user), nil)
+	req, err := http.NewRequest(
+		"GET",
+		fmt.Sprintf(
+			"http://localhost:8080/api/v1/%s/%s/sois",
+			hash.Hash(user),
+			hash.Hash("default")),
+		nil)
 	if err != nil {
 		return err
 	}
@@ -337,7 +345,13 @@ func push(_ string) error {
 	if err != nil {
 		return err
 	}
-	req, err := http.NewRequest("POST", fmt.Sprintf("http://localhost:8080/api/v1/%s/default/sois:replace", user), strings.NewReader(sb.String()))
+	req, err := http.NewRequest(
+		"POST",
+		fmt.Sprintf(
+			"http://localhost:8080/api/v1/%s/%s/sois:replace",
+			hash.Hash(user),
+			hash.Hash("default")),
+		strings.NewReader(sb.String()))
 	if err != nil {
 		return err
 	}
