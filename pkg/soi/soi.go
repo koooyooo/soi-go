@@ -12,12 +12,14 @@ var (
 
 type (
 	SoiData struct {
-		Name      string     `json:"name"`
-		Title     string     `json:"title"`
-		URI       string     `json:"uri"`
-		Tags      []string   `json:"tags"`
-		CreatedAt time.Time  `json:"created_at"`
-		UsageLogs []UsageLog `json:"usage_log"`
+		Name           string     `json:"name"`
+		Title          string     `json:"title"`
+		URI            string     `json:"uri"`
+		Tags           []string   `json:"tags"`
+		Rate           float32    `json:"rate"`
+		NumOfTimesRead float32    `json:"num_of_times_read"`
+		CreatedAt      time.Time  `json:"created_at"`
+		UsageLogs      []UsageLog `json:"usage_log"`
 	}
 
 	UsageType string
