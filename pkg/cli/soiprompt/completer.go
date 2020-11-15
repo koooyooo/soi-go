@@ -8,6 +8,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/koooyooo/soi-go/pkg/cli/constant"
+
 	"github.com/koooyooo/soi-go/pkg/fileio"
 
 	"github.com/c-bata/go-prompt"
@@ -66,7 +68,7 @@ func suggestAddCmd(d prompt.Document) []prompt.Suggest {
 	// dir探索
 	if strings.HasSuffix(d.Text, "-d ") {
 		var suggests []prompt.Suggest
-		soiRoot, err := fileio.SoisDirPath()
+		soiRoot, err := fileio.SoisDirPath(constant.BucketName())
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -99,7 +101,7 @@ func suggestMvCmd(d prompt.Document) []prompt.Suggest {
 
 	word := strings.TrimPrefix(d.GetWordBeforeCursor(), "mv ")
 
-	dir, err := fileio.SoisDirPath()
+	dir, err := fileio.SoisDirPath(constant.BucketName())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -120,7 +122,7 @@ func suggestMvCmd(d prompt.Document) []prompt.Suggest {
 func suggestRmCmd(d prompt.Document) []prompt.Suggest {
 	word := strings.TrimPrefix(d.GetWordBeforeCursor(), "rm ")
 
-	dir, err := fileio.SoisDirPath()
+	dir, err := fileio.SoisDirPath(constant.BucketName())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -158,7 +160,7 @@ func suggestDigCmd(d prompt.Document) []prompt.Suggest {
 		log.Fatal(err)
 	}
 
-	soisDir, _ := fileio.SoisDirPath()
+	soisDir, _ := fileio.SoisDirPath(constant.BucketName())
 	return suggestByPath(soisDir, filepath.Join(soisDir, flags.Arg(0)), d.GetWordBeforeCursor(), true)
 }
 
@@ -197,7 +199,7 @@ func suggestListCmd(d prompt.Document) []prompt.Suggest {
 		return browserOptSuggests
 	}
 	var s []prompt.Suggest
-	dir, _ := fileio.SoisDirPath()
+	dir, _ := fileio.SoisDirPath(constant.BucketName())
 	files, err := listFilesRecursively(dir)
 	if err != nil {
 		panic(err)

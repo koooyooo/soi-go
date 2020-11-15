@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/koooyooo/soi-go/pkg/cli/constant"
+
 	"github.com/koooyooo/soi-go/pkg/fileio"
 
 	"github.com/c-bata/go-prompt"
@@ -81,7 +83,7 @@ func listFilesRecursively(dir string) ([]string, error) {
 
 // listDirsRecursively は引数のdir配下を再帰的に走査してDirectoryのPathを収集します
 func listDirsRecursively(dir string, lastSlash bool) ([]string, error) {
-	soiRoot, err := fileio.SoisDirPath()
+	soiRoot, err := fileio.SoisDirPath(constant.BucketName())
 	if err != nil {
 		return nil, err
 	}

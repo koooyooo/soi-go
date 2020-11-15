@@ -1,11 +1,26 @@
 package main
 
 import (
+	"log"
+	"os"
+
 	prompt "github.com/c-bata/go-prompt"
+	"github.com/koooyooo/soi-go/pkg/cli/constant"
 	"github.com/koooyooo/soi-go/pkg/cli/soiprompt"
+	"github.com/koooyooo/soi-go/pkg/fileio"
 )
 
 func main() {
+	soisDir, err := fileio.SoisDirPath(constant.BucketName())
+	if err != nil {
+		log.Fatal(err)
+	}
+	if !fileio.Exists(soisDir) {
+		if err := os.MkdirAll(soisDir, 0700); err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	p := prompt.New(
 		soiprompt.Executor,
 		soiprompt.Completer,

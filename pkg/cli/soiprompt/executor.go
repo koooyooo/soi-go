@@ -101,7 +101,7 @@ func add(in string) error {
 	if err != nil {
 		return err
 	}
-	soiRoot, err := fileio.SoisDirPath()
+	soiRoot, err := fileio.SoisDirPath(constant.BucketName())
 	if err != nil {
 		return err
 	}
@@ -113,7 +113,7 @@ func add(in string) error {
 }
 
 func mv(in string) error {
-	baseDir, err := fileio.SoisDirPath()
+	baseDir, err := fileio.SoisDirPath(constant.BucketName())
 	if err != nil {
 		return err
 	}
@@ -149,7 +149,7 @@ func mv(in string) error {
 }
 
 func rm(in string) error {
-	baseDir, err := fileio.SoisDirPath()
+	baseDir, err := fileio.SoisDirPath(constant.BucketName())
 	if err != nil {
 		return err
 	}
@@ -175,7 +175,7 @@ func open(in string) error {
 		return err
 	}
 
-	soisDir, err := fileio.SoisDirPath()
+	soisDir, err := fileio.SoisDirPath(constant.BucketName())
 	if err != nil {
 		return err
 	}
@@ -214,7 +214,7 @@ func open(in string) error {
 }
 
 func pull(_ string) error {
-	soisDir, err := fileio.SoisDirPath()
+	soisDir, err := fileio.SoisDirPath(constant.BucketName())
 	if err != nil {
 		return err
 	}
@@ -303,7 +303,7 @@ func generateAuthValues() (user string, pass string, authValue string, err error
 }
 
 func push(_ string) error {
-	soisDir, err := fileio.SoisDirPath()
+	soisDir, err := fileio.SoisDirPath(constant.BucketName())
 	if err != nil {
 		return err
 	}

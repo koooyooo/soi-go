@@ -19,10 +19,10 @@ func SoisFilePath() (string, error) {
 	return filepath.Join(homeDir, soisJSONName), nil
 }
 
-func SoisDirPath() (string, error) {
+func SoisDirPath(bucket string) (string, error) {
 	homeDir, err := homedir.Dir()
 	if err != nil {
 		return "", err
 	}
-	return filepath.Join(homeDir, ".soi"), nil
+	return filepath.Join(homeDir, ".soi", bucket), nil
 }
