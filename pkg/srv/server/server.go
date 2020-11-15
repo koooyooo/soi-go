@@ -39,11 +39,11 @@ func listHandler(c *gin.Context) {
 	// 認証
 	authResult, err := auth.Authorize(c)
 	if !authResult {
-		c.AbortWithError(404, err)
+		_ = c.AbortWithError(404, err)
 		return
 	}
 	if err != nil {
-		c.AbortWithError(500, err)
+		_ = c.AbortWithError(500, err)
 		return
 	}
 
@@ -61,11 +61,11 @@ func postHandler(c *gin.Context) {
 	// 認証
 	authResult, err := auth.Authorize(c)
 	if !authResult {
-		c.AbortWithError(404, err)
+		_ = c.AbortWithError(404, err)
 		return
 	}
 	if err != nil {
-		c.AbortWithError(500, err)
+		_ = c.AbortWithError(500, err)
 		return
 	}
 
