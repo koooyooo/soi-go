@@ -12,12 +12,16 @@ import (
 
 type (
 	Repository interface {
+		// Store は単一の仮想Soiを保存する
 		Store(context.Context, *soi.SoiVirtual) error
+		// StoreAll は仮想Soiバケットを保存する
 		StoreAll(context.Context, *soi.SoiVirtualBucket) error
+		// LoadAll は仮想Soiバケットを取得する
 		LoadAll(context.Context) (*soi.SoiVirtualBucket, error)
 	}
 )
 
+// リポジトリを生成する
 func NewRepository() Repository {
 	repoType := 2
 	switch repoType {
@@ -29,10 +33,12 @@ func NewRepository() Repository {
 	return nil
 }
 
+// ユーザIDを取得する
 func getUserID(ctx context.Context) (string, error) {
 	return getValue(ctx, constant.CtxKeyUserID)
 }
 
+// バケットIDを取得する
 func getSoiBucketID(ctx context.Context) (string, error) {
 	return getValue(ctx, constant.CtxKeySoiBucketID)
 }

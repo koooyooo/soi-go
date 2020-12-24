@@ -35,6 +35,7 @@ func (gr GCSRepository) StoreAll(ctx context.Context, sv *soi.SoiVirtualBucket) 
 	w := bkt.Object(objName).NewWriter(ctx)
 	defer w.Close()
 	b, err := json.Marshal(sv)
+
 	if err != nil {
 		return err
 	}
