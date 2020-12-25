@@ -11,18 +11,23 @@ import (
 	"github.com/koooyooo/soi-go/pkg/soi"
 )
 
+// GCSリポジトリを作成
 func newGCSRepository(bucketName string) *GCSRepository {
 	return &GCSRepository{BucketName: bucketName}
 }
 
+// GCSリポジトリ
 type GCSRepository struct {
+	// GCSバケット名
 	BucketName string
 }
 
+// Store は単一の仮想Soiを保存する
 func (gr GCSRepository) Store(ctx context.Context, sv *soi.SoiVirtual) error {
 	return store(gr, ctx, sv)
 }
 
+// StoreAll は仮想Soiバケットを保存する
 func (gr GCSRepository) StoreAll(ctx context.Context, sv *soi.SoiVirtualBucket) error {
 	bkt, err := getBucket(ctx, gr.BucketName)
 	if err != nil {
@@ -45,6 +50,7 @@ func (gr GCSRepository) StoreAll(ctx context.Context, sv *soi.SoiVirtualBucket) 
 	return nil
 }
 
+// LoadAll は仮想Soiバケットを取得する
 func (gr GCSRepository) LoadAll(ctx context.Context) (*soi.SoiVirtualBucket, error) {
 	bkt, err := getBucket(ctx, gr.BucketName)
 	if err != nil {
@@ -70,6 +76,7 @@ func (gr GCSRepository) LoadAll(ctx context.Context) (*soi.SoiVirtualBucket, err
 	return &svb, nil
 }
 
+// getBucket はContextよりバケット名を取得する
 func getBucket(ctx context.Context, bucketName string) (*storage.BucketHandle, error) {
 	cli, err := storage.NewClient(ctx)
 	if err != nil {
@@ -78,6 +85,7 @@ func getBucket(ctx context.Context, bucketName string) (*storage.BucketHandle, e
 	return cli.Bucket(bucketName), nil
 }
 
+// getObjectName はContextよりオブジェクト名を取得する
 func getObjectName(ctx context.Context) (string, error) {
 	userID, err := getUserID(ctx)
 	if err != nil {

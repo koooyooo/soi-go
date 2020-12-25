@@ -5,10 +5,12 @@ import (
 	"io/ioutil"
 )
 
+// 設定情報
 type Config struct {
 	Server string `json:"server"`
 }
 
+// 設定をロードします
 func LoadConfig() (*Config, error) {
 	b, err := ioutil.ReadFile("config.json")
 	if err != nil {
