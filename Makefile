@@ -1,7 +1,12 @@
 CLI_MOD="cmd/cli/soi.go"
 SERV_MOD="cmd/srv/soi-server.go"
-CLI_EX="./soi"
-SERV_EX="./soi-server"
+
+CLI_BIN="./soi"
+SERV_BIN="./soi-server"
+
+PROJECT_NAME=${SOI_PROJECT_NAME}
+BUCKET_NAME=${SOI_BUCKET_NAME}
+DOCKER_IMAGE_NAME=${SOI_DOCKER_IMAGE_NAME}
 
 .PHONY: run
 run:
@@ -9,7 +14,7 @@ run:
 
 .PHONY: build
 build:
-	@ go build -o "$(CLI_EX)" "$(CLI_MOD)"
+	@ go build -o "$(CLI_BIN)" "$(CLI_MOD)"
 
 .PHONY: install
 install:
@@ -17,7 +22,7 @@ install:
 
 .PHONY: clean
 clean:
-	@ rm "$(CLI_EX)"
+	@ rm "$(CLI_BIN)"
 
 .PHONY: run-server
 run-server:
@@ -29,10 +34,22 @@ send-request:
 
 .PHONY: build-server
 build-server:
-	@ go build -o "$(SERV_EX)" "$(SERV_MOD)"
+	@ go build -o "$(SERV_BIN)" "$(SERV_MOD)"
 
 .PHONY: push-image
 push-image:
-	@ cat "${HOME}/.gcp/soi-cloud-708d1b5c40f7.json" | docker login -u _json_key --password-stdin https://gcr.io; \
-      docker build -t gcr.io/soi-cloud/soi-server:latest . ;\
-	  docker push gcr.io/soi-cloud/soi-server:latest
+	@ gcloud auth login; \
+	  gcloud config set project $(PROJECT_NAME); \
+      gcloud auth configure-docker; \
+      docker rmi gcr.io/$(PROJECT_NAME)/$(DOCKER_IMAGE_NAME):latest; \
+      docker build -t gcr.io/$(PROJECT_NAME)/$(DOCKER_IMAGE_NAME):latest . ;\
+	  docker push gcr.io/$(PROJECT_NAME)/$(DOCKER_IMAGE_NAME):latest
+
+.PHONY: deploy-image
+deploy-image: push-image
+	@ gcloud beta run deploy soi-cloud \
+	--image gcr.io/$(PROJECT_NAME)/$(DOCKER_IMAGE_NAME):latest \
+	--port 8080 \
+	--platform=managed \
+	--region=asia-northeast1 \
+	--set-env-vars=SOI_BUCKET_NAME=$(BUCKET_NAME)

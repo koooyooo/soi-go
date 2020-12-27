@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -39,10 +40,12 @@ func listHandler(c *gin.Context) {
 	// 認証
 	authResult, err := auth.Authorize(c)
 	if !authResult {
+		fmt.Printf("auth failed: %s", err.Error())
 		_ = c.AbortWithError(404, err)
 		return
 	}
 	if err != nil {
+		fmt.Printf("auth error: %s", err.Error())
 		_ = c.AbortWithError(500, err)
 		return
 	}
@@ -51,6 +54,7 @@ func listHandler(c *gin.Context) {
 	repo := repo.NewRepository()
 	sb, err := repo.LoadAll(ctx)
 	if err != nil {
+		fmt.Printf("load error: %s", err.Error())
 		_ = c.AbortWithError(500, err)
 		return
 	}

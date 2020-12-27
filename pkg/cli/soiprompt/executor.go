@@ -14,6 +14,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/koooyooo/soi-go/pkg/config"
+
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
 
 	"github.com/koooyooo/soi-go/pkg/soi"
@@ -237,9 +239,13 @@ func pull(_ string) error {
 	if err != nil {
 		return err
 	}
+	cfg, err := config.LoadConfig()
+	if err != nil {
+		return err
+	}
 	req, err := http.NewRequest(
 		"GET",
-		fmt.Sprintf("http://localhost:8080/api/v1/%s/%s/sois", user, "default"),
+		fmt.Sprintf("%s/api/v1/%s/%s/sois", cfg.Server, user, "default"),
 		nil)
 	if err != nil {
 		return err
@@ -256,6 +262,7 @@ func pull(_ string) error {
 		return err
 	}
 	var sb soi.SoiVirtualBucket
+	fmt.Println(string(b)) // TODO Responseが Hello World (Rootにアクセスしている??)
 	if err = json.Unmarshal(b, &sb); err != nil {
 		return err
 	}
@@ -340,10 +347,14 @@ func push(_ string) error {
 	if err != nil {
 		return err
 	}
+	cfg, err := config.LoadConfig()
+	if err != nil {
+		return err
+	}
 	req, err := http.NewRequest(
 		"POST",
 		fmt.Sprintf(
-			"http://localhost:8080/api/v1/%s/%s/sois:replace", user, "default"),
+			"%s/api/v1/%s/%s/sois:replace", cfg.Server, user, "default"),
 		strings.NewReader(sb.String()))
 	if err != nil {
 		return err
