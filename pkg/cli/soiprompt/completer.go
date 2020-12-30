@@ -198,26 +198,42 @@ func suggestListCmd(d prompt.Document) []prompt.Suggest {
 	if strings.HasPrefix(d.GetWordBeforeCursor(), "-") {
 		return browserOptSuggests
 	}
-	var s []prompt.Suggest
 	soisDir, _ := fileio.SoisDirPath(constant.BucketName())
 	files, err := listFilesRecursively(soisDir)
 	if err != nil {
 		panic(err)
 	}
-	//var wg sync.WaitGroup
-	//wg.Add(len(files))
-
-	for _, f := range files {
-		//go func(fp string) {
-		s = append(s, prompt.Suggest{
-			Text:        createHeader(f) + " " + strings.TrimPrefix(f, soisDir+"/"),
+	swp, err := loadSoiWithPath(files)
+	if err != nil {
+		panic(err)
+	}
+	var sgs []prompt.Suggest
+	for _, s := range swp {
+		sgs = append(sgs, prompt.Suggest{
+			Text:        createHeader(s.SoiData) + " " + strings.TrimPrefix(s.Path, soisDir+"/"),
 			Description: "",
 		})
-		//	wg.Done()
-		//}(f)
 	}
+
+	//var wg sync.WaitGroup
+	//wg.Add(len(files))
+	//
+	//var s = make([]prompt.Suggest, len(files))
+	//for i, f := range files {
+	//	go func(idx int, fp string) {
+	//		sd, err := readSoiData(fp)
+	//		if err != nil {
+	//			log.Fatalf("failed in load sd: %s", err.Error())
+	//		}
+	//		s[idx] = prompt.Suggest{
+	//			Text:        createHeader(sd) + " " + strings.TrimPrefix(fp, soisDir+"/"),
+	//			Description: "",
+	//		}
+	//		wg.Done()
+	//	}(i, f)
+	//}
 	//wg.Wait()
-	return prompt.FilterContains(s, d.GetWordBeforeCursor(), true)
+	return prompt.FilterContains(sgs, d.GetWordBeforeCursor(), true)
 }
 
 func suggestHelpCmd(d prompt.Document) []prompt.Suggest {

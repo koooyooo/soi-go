@@ -31,6 +31,11 @@ type (
 		UsedAt time.Time `json:"used_at"`
 	}
 
+	SoiWithPath struct {
+		SoiData *SoiData
+		Path    string
+	}
+
 	SoiVirtual struct {
 		*SoiData
 		Path string `json:"path"`
