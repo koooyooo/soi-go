@@ -214,25 +214,6 @@ func suggestListCmd(d prompt.Document) []prompt.Suggest {
 			Description: "",
 		})
 	}
-
-	//var wg sync.WaitGroup
-	//wg.Add(len(files))
-	//
-	//var s = make([]prompt.Suggest, len(files))
-	//for i, f := range files {
-	//	go func(idx int, fp string) {
-	//		sd, err := readSoiData(fp)
-	//		if err != nil {
-	//			log.Fatalf("failed in load sd: %s", err.Error())
-	//		}
-	//		s[idx] = prompt.Suggest{
-	//			Text:        createHeader(sd) + " " + strings.TrimPrefix(fp, soisDir+"/"),
-	//			Description: "",
-	//		}
-	//		wg.Done()
-	//	}(i, f)
-	//}
-	//wg.Wait()
 	return prompt.FilterContains(sgs, d.GetWordBeforeCursor(), true)
 }
 
