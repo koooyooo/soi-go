@@ -187,7 +187,7 @@ func open(in string) error {
 		return err
 	}
 
-	relPath := removeHeader(filepath.Join(flags.Args()...))
+	relPath := addJSON(removeHeader(filepath.Join(flags.Args()...)))
 
 	fullPath := filepath.Join(soisDir, relPath)
 
@@ -230,13 +230,11 @@ func open(in string) error {
 	return exec.Command("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", s.URI).Start()
 }
 
-// 相対パス内のヘッダ部分を除去
-func removeHeader(s string) string {
-	if strings.HasPrefix(s, "[") && strings.Contains(s, "]") {
-		idx := strings.Index(s, "]")
-		s = s[idx+len("]"):]
+func addJSON(path string) string {
+	if !strings.HasSuffix(path, ".json") {
+		path = path + ".json"
 	}
-	return s
+	return path
 }
 
 func pull(_ string) error {

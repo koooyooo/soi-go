@@ -1,17 +1,12 @@
 package soiprompt
 
 import (
-	"encoding/json"
 	"flag"
-	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
-
-	"github.com/koooyooo/soi-go/pkg/soi"
 
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
 
@@ -209,20 +204,20 @@ func suggestListCmd(d prompt.Document) []prompt.Suggest {
 	if err != nil {
 		panic(err)
 	}
+	//var wg sync.WaitGroup
+	//wg.Add(len(files))
+
 	for _, f := range files {
+		//go func(fp string) {
 		s = append(s, prompt.Suggest{
 			Text:        createHeader(f) + " " + strings.TrimPrefix(f, soisDir+"/"),
 			Description: "",
 		})
+		//	wg.Done()
+		//}(f)
 	}
+	//wg.Wait()
 	return prompt.FilterContains(s, d.GetWordBeforeCursor(), true)
-}
-
-func createHeader(filepath string) string {
-	b, _ := ioutil.ReadFile(filepath)
-	var sd soi.SoiData
-	json.Unmarshal(b, &sd)
-	return fmt.Sprintf("[%3d %04.1f]", sd.NumViews, sd.NumReads)
 }
 
 func suggestHelpCmd(d prompt.Document) []prompt.Suggest {
