@@ -9,7 +9,8 @@ import (
 	"github.com/koooyooo/soi-go/pkg/soi"
 )
 
-func readSoiData(filepath string) (*soi.SoiData, error) {
+// loadSoiData は指定されたファイルパスよりSoiデータをロードします
+func loadSoiData(filepath string) (*soi.SoiData, error) {
 	b, err := ioutil.ReadFile(filepath)
 	if err != nil {
 		return nil, err
@@ -21,14 +22,15 @@ func readSoiData(filepath string) (*soi.SoiData, error) {
 	return &sd, nil
 }
 
-func loadSoiWithPath(files []string) ([]*soi.SoiWithPath, error) {
+// loadSoiDataArray は指定されたファイルパスの配列からSoiData(WithPath)の配列をロードします
+func loadSoiDataArray(files []string) ([]*soi.SoiWithPath, error) {
 	var wg sync.WaitGroup
 	wg.Add(len(files))
 
 	var ss = make([]*soi.SoiWithPath, len(files))
 	for i, f := range files {
 		go func(idx int, fp string) {
-			sd, err := readSoiData(fp)
+			sd, err := loadSoiData(fp)
 			if err != nil {
 				log.Fatalf("failed in load sd: %s", err.Error())
 			}

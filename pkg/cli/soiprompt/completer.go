@@ -203,7 +203,7 @@ func suggestListCmd(d prompt.Document) []prompt.Suggest {
 	if err != nil {
 		panic(err)
 	}
-	swp, err := loadSoiWithPath(files)
+	swp, err := loadSoiDataArray(files)
 	if err != nil {
 		panic(err)
 	}
