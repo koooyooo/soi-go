@@ -19,6 +19,7 @@ import (
 	"github.com/koooyooo/soi-go/pkg/srv/repo"
 )
 
+// Run はルーティングを行います
 func Run() {
 	r := gin.Default()
 	r.GET("/api/v1/", root)
@@ -30,12 +31,14 @@ func Run() {
 	}
 }
 
+// root はルートパスのルーティングです
 func root(c *gin.Context) {
 	c.JSON(200, gin.H{
-		"Hello": "World",
+		"Result": "OK",
 	})
 }
 
+// listHandler はsoiのリストを取得します
 func listHandler(c *gin.Context) {
 	// 認証
 	authResult, err := auth.Authorize(c)
@@ -61,6 +64,7 @@ func listHandler(c *gin.Context) {
 	c.JSON(200, sb)
 }
 
+// postHandler は
 func postHandler(c *gin.Context) {
 	// 認証
 	authResult, err := auth.Authorize(c)

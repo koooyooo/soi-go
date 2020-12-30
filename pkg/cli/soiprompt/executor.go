@@ -23,6 +23,7 @@ import (
 	"github.com/koooyooo/soi-go/pkg/fileio"
 )
 
+// Executor は入力されたコマンドに応じた処理を行う
 func Executor(in string) {
 	in = strings.Trim(in, " ")
 	cmd := strings.Split(in, " ")[0]
@@ -70,6 +71,7 @@ func Executor(in string) {
 	}
 }
 
+// add はsoiの追加を行う
 func add(in string) error {
 	flags := flag.NewFlagSet("add", flag.PanicOnError)
 	n := flags.String("n", "", "name of the uri")
@@ -114,6 +116,7 @@ func add(in string) error {
 	return ioutil.WriteFile(filepath.Join(baseDir, toStorableName(name)), b, 0600)
 }
 
+// mv はsoiの移動を行う
 func mv(in string) error {
 	baseDir, err := fileio.SoisDirPath(constant.BucketName())
 	if err != nil {
@@ -150,6 +153,7 @@ func mv(in string) error {
 	return exec.Command("mv", from, to).Start()
 }
 
+// rm はsoiの削除を行う
 func rm(in string) error {
 	baseDir, err := fileio.SoisDirPath(constant.BucketName())
 	if err != nil {
@@ -168,22 +172,26 @@ func rm(in string) error {
 	return exec.Command("rm", "-rf", target).Start()
 }
 
+// open は指定されたSoiを元にブラウザを開きます
 func open(in string) error {
 	flags := flag.NewFlagSet("open", flag.PanicOnError)
-	//chrome := flags.Bool("c", false, "use chrome")
 	firefox := flags.Bool("f", false, "use firefox")
 	safari := flags.Bool("s", false, "use safari")
 	if err := flags.Parse(strings.Split(in, " ")[1:]); err != nil {
 		return err
 	}
 
+	// Soiファイルを特定
 	soisDir, err := fileio.SoisDirPath(constant.BucketName())
 	if err != nil {
 		return err
 	}
-	fullPath := filepath.Join(soisDir, filepath.Join(flags.Args()...))
 
-	// ファイルを読み込み
+	relPath := removeHeader(filepath.Join(flags.Args()...))
+
+	fullPath := filepath.Join(soisDir, relPath)
+
+	// Soiファイルを読み込み
 	b, err := ioutil.ReadFile(fullPath)
 	if err != nil {
 		return err
@@ -193,11 +201,17 @@ func open(in string) error {
 	if err != nil {
 		return err
 	}
-	// 利用ログを追加して再登録
+
+	// 閲覧履歴を追記
+	s.NumViews++
+
+	// 利用ログを記載
 	s.UsageLogs = append(s.UsageLogs, soi.UsageLog{
 		Type:   soi.UsageTypeOpen,
 		UsedAt: time.Now(),
 	})
+
+	// Soiファイルを再登録
 	ub, err := json.Marshal(s)
 	if err != nil {
 		return err
@@ -206,6 +220,7 @@ func open(in string) error {
 		return err
 	}
 
+	// 環境設定に応じてブラウザオープン
 	if *firefox {
 		return exec.Command("open", "-a", "Firefox", s.URI).Start()
 	}
@@ -215,23 +230,19 @@ func open(in string) error {
 	return exec.Command("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", s.URI).Start()
 }
 
+// 相対パス内のヘッダ部分を除去
+func removeHeader(s string) string {
+	if strings.HasPrefix(s, "[") && strings.Contains(s, "]") {
+		idx := strings.Index(s, "]")
+		s = s[idx+len("]"):]
+	}
+	return s
+}
+
 func pull(_ string) error {
 	soisDir, err := fileio.SoisDirPath(constant.BucketName())
 	if err != nil {
 		return err
-	}
-	// SoisDirが空でなければバックアップを取得
-	empty, err := fileio.IsEmpty(soisDir)
-	if err != nil {
-		return err
-	}
-	if !empty {
-		if err := os.RemoveAll(soisDir + ".bk"); err != nil {
-			return err
-		}
-		if err := os.Rename(soisDir, soisDir+".bk"); err != nil {
-			return err
-		}
 	}
 
 	// リクエスト作成
@@ -255,6 +266,23 @@ func pull(_ string) error {
 	if err != nil {
 		return err
 	}
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("pull response not OK: %d", resp.StatusCode)
+	}
+
+	// バックアップディレクトリを作成
+	empty, err := fileio.IsEmpty(soisDir)
+	if err != nil {
+		return err
+	}
+	if !empty {
+		if err := os.RemoveAll(soisDir + ".bk"); err != nil {
+			return err
+		}
+		if err := os.Rename(soisDir, soisDir+".bk"); err != nil {
+			return err
+		}
+	}
 
 	// レスポンス処理
 	b, err := ioutil.ReadAll(resp.Body)
@@ -262,7 +290,6 @@ func pull(_ string) error {
 		return err
 	}
 	var sb soi.SoiVirtualBucket
-	fmt.Println(string(b)) // TODO Responseが Hello World (Rootにアクセスしている??)
 	if err = json.Unmarshal(b, &sb); err != nil {
 		return err
 	}

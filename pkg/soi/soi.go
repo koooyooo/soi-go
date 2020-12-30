@@ -12,14 +12,16 @@ var (
 
 type (
 	SoiData struct {
-		Name           string     `json:"name"`
-		Title          string     `json:"title"`
-		URI            string     `json:"uri"`
-		Tags           []string   `json:"tags"`
-		Rate           float32    `json:"rate"`
-		NumOfTimesRead float32    `json:"num_of_times_read"`
-		CreatedAt      time.Time  `json:"created_at"`
-		UsageLogs      []UsageLog `json:"usage_log"`
+		Name          string     `json:"name"`
+		Title         string     `json:"title"`
+		URI           string     `json:"uri"`
+		Tags          []string   `json:"tags"`
+		Rate          float32    `json:"rate"`
+		NumViews      int32      `json:"num_views"`     // ページを開いた回数
+		NumReads      float32    `json:"num_reads"`     // ページを実際に読んだ回数(2回半なら0.5)
+		Comprehension int32      `json:"comprehension"` // 理解度 1 - 100
+		CreatedAt     time.Time  `json:"created_at"`
+		UsageLogs     []UsageLog `json:"usage_log"`
 	}
 
 	UsageType string
