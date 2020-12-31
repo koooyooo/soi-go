@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	soisDir, err := fileio.SoisDirPath(constant.BucketName())
+	soisDir, err := constant.LocalBucket.Path()
 	if err != nil {
 		log.Fatal(err)
 	}

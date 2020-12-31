@@ -105,7 +105,7 @@ func add(in string) error {
 	if err != nil {
 		return err
 	}
-	soiRoot, err := fileio.SoisDirPath(constant.BucketName())
+	soiRoot, err := constant.LocalBucket.Path()
 	if err != nil {
 		return err
 	}
@@ -118,7 +118,7 @@ func add(in string) error {
 
 // mv はsoiの移動を行う
 func mv(in string) error {
-	baseDir, err := fileio.SoisDirPath(constant.BucketName())
+	baseDir, err := constant.LocalBucket.Path()
 	if err != nil {
 		return err
 	}
@@ -155,7 +155,7 @@ func mv(in string) error {
 
 // rm はsoiの削除を行う
 func rm(in string) error {
-	baseDir, err := fileio.SoisDirPath(constant.BucketName())
+	baseDir, err := constant.LocalBucket.Path()
 	if err != nil {
 		return err
 	}
@@ -182,7 +182,7 @@ func open(in string) error {
 	}
 
 	// Soiファイルを特定
-	soisDir, err := fileio.SoisDirPath(constant.BucketName())
+	soisDir, err := constant.LocalBucket.Path()
 	if err != nil {
 		return err
 	}
@@ -238,7 +238,7 @@ func addJSON(path string) string {
 }
 
 func pull(_ string) error {
-	soisDir, err := fileio.SoisDirPath(constant.BucketName())
+	soisDir, err := constant.LocalBucket.Path()
 	if err != nil {
 		return err
 	}
@@ -338,7 +338,11 @@ func generateAuthValues() (user string, pass string, authValue string, err error
 }
 
 func push(_ string) error {
-	soisDir, err := fileio.SoisDirPath(constant.BucketName())
+	bucket := constant.LocalBucket
+	if bucket.IsLocalOnly() {
+		return fmt.Errorf("Bucketname %s is Local Bucket", bucket.GetName())
+	}
+	soisDir, err := bucket.Path()
 	if err != nil {
 		return err
 	}
