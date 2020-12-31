@@ -43,6 +43,11 @@ func Executor(in string) {
 			fmt.Println(err)
 			return
 		}
+	case "cb":
+		if err := cb(in); err != nil {
+			fmt.Println(err)
+			return
+		}
 	case "open", "o", "list", "l", "dig", "d":
 		if err := open(in); err != nil {
 			fmt.Println(err)
@@ -172,7 +177,39 @@ func rm(in string) error {
 	return exec.Command("rm", "-rf", target).Start()
 }
 
-// open は指定されたSoiを元にブラウザを開きます
+// cb はbucketの変更を行う
+func cb(in string) error {
+	flags := flag.NewFlagSet("cb", flag.PanicOnError)
+	if err := flags.Parse(strings.Split(in, " ")[1:]); err != nil {
+		return err
+	}
+	buckets, err := constant.ListBuckets()
+	if err != nil {
+		return err
+	}
+
+	bucket := flags.Arg(0)
+	// 存在するBucketなら変更
+	for _, b := range buckets {
+		if b == bucket {
+			constant.LocalBucket.SetName(bucket)
+			fmt.Printf("change current bucket: %s \n", bucket)
+			return nil
+		}
+	}
+	soisDir, err := constant.SoisDir()
+	if err != nil {
+		return err
+	}
+	if err := os.Mkdir(filepath.Join(soisDir, bucket), 0600); err != nil {
+		return err
+	}
+	constant.LocalBucket.SetName(bucket)
+	fmt.Printf("create & change current bucket: %s \n", bucket)
+	return nil
+}
+
+// open は指定されたSoiを元にブラウザを開く
 func open(in string) error {
 	flags := flag.NewFlagSet("open", flag.PanicOnError)
 	firefox := flags.Bool("f", false, "use firefox")

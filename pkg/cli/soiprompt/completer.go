@@ -33,6 +33,8 @@ func Completer(d prompt.Document) []prompt.Suggest {
 		return suggestDigCmd(d)
 	case hasPrefixes(text, "list ", "l "):
 		return suggestListCmd(d)
+	case hasPrefixes(text, "cb ", "c "):
+		return suggestCBCmd(d)
 	case hasPrefixes(text, "help ", "h "):
 		return suggestHelpCmd(d)
 	default:
@@ -40,6 +42,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 			{Text: "add", Description: "(a)dd url"},
 			{Text: "dig", Description: "(d)ig urls"},
 			{Text: "list", Description: "(l)ist and filter urls"},
+			{Text: "cb", Description: "change bucket"},
 			{Text: "tag", Description: "add tags (TODO)"},
 			{Text: "mv", Description: "move file to dir"},
 			{Text: "rm", Description: "remove file or dir"},
@@ -221,6 +224,26 @@ func suggestListCmd(d prompt.Document) []prompt.Suggest {
 		})
 	}
 	return prompt.FilterContains(sgs, d.GetWordBeforeCursor(), true)
+}
+
+// suggestCBCmd はバケット変更時のSuggestを提示します
+func suggestCBCmd(d prompt.Document) []prompt.Suggest {
+	buckets, err := constant.ListBuckets()
+	if err != nil {
+		log.Fatal(err)
+	}
+	var s []prompt.Suggest
+	for _, b := range buckets {
+		s = append(s, prompt.Suggest{
+			Text:        b,
+			Description: "existing bucket",
+		})
+	}
+	s = append(s, prompt.Suggest{
+		Text:        "<<new bucket name>>",
+		Description: `input new bucket name (local private one should start with "_")`,
+	})
+	return prompt.FilterContains(s, d.GetWordBeforeCursor(), true)
 }
 
 func suggestHelpCmd(d prompt.Document) []prompt.Suggest {
