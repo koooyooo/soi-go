@@ -201,7 +201,7 @@ func cb(in string) error {
 	if err != nil {
 		return err
 	}
-	if err := os.Mkdir(filepath.Join(soisDir, bucket), 0600); err != nil {
+	if err := os.Mkdir(filepath.Join(soisDir, bucket), 0700); err != nil {
 		return err
 	}
 	constant.LocalBucket.SetName(bucket)
