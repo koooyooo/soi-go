@@ -23,7 +23,7 @@ import (
 	"github.com/koooyooo/soi-go/pkg/fileio"
 )
 
-// Executor は入力されたコマンドに応じた処理を行う
+// Executor は入力されたコマンドに応じた処理を行います
 func Executor(in string) {
 	in = strings.Trim(in, " ")
 	cmd := strings.Split(in, " ")[0]
@@ -76,7 +76,7 @@ func Executor(in string) {
 	}
 }
 
-// add はsoiの追加を行う
+// add はsoiの追加を行います
 func add(in string) error {
 	flags := flag.NewFlagSet("add", flag.PanicOnError)
 	n := flags.String("n", "", "name of the uri")
@@ -121,7 +121,7 @@ func add(in string) error {
 	return ioutil.WriteFile(filepath.Join(baseDir, toStorableName(name)), b, 0600)
 }
 
-// mv はsoiの移動を行う
+// mv はsoiの移動を行います
 func mv(in string) error {
 	baseDir, err := constant.LocalBucket.Path()
 	if err != nil {
@@ -158,7 +158,7 @@ func mv(in string) error {
 	return exec.Command("mv", from, to).Start()
 }
 
-// rm はsoiの削除を行う
+// rm はsoiの削除を行います
 func rm(in string) error {
 	baseDir, err := constant.LocalBucket.Path()
 	if err != nil {
@@ -177,18 +177,24 @@ func rm(in string) error {
 	return exec.Command("rm", "-rf", target).Start()
 }
 
-// cb はbucketの変更を行う
+// cb はbucketの変更を行います
 func cb(in string) error {
 	flags := flag.NewFlagSet("cb", flag.PanicOnError)
 	if err := flags.Parse(strings.Split(in, " ")[1:]); err != nil {
 		return err
+	}
+
+	bucket := flags.Arg(0)
+	// 引数なしの場合は現在のバケット表示
+	if bucket == "" {
+		fmt.Printf("current bucket: [%s]\n", constant.LocalBucket.GetName())
+		return nil
 	}
 	buckets, err := constant.ListBuckets()
 	if err != nil {
 		return err
 	}
 
-	bucket := flags.Arg(0)
 	// 存在するBucketなら変更
 	for _, b := range buckets {
 		if b == bucket {
@@ -209,7 +215,7 @@ func cb(in string) error {
 	return nil
 }
 
-// open は指定されたSoiを元にブラウザを開く
+// open は指定されたSoiを元にブラウザを開きます
 func open(in string) error {
 	flags := flag.NewFlagSet("open", flag.PanicOnError)
 	firefox := flags.Bool("f", false, "use firefox")
@@ -267,6 +273,7 @@ func open(in string) error {
 	return exec.Command("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", s.URI).Start()
 }
 
+// 末尾に ".json" を追加します
 func addJSON(path string) string {
 	if !strings.HasSuffix(path, ".json") {
 		path = path + ".json"
@@ -274,6 +281,7 @@ func addJSON(path string) string {
 	return path
 }
 
+// pull はレジストリよりデータをロードします
 func pull(_ string) error {
 	soisDir, err := constant.LocalBucket.Path()
 	if err != nil {
