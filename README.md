@@ -20,17 +20,17 @@ soi>
 
 #### Add
 Type `add` to add a new link (soi).  
-```shell script
+```
 soi> add https://www.google.com
 ```
 
 - You can specify its directory by `-d` option (default: `new`)
-```shell script
+```
 soi> add -d search https://www.google.com
 ```
 
 - You can specify its name by `-n` option (default: HTML's `<title>` value)
-```shell script
+```
 soi> add -n google https://www.google.com
 ```
 
