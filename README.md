@@ -2,28 +2,75 @@
 # Soi
 Soi is a url management CLI system. which could add url, find url and rename url.
 
+## Install
+Clone this repository, then run `make install` in the directory.
+```
+$ git clone https://github.com/koooyooo/soi-go.git
+$ cd soi-go && make install
+```
+
 ## Usage
 
-#### Add
+### Run Soi
+Type `soi` then soi prompt appears.
 ```
-  Desc:  add url to soi
-  Usage: add (URL)
-  Option:
-    -n: logical name of the url    (default: &lt;title&gt; of the URL)
-    -d: directory to store the url (default: "new")
+$ soi
+soi> 
 ```
 
-#### Dig
+#### Add
+Type `add` to add a new link (soi).  
+```shell script
+soi> add https://www.google.com
 ```
-  Desc:  dig url directory with [Tab] key completion and [→] key listing next suggestions
-  Usage: dig (URL Completion with [Tab] and [→] key listing next suggestions)
+
+- You can specify its directory by `-d` option (default: `new`)
+```shell script
+soi> add -d search https://www.google.com
+```
+
+- You can specify its name by `-n` option (default: HTML's `<title>` value)
+```shell script
+soi> add -n google https://www.google.com
+```
+
+- Specifying both `-d` and `-n` is the most preferable.
+```
+soi> add -d search -n google https://www.google.com
 ```
 
 #### List
+Type `list` to list up the links(sois).  
+- Then, you can choose a link by using `Tab` key.
+- Next, you can select links by using `Tab`, `Shift + Tab` or arrow keys.
+- Also, you can filter links by typing free words.
+- Finally, type `enter` key to open the site in a browser.
+- Default browser is `chrome`, if you like `firefox`, use `-f` option, or you prefer `safari`, use `-s` option.
 ```
-  Desc:  list all urls with filtering
-  Usage: list (free words)
+soi> list
+           [  0 00.0] search/google.json
+           [  0 00.0] search/yahoo.json
+           [  0 00.0] sns/facebook.json
 ```
+
+
+#### Dig
+Type `Dig` to search links(sois) by digging directory one by one.
+```
+soi> dig
+          search/
+          sns/
+```
+- Then, type `Tab` key and choose one directory
+- Next, type `→` key to dig the chosen directory
+```
+soi> dig search/
+                 search/google.json
+                 search/yahoo.json
+``` 
+- Finally, type `enter` key to open the site in a browser
+- Default browser is `chrome`, if you like `firefox`, use `-f` option, or you prefer `safari`, use `-s` option.
+
 
 #### Tag              
 ```
