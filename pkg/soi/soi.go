@@ -14,6 +14,7 @@ type (
 	SoiData struct {
 		Name          string     `json:"name"`
 		Title         string     `json:"title"`
+		Hash          string     `json:"hash"`
 		URI           string     `json:"uri"`
 		Tags          []string   `json:"tags"`
 		Rate          float32    `json:"rate"`
