@@ -7,6 +7,7 @@ services:
       - 8080:8080
     environment:
       GOOGLE_APPLICATION_CREDENTIALS: "/etc/gcp/service-account.json"
+      SOI_BUCKET_NAME: ${SOI_BUCKET_NAME}
     volumes:
       - type: bind
         source: ${SERVICE_ACCOUNT_DIR}
