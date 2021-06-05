@@ -10,10 +10,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/koooyooo/soi-go/pkg/common/file"
+
 	"github.com/koooyooo/soi-go/pkg/common/hash"
 
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/common"
 	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/utils"
 	"github.com/koooyooo/soi-go/pkg/soi"
 )
@@ -61,5 +62,5 @@ func add(in string) error {
 	if err = os.MkdirAll(baseDir, 0700); err != nil {
 		return err
 	}
-	return ioutil.WriteFile(filepath.Join(baseDir, common.ToStorableName(name)), b, 0600)
+	return ioutil.WriteFile(filepath.Join(baseDir, file.ToStorableName(name)), b, 0600)
 }
