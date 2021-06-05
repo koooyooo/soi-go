@@ -4,6 +4,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/suggest"
+
 	prompt "github.com/c-bata/go-prompt"
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
 	"github.com/koooyooo/soi-go/pkg/cli/soiprompt"
@@ -23,7 +25,7 @@ func main() {
 
 	p := prompt.New(
 		soiprompt.Executor,
-		soiprompt.Completer,
+		suggest.Completer,
 		prompt.OptionTitle("soi input"),
 		prompt.OptionPrefix("soi> "),
 		prompt.OptionPrefixTextColor(prompt.Black),

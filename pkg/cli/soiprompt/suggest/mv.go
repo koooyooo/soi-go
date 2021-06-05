@@ -10,8 +10,8 @@ import (
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
 )
 
-// MvCmd はmvコマンド系のSuggestを提示します
-func MvCmd(d prompt.Document) []prompt.Suggest {
+// mvCmd はmvコマンド系のSuggestを提示します
+func mvCmd(d prompt.Document) []prompt.Suggest {
 	text := d.Text
 	is2ndArg := 2 < len(strings.Split(text, " "))
 

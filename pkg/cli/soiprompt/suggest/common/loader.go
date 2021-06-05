@@ -9,7 +9,7 @@ import (
 	"github.com/koooyooo/soi-go/pkg/soi"
 )
 
-// loadSoiDataArray は指定されたファイルパスの配列からSoiData(WithPath)の配列をロードします
+// LoadSoiDataArray は指定されたファイルパスの配列からSoiData(WithPath)の配列をロードします
 func LoadSoiDataArray(files []string) ([]*soi.SoiWithPath, error) {
 	var wg sync.WaitGroup
 	wg.Add(len(files))

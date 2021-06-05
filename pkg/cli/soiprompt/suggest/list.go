@@ -12,8 +12,8 @@ import (
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
 )
 
-// ListCmd はlistコマンド系のSuggestを提示します
-func ListCmd(d prompt.Document) []prompt.Suggest {
+// listCmd はlistコマンド系のSuggestを提示します
+func listCmd(d prompt.Document) []prompt.Suggest {
 	// option探索
 	if strings.HasPrefix(d.GetWordBeforeCursor(), "-") {
 		return browserOptSuggests

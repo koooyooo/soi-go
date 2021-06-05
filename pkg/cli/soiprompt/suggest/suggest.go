@@ -1,31 +1,29 @@
-package soiprompt
+package suggest
 
 import (
 	"strings"
 
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/suggest"
-
 	"github.com/c-bata/go-prompt"
 )
 
-// completer はSuggest候補を提示することで補完を実施します
+// Completer はSuggest候補を提示することで補完を実施します
 func Completer(d prompt.Document) []prompt.Suggest {
 	text := d.TextBeforeCursor()
 	switch {
 	case hasPrefixes(text, "add ", "a "):
-		return suggest.AddCmd(d)
+		return addCmd(d)
 	case hasPrefixes(text, "mv "):
-		return suggest.MvCmd(d)
+		return mvCmd(d)
 	case hasPrefixes(text, "rm "):
-		return suggest.RmCmd(d)
+		return rmCmd(d)
 	case hasPrefixes(text, "dig ", "d "):
-		return suggest.DigCmd(d)
+		return digCmd(d)
 	case hasPrefixes(text, "list ", "l "):
-		return suggest.ListCmd(d)
+		return listCmd(d)
 	case hasPrefixes(text, "cb ", "c "):
-		return suggest.CBCmd(d)
+		return cbCmd(d)
 	case hasPrefixes(text, "help ", "h "):
-		return suggest.HelpCmd(d)
+		return helpCmd(d)
 	default:
 		s := []prompt.Suggest{
 			{Text: "add", Description: "(a)dd url"},

@@ -5,6 +5,6 @@ import (
 	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/suggest/common"
 )
 
-func HelpCmd(d prompt.Document) []prompt.Suggest {
+func helpCmd(d prompt.Document) []prompt.Suggest {
 	return common.EmptySuggests
 }

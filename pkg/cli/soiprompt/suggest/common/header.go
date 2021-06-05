@@ -7,7 +7,7 @@ import (
 	"github.com/koooyooo/soi-go/pkg/soi"
 )
 
-// ヘッダ部分の文字列を作成します
+// CreateHeader はヘッダ部分の文字列を作成します
 func CreateHeader(sd *soi.SoiData) string {
 	return fmt.Sprintf("[%3d %04.1f]", sd.NumViews, sd.NumReads)
 }

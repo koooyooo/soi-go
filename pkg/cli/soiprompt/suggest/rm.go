@@ -11,8 +11,8 @@ import (
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
 )
 
-// RmCmd はrmコマンド系のSuggestを提示します
-func RmCmd(d prompt.Document) []prompt.Suggest {
+// rmCmd はrmコマンド系のSuggestを提示します
+func rmCmd(d prompt.Document) []prompt.Suggest {
 	word := strings.TrimPrefix(d.GetWordBeforeCursor(), "rm ")
 
 	dir, err := constant.LocalBucket.Path()

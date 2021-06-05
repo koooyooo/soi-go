@@ -12,8 +12,8 @@ import (
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
 )
 
-// AddCmd はaddコマンド系のSuggestを提示します
-func AddCmd(d prompt.Document) []prompt.Suggest {
+// addCmd はaddコマンド系のSuggestを提示します
+func addCmd(d prompt.Document) []prompt.Suggest {
 	// option探索
 	if utils.IsOptionWord(d) {
 		return []prompt.Suggest{

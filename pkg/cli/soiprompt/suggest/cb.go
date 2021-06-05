@@ -7,8 +7,8 @@ import (
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
 )
 
-// CBCmd はバケット変更時のSuggestを提示します
-func CBCmd(d prompt.Document) []prompt.Suggest {
+// cbCmd はバケット変更時のSuggestを提示します
+func cbCmd(d prompt.Document) []prompt.Suggest {
 	buckets, err := constant.ListBuckets()
 	if err != nil {
 		log.Fatal(err)

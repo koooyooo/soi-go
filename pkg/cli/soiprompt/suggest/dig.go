@@ -16,8 +16,8 @@ import (
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
 )
 
-// DigCmd はppコマンド系のSuggestを提示します
-func DigCmd(d prompt.Document) []prompt.Suggest {
+// digCmd はppコマンド系のSuggestを提示します
+func digCmd(d prompt.Document) []prompt.Suggest {
 	// option探索
 	if utils.IsOptionWord(d) {
 		return browserOptSuggests

@@ -46,7 +46,7 @@ func ListFilesRecursively(dir string) ([]string, error) {
 	return files, err
 }
 
-// listDirsRecursively は引数のdir配下を再帰的に走査してDirectoryのPathを収集します
+// ListDirsRecursively は引数のdir配下を再帰的に走査してDirectoryのPathを収集します
 func ListDirsRecursively(dir string, lastSlash bool) ([]string, error) {
 	soiRoot, err := constant.LocalBucket.Path()
 	if err != nil {
