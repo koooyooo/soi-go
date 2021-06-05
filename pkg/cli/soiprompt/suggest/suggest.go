@@ -6,6 +6,8 @@ import (
 	"github.com/c-bata/go-prompt"
 )
 
+var EmptySuggests []prompt.Suggest
+
 // Completer はSuggest候補を提示することで補完を実施します
 func Completer(d prompt.Document) []prompt.Suggest {
 	text := d.TextBeforeCursor()
@@ -18,7 +20,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 		return rmCmd(d)
 	case hasPrefixes(text, "dig ", "d "):
 		return digCmd(d)
-	case hasPrefixes(text, "list ", "l "):
+	case hasPrefixes(text, "list ", "ls", "l "):
 		return listCmd(d)
 	case hasPrefixes(text, "cb ", "c "):
 		return cbCmd(d)

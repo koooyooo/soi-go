@@ -9,8 +9,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/suggest/meta"
+
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/common"
 	"github.com/koooyooo/soi-go/pkg/soi"
 )
 
@@ -29,7 +30,7 @@ func open(in string) error {
 		return err
 	}
 
-	relPath := addJSON(common.RemoveHeader(filepath.Join(flags.Args()...)))
+	relPath := addJSON(meta.Remove(filepath.Join(flags.Args()...)))
 
 	fullPath := filepath.Join(soisDir, relPath)
 

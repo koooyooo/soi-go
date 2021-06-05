@@ -32,7 +32,7 @@ func Executor(in string) {
 			fmt.Println(err)
 			return
 		}
-	case "open", "o", "list", "l", "dig", "d":
+	case "open", "o", "list", "ls", "l", "dig", "d":
 		if err := open(in); err != nil {
 			fmt.Println(err)
 			return

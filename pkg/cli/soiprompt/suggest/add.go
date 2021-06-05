@@ -4,8 +4,6 @@ import (
 	"log"
 	"strings"
 
-	common2 "github.com/koooyooo/soi-go/pkg/cli/soiprompt/common"
-
 	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/utils"
 
 	"github.com/c-bata/go-prompt"
@@ -22,7 +20,7 @@ func addCmd(d prompt.Document) []prompt.Suggest {
 		}
 	}
 	if strings.HasSuffix(d.Text, "-n ") {
-		return common2.EmptySuggests
+		return EmptySuggests
 	}
 	// dir探索
 	if strings.HasSuffix(d.Text, "-d ") {
@@ -50,5 +48,5 @@ func addCmd(d prompt.Document) []prompt.Suggest {
 			{Text: "-d", Description: "dir to which soi store"},
 		}
 	}
-	return common2.EmptySuggests
+	return EmptySuggests
 }
