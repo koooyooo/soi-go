@@ -8,7 +8,8 @@ import (
 	"os"
 	"path"
 
-	"github.com/koooyooo/soi-go/pkg/fileio"
+	fileio2 "github.com/koooyooo/soi-go/pkg/common/file"
+
 	"github.com/koooyooo/soi-go/pkg/soi"
 )
 
@@ -67,7 +68,7 @@ func (f FileRepository) LoadAll(ctx context.Context) (*soi.SoiVirtualBucket, err
 		return nil, err
 	}
 	path := path.Join(f.BasePath, userID, soiBucketID, "sois.json")
-	if !fileio.Exists(path) {
+	if !fileio2.Exists(path) {
 		return &soi.SoiVirtualBucket{}, nil
 	}
 	b, err := ioutil.ReadFile(path)

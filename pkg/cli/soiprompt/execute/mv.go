@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
-	"github.com/koooyooo/soi-go/pkg/fileio"
+	"github.com/koooyooo/soi-go/pkg/common/file"
 )
 
 // mv はsoiの移動を行います
@@ -26,7 +26,7 @@ func mv(in string) error {
 
 	// 移動先のディレクトリが存在しない場合は作成
 	toDir := to[0:strings.LastIndex(to, "/")]
-	if !fileio.Exists(toDir) {
+	if !file.Exists(toDir) {
 		err = os.MkdirAll(toDir, 0700)
 		if err != nil {
 			return err
@@ -34,7 +34,7 @@ func mv(in string) error {
 	}
 
 	// 末尾JSONの付与
-	toIsDir, err := fileio.IsDir(to)
+	toIsDir, err := file.IsDir(to)
 	if err != nil {
 		switch err.(type) {
 		case *os.PathError:

@@ -4,13 +4,14 @@ import (
 	"log"
 	"os"
 
+	fileio2 "github.com/koooyooo/soi-go/pkg/common/file"
+
 	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/execute"
 
 	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/suggest"
 
 	prompt "github.com/c-bata/go-prompt"
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
-	"github.com/koooyooo/soi-go/pkg/fileio"
 )
 
 func main() {
@@ -18,7 +19,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	if !fileio.Exists(soisDir) {
+	if !fileio2.Exists(soisDir) {
 		if err := os.MkdirAll(soisDir, 0700); err != nil {
 			log.Fatal(err)
 		}

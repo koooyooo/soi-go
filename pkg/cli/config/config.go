@@ -9,7 +9,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/koooyooo/soi-go/pkg/fileio"
+	fileio2 "github.com/koooyooo/soi-go/pkg/common/file"
 
 	"github.com/mitchellh/go-homedir"
 )
@@ -26,7 +26,7 @@ func LoadConfig() (*Config, error) {
 		return nil, err
 	}
 	confPath := filepath.Join(dir, ".soi", "config.json")
-	if !fileio.Exists(confPath) {
+	if !fileio2.Exists(confPath) {
 		initConfig(confPath)
 	}
 	b, err := ioutil.ReadFile(confPath)

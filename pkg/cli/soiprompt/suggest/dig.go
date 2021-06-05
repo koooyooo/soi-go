@@ -7,13 +7,13 @@ import (
 	"path/filepath"
 	"strings"
 
-	common2 "github.com/koooyooo/soi-go/pkg/cli/soiprompt/common"
+	fileio2 "github.com/koooyooo/soi-go/pkg/common/file"
 
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/utils"
-	"github.com/koooyooo/soi-go/pkg/fileio"
+	common2 "github.com/koooyooo/soi-go/pkg/cli/soiprompt/common"
 
 	"github.com/c-bata/go-prompt"
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
+	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/utils"
 )
 
 // digCmd はppコマンド系のSuggestを提示します
@@ -41,7 +41,7 @@ func digCmd(d prompt.Document) []prompt.Suggest {
 
 func suggestByPath(soisDir, path, input string, showDir bool) []prompt.Suggest {
 	var found bool
-	isDir, err := fileio.IsDir(strings.TrimSuffix(path, "/"))
+	isDir, err := fileio2.IsDir(strings.TrimSuffix(path, "/"))
 	if err != nil {
 		switch err.(type) {
 		case *os.PathError:

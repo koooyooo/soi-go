@@ -1,7 +1,7 @@
 /*
-Package fileio offers file related functions
+Package file offers file related functions
 */
-package fileio
+package file
 
 import (
 	"io"

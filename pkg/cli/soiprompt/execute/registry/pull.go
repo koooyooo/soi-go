@@ -9,10 +9,11 @@ import (
 	"path"
 	"path/filepath"
 
+	fileio2 "github.com/koooyooo/soi-go/pkg/common/file"
+
 	config2 "github.com/koooyooo/soi-go/pkg/cli/config"
 
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
-	"github.com/koooyooo/soi-go/pkg/fileio"
 	"github.com/koooyooo/soi-go/pkg/soi"
 )
 
@@ -49,7 +50,7 @@ func Pull(_ string) error {
 	}
 
 	// バックアップディレクトリを作成
-	empty, err := fileio.IsEmpty(soisDir)
+	empty, err := fileio2.IsEmpty(soisDir)
 	if err != nil {
 		return err
 	}
@@ -71,7 +72,7 @@ func Pull(_ string) error {
 	if err = json.Unmarshal(b, &sb); err != nil {
 		return err
 	}
-	if !fileio.Exists(soisDir) {
+	if !fileio2.Exists(soisDir) {
 		if err := os.Mkdir(soisDir, 0700); err != nil {
 			return err
 		}

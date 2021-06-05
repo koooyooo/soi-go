@@ -10,6 +10,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/koooyooo/soi-go/pkg/common/hash"
+
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
 	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/common"
 	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/utils"
@@ -43,7 +45,7 @@ func add(in string) error {
 	s := soi.SoiData{
 		Name:      name,
 		URI:       uri,
-		Hash:      common.Hash(uri),
+		Hash:      hash.HashSha1(uri),
 		Tags:      []string{},
 		CreatedAt: time.Now(), // .Format("2006-01-02T15:04:05Z07:00"),
 	}

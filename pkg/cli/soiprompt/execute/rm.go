@@ -7,8 +7,9 @@ import (
 	"path/filepath"
 	"strings"
 
+	fileio2 "github.com/koooyooo/soi-go/pkg/common/file"
+
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
-	"github.com/koooyooo/soi-go/pkg/fileio"
 )
 
 // rm はsoiの削除を行います
@@ -23,7 +24,7 @@ func rm(in string) error {
 	}
 
 	target := filepath.Join(baseDir, flags.Arg(0))
-	if !fileio.Exists(target) {
+	if !fileio2.Exists(target) {
 		fmt.Println("No file or dir found.")
 		return nil
 	}
