@@ -46,7 +46,7 @@ func add(in string) error {
 	s := soi.SoiData{
 		Name:      name,
 		URI:       uri,
-		Hash:      hash.HashSha1(uri),
+		Hash:      hash.Sha1(uri),
 		Tags:      []string{},
 		CreatedAt: time.Now(), // .Format("2006-01-02T15:04:05Z07:00"),
 	}

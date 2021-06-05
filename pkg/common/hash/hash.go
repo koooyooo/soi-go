@@ -7,13 +7,13 @@ import (
 	"io"
 )
 
-func HashSha1(s string) string {
+func Sha1(s string) string {
 	sh := sha1.New()
 	io.WriteString(sh, s)
 	return fmt.Sprintf("%x", sh.Sum(nil))
 }
 
-func HashSha256(s string) string {
+func Sha256(s string) string {
 	b := sha256.Sum256([]byte(s))
 	return fmt.Sprintf("%x", b)
 }

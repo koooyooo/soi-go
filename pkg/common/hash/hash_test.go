@@ -6,12 +6,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestHashSha1(t *testing.T) {
-	s := HashSha1("Hello")
+func TestSha1(t *testing.T) {
+	s := Sha1("Hello")
 	assert.Equal(t, "f7ff9e8b7bb2e09b70935a5d785e0cc5d9d0abf0", s)
 }
 
-func TestHashSha256(t *testing.T) {
-	s := HashSha256("hello world")
+func TestSha256(t *testing.T) {
+	s := Sha256("hello world")
 	assert.Equal(t, "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9", s)
 }
