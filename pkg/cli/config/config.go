@@ -19,7 +19,28 @@ type Config struct {
 	Server string `json:"server"`
 }
 
-func InitConfig(path string) error {
+// LoadConfig は設定をロードします
+func LoadConfig() (*Config, error) {
+	dir, err := homedir.Dir()
+	if err != nil {
+		return nil, err
+	}
+	confPath := filepath.Join(dir, ".soi", "config.json")
+	if !fileio.Exists(confPath) {
+		initConfig(confPath)
+	}
+	b, err := ioutil.ReadFile(confPath)
+	if err != nil {
+		return nil, err
+	}
+	var conf Config
+	if err := json.Unmarshal(b, &conf); err != nil {
+		return nil, err
+	}
+	return &conf, nil
+}
+
+func initConfig(path string) error {
 	sc := bufio.NewScanner(os.Stdin)
 	fmt.Println(`server url? (ex. https://server:80")`)
 	fmt.Print("> ")
@@ -36,25 +57,4 @@ func InitConfig(path string) error {
 		return err
 	}
 	return ioutil.WriteFile(path, b, 0600)
-}
-
-// 設定をロードします
-func LoadConfig() (*Config, error) {
-	dir, err := homedir.Dir()
-	if err != nil {
-		return nil, err
-	}
-	confPath := filepath.Join(dir, ".soi", "config.json")
-	if !fileio.Exists(confPath) {
-		InitConfig(confPath)
-	}
-	b, err := ioutil.ReadFile(confPath)
-	if err != nil {
-		return nil, err
-	}
-	var conf Config
-	if err := json.Unmarshal(b, &conf); err != nil {
-		return nil, err
-	}
-	return &conf, nil
 }

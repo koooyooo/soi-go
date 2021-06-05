@@ -9,8 +9,9 @@ import (
 	"path"
 	"path/filepath"
 
+	config2 "github.com/koooyooo/soi-go/pkg/cli/config"
+
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
-	"github.com/koooyooo/soi-go/pkg/config"
 	"github.com/koooyooo/soi-go/pkg/fileio"
 	"github.com/koooyooo/soi-go/pkg/soi"
 )
@@ -27,7 +28,7 @@ func Pull(_ string) error {
 	if err != nil {
 		return err
 	}
-	cfg, err := config.LoadConfig()
+	cfg, err := config2.LoadConfig()
 	if err != nil {
 		return err
 	}

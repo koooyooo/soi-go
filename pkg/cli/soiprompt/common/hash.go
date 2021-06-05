@@ -3,11 +3,11 @@ package common
 import (
 	"crypto/sha1"
 	"fmt"
+	"io"
 )
 
 func Hash(s string) string {
 	sh := sha1.New()
-	sh.Write([]byte(s))
-	b := sh.Sum(nil)
-	return fmt.Sprintf("%x", b)
+	io.WriteString(sh, s)
+	return fmt.Sprintf("%x", sh.Sum(nil))
 }

@@ -9,8 +9,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/koooyooo/soi-go/pkg/cli/config"
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
-	"github.com/koooyooo/soi-go/pkg/config"
 	"github.com/koooyooo/soi-go/pkg/soi"
 )
 
