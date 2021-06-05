@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/suggest/common"
+	common2 "github.com/koooyooo/soi-go/pkg/cli/soiprompt/common"
 
 	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/utils"
 	"github.com/koooyooo/soi-go/pkg/fileio"
@@ -64,7 +64,7 @@ func suggestByPath(soisDir, path, input string, showDir bool) []prompt.Suggest {
 		}
 		return utils.FilePathsToSuggests(soisDir, dirs, input)
 	}
-	return common.EmptySuggests
+	return common2.EmptySuggests
 }
 
 // toLeafDirPath はPathを末端ディレクトリのPathに変換します

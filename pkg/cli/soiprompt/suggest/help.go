@@ -2,9 +2,9 @@ package suggest
 
 import (
 	"github.com/c-bata/go-prompt"
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/suggest/common"
+	common2 "github.com/koooyooo/soi-go/pkg/cli/soiprompt/common"
 )
 
 func helpCmd(d prompt.Document) []prompt.Suggest {
-	return common.EmptySuggests
+	return common2.EmptySuggests
 }

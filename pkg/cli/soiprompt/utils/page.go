@@ -1,4 +1,4 @@
-package soiprompt
+package utils
 
 import (
 	"io"
@@ -8,7 +8,7 @@ import (
 	"golang.org/x/net/html/atom"
 )
 
-func parseTitleByURL(url string) (string, bool, error) {
+func ParseTitleByURL(url string) (string, bool, error) {
 	resp, err := http.DefaultClient.Get(url)
 	if err != nil {
 		return "", false, err

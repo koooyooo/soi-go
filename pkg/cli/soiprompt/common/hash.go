@@ -1,11 +1,11 @@
-package soiprompt
+package common
 
 import (
 	"crypto/sha1"
 	"fmt"
 )
 
-func hash(s string) string {
+func Hash(s string) string {
 	sh := sha1.New()
 	sh.Write([]byte(s))
 	b := sh.Sum(nil)

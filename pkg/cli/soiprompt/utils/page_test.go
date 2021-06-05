@@ -1,4 +1,4 @@
-package soiprompt
+package utils
 
 import (
 	"bytes"

@@ -1,9 +1,9 @@
-package soiprompt
+package common
 
 import "strings"
 
-// toStorableName はファイル名を保存可能な形式に変換します
-func toStorableName(n string) string {
+// ToStorableName はファイル名を保存可能な形式に変換します
+func ToStorableName(n string) string {
 	// pathの予約語系を変換します
 	n = strings.ReplaceAll(n, " ", "_")
 	n = strings.ReplaceAll(n, "/", "／")

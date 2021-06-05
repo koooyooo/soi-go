@@ -4,11 +4,12 @@ import (
 	"log"
 	"os"
 
+	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/execute"
+
 	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/suggest"
 
 	prompt "github.com/c-bata/go-prompt"
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt"
 	"github.com/koooyooo/soi-go/pkg/fileio"
 )
 
@@ -24,7 +25,7 @@ func main() {
 	}
 
 	p := prompt.New(
-		soiprompt.Executor,
+		execute.Executor,
 		suggest.Completer,
 		prompt.OptionTitle("soi input"),
 		prompt.OptionPrefix("soi> "),

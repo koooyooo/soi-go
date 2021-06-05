@@ -4,9 +4,9 @@ import (
 	"log"
 	"strings"
 
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/utils"
+	common2 "github.com/koooyooo/soi-go/pkg/cli/soiprompt/common"
 
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/suggest/common"
+	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/utils"
 
 	"github.com/c-bata/go-prompt"
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
@@ -26,14 +26,14 @@ func listCmd(d prompt.Document) []prompt.Suggest {
 	if err != nil {
 		log.Fatal(err)
 	}
-	swp, err := common.LoadSoiDataArray(files)
+	swp, err := common2.LoadSoiDataArray(files)
 	if err != nil {
 		panic(err)
 	}
 	var sgs []prompt.Suggest
 	for _, s := range swp {
 		sgs = append(sgs, prompt.Suggest{
-			Text:        common.CreateHeader(s.SoiData) + " " + strings.TrimPrefix(s.Path, soisDir+"/"),
+			Text:        common2.CreateHeader(s.SoiData) + " " + strings.TrimPrefix(s.Path, soisDir+"/"),
 			Description: "",
 		})
 	}
