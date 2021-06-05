@@ -1,22 +1,11 @@
 package soiprompt
 
 import (
-	"flag"
-	"log"
-	"os"
-	"path/filepath"
-	"sort"
 	"strings"
 
-	"github.com/koooyooo/soi-go/pkg/cli/constant"
-
-	"github.com/koooyooo/soi-go/pkg/fileio"
+	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/suggest"
 
 	"github.com/c-bata/go-prompt"
-)
-
-var (
-	EmptySuggests = []prompt.Suggest{}
 )
 
 // completer はSuggest候補を提示することで補完を実施します
@@ -24,19 +13,19 @@ func Completer(d prompt.Document) []prompt.Suggest {
 	text := d.TextBeforeCursor()
 	switch {
 	case hasPrefixes(text, "add ", "a "):
-		return suggestAddCmd(d)
+		return suggest.AddCmd(d)
 	case hasPrefixes(text, "mv "):
-		return suggestMvCmd(d)
+		return suggest.MvCmd(d)
 	case hasPrefixes(text, "rm "):
-		return suggestRmCmd(d)
+		return suggest.RmCmd(d)
 	case hasPrefixes(text, "dig ", "d "):
-		return suggestDigCmd(d)
+		return suggest.DigCmd(d)
 	case hasPrefixes(text, "list ", "l "):
-		return suggestListCmd(d)
+		return suggest.ListCmd(d)
 	case hasPrefixes(text, "cb ", "c "):
-		return suggestCBCmd(d)
+		return suggest.CBCmd(d)
 	case hasPrefixes(text, "help ", "h "):
-		return suggestHelpCmd(d)
+		return suggest.HelpCmd(d)
 	default:
 		s := []prompt.Suggest{
 			{Text: "add", Description: "(a)dd url"},
@@ -56,205 +45,12 @@ func Completer(d prompt.Document) []prompt.Suggest {
 	}
 }
 
-// suggestAddCmd はaddコマンド系のSuggestを提示します
-func suggestAddCmd(d prompt.Document) []prompt.Suggest {
-	// option探索
-	if isOptionWord(d) {
-		return []prompt.Suggest{
-			{Text: "-n", Description: "name of the url"},
-			{Text: "-d", Description: "dir to which soi store"},
+// hasPrefixes は引数の文字列に接頭語が含まれているものがあるかを調査します
+func hasPrefixes(in string, prefixes ...string) bool {
+	for _, p := range prefixes {
+		if strings.HasPrefix(in, p) {
+			return true
 		}
 	}
-	if strings.HasSuffix(d.Text, "-n ") {
-		return EmptySuggests
-	}
-	// dir探索
-	if strings.HasSuffix(d.Text, "-d ") {
-		var suggests []prompt.Suggest
-		soiRoot, err := constant.LocalBucket.Path()
-		if err != nil {
-			log.Fatal(err)
-		}
-		dirs, err := listDirsRecursively(soiRoot, false)
-		if err != nil {
-			log.Fatal(err)
-		}
-		for _, d := range dirs {
-			suggests = append(suggests, prompt.Suggest{
-				Text:        strings.TrimPrefix(d, soiRoot+"/"),
-				Description: "",
-			})
-		}
-		return suggests
-	}
-	if strings.HasSuffix(d.Text, " ") {
-		return []prompt.Suggest{
-			{Text: "https://", Description: "target url"},
-			{Text: "-n", Description: "name of the url"},
-			{Text: "-d", Description: "dir to which soi store"},
-		}
-	}
-	return EmptySuggests
-}
-
-// suggestMvCmd はmvコマンド系のSuggestを提示します
-func suggestMvCmd(d prompt.Document) []prompt.Suggest {
-	text := d.Text
-	is2ndArg := 2 < len(strings.Split(text, " "))
-
-	word := strings.TrimPrefix(d.GetWordBeforeCursor(), "mv ")
-
-	dir, err := constant.LocalBucket.Path()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var files []string
-	if is2ndArg {
-		files, err = listDirsRecursively(dir, true)
-	} else {
-		files, err = listFilesRecursively(dir)
-	}
-	if err != nil {
-		log.Fatal(err)
-	}
-	return filePathsToSuggests(dir, files, word)
-}
-
-// suggestRmCmd はrmコマンド系のSuggestを提示します
-func suggestRmCmd(d prompt.Document) []prompt.Suggest {
-	word := strings.TrimPrefix(d.GetWordBeforeCursor(), "rm ")
-
-	dir, err := constant.LocalBucket.Path()
-	if err != nil {
-		log.Fatal(err)
-	}
-	var fileDirs []string
-	// ファイル系を追加
-	files, err := listFilesRecursively(dir)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fileDirs = append(fileDirs, files...)
-	// ディレクトリ系を追加
-	dirs, err := listDirsRecursively(dir, false)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fileDirs = append(fileDirs, dirs...)
-	sort.Strings(fileDirs)
-
-	return filePathsToSuggests(dir, fileDirs, word)
-}
-
-// suggestDigCmd はppコマンド系のSuggestを提示します
-func suggestDigCmd(d prompt.Document) []prompt.Suggest {
-	// option探索
-	if isOptionWord(d) {
-		return browserOptSuggests
-	}
-	input := d.TextBeforeCursor()
-	inputs := strings.Split(input, " ")
-
-	flags := flag.NewFlagSet("dig", flag.PanicOnError)
-	flags.Bool("f", false, "open w/ firefox")
-	flags.Bool("s", false, "open w/ safari")
-	if err := flags.Parse(inputs[1:]); err != nil {
-		log.Fatal(err)
-	}
-
-	soisDir, err := constant.LocalBucket.Path()
-	if err != nil {
-		log.Fatal(err)
-	}
-	return suggestByPath(soisDir, filepath.Join(soisDir, flags.Arg(0)), d.GetWordBeforeCursor(), true)
-}
-
-func suggestByPath(soisDir, path, input string, showDir bool) []prompt.Suggest {
-	var found bool
-	isDir, err := fileio.IsDir(strings.TrimSuffix(path, "/"))
-	if err != nil {
-		switch err.(type) {
-		case *os.PathError:
-			found = false
-			// 対象ファイルが見つからないだけの場合はスルー
-		default:
-			log.Fatal(err)
-		}
-	} else {
-		found = true
-	}
-	switch {
-	case !found || isDir:
-		if !found {
-			path = toLeafDirPath(path)
-		}
-		dirs, err := listFileDirs(path, showDir, true)
-		if err != nil {
-			log.Fatal(err)
-		}
-		return filePathsToSuggests(soisDir, dirs, input)
-	}
-	return EmptySuggests
-}
-
-// suggestListCmd はlistコマンド系のSuggestを提示します
-func suggestListCmd(d prompt.Document) []prompt.Suggest {
-	// option探索
-	if strings.HasPrefix(d.GetWordBeforeCursor(), "-") {
-		return browserOptSuggests
-	}
-	soisDir, err := constant.LocalBucket.Path()
-	if err != nil {
-		log.Fatal(err)
-	}
-	files, err := listFilesRecursively(soisDir)
-	if err != nil {
-		log.Fatal(err)
-	}
-	swp, err := loadSoiDataArray(files)
-	if err != nil {
-		panic(err)
-	}
-	var sgs []prompt.Suggest
-	for _, s := range swp {
-		sgs = append(sgs, prompt.Suggest{
-			Text:        createHeader(s.SoiData) + " " + strings.TrimPrefix(s.Path, soisDir+"/"),
-			Description: "",
-		})
-	}
-	return prompt.FilterContains(sgs, d.GetWordBeforeCursor(), true)
-}
-
-// suggestCBCmd はバケット変更時のSuggestを提示します
-func suggestCBCmd(d prompt.Document) []prompt.Suggest {
-	buckets, err := constant.ListBuckets()
-	if err != nil {
-		log.Fatal(err)
-	}
-	var s []prompt.Suggest
-	for _, b := range buckets {
-		s = append(s, prompt.Suggest{
-			Text:        b,
-			Description: "existing bucket",
-		})
-	}
-	s = append(s, prompt.Suggest{
-		Text:        "<<new bucket name>>",
-		Description: `input new bucket name (local private one should start with "_")`,
-	})
-	return prompt.FilterContains(s, d.GetWordBeforeCursor(), true)
-}
-
-func suggestHelpCmd(d prompt.Document) []prompt.Suggest {
-	return EmptySuggests
-}
-
-func isOptionWord(d prompt.Document) bool {
-	return strings.HasPrefix(d.GetWordBeforeCursor(), "-")
-}
-
-var browserOptSuggests = []prompt.Suggest{
-	{Text: "-f", Description: "open w/ firefox"},
-	{Text: "-s", Description: "open w/ safari"},
+	return false
 }
