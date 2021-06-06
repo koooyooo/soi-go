@@ -3,8 +3,9 @@ package constant
 import "os"
 
 var (
-	EnvKeySoiUserName = ClientEnvKey("SOI_USER_NAME")
-	EnvKeySoiUserPass = ClientEnvKey("SOI_USER_PASS")
+	EnvKeyDefaultBrowser = ClientEnvKey("SOI_DEFAULT_BROWSER")
+	EnvKeySoiUserName    = ClientEnvKey("SOI_USER_NAME")
+	EnvKeySoiUserPass    = ClientEnvKey("SOI_USER_PASS")
 )
 
 type ClientEnvKey string

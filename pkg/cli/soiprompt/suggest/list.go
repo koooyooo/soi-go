@@ -34,8 +34,11 @@ func listCmd(d prompt.Document) []prompt.Suggest {
 	}
 	var sgs []prompt.Suggest
 	for _, s := range swp {
+		relPath := strings.TrimPrefix(s.Path, soisDir+"/")
+		baseName := strings.TrimSuffix(relPath, ".json")
 		sgs = append(sgs, prompt.Suggest{
-			Text:        meta.Create(s.SoiData) + " " + strings.TrimPrefix(s.Path, soisDir+"/"),
+			Text: s.SoiData.GetHash()[:8] + " " + meta.Create(s.SoiData) + " " + baseName,
+			//Text:        baseName + " " + meta.Create(s.SoiData) + " " + s.SoiData.GetHash()[:8],
 			Description: "",
 		})
 	}
@@ -43,6 +46,7 @@ func listCmd(d prompt.Document) []prompt.Suggest {
 }
 
 var browserOptSuggests = []prompt.Suggest{
+	{Text: "-c", Description: "open w/ chrome"},
 	{Text: "-f", Description: "open w/ firefox"},
 	{Text: "-s", Description: "open w/ safari"},
 }
