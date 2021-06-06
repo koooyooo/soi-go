@@ -1,44 +1,40 @@
-package server
+package http
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
-
-	"github.com/koooyooo/soi-go/pkg/srv/auth"
 
 	"github.com/koooyooo/soi-go/pkg/srv/constant"
 
-	"github.com/koooyooo/soi-go/pkg/soi"
-
 	"github.com/gin-gonic/gin"
-
+	"github.com/koooyooo/soi-go/pkg/soi"
+	"github.com/koooyooo/soi-go/pkg/srv/auth"
 	"github.com/koooyooo/soi-go/pkg/srv/repo"
 )
 
-// Run はルーティングを行います
-func Run() {
-	r := gin.Default()
-	r.GET("/api/v1/", root)
-	r.GET("/api/v1/:user_id/:soi_bucket_id/sois", listHandler)
-	r.POST("/api/v1/:user_id/:soi_bucket_id/sois", postHandler)
-	r.POST("/api/v1/:user_id/:soi_bucket_id/sois:replace", replaceHandler)
-	if err := r.Run(":8080"); err != nil {
-		log.Fatalf("run server fails: %v", err)
+// createContext は認証情報をContextに埋め込みます
+func createContext(ctx context.Context, gc *gin.Context) context.Context {
+	if userID := gc.Param("user_id"); userID != "" {
+		ctx = context.WithValue(ctx, constant.CtxKeyUserID, userID)
 	}
+	if soiBucketID := gc.Param("soi_bucket_id"); soiBucketID != "" {
+		ctx = context.WithValue(ctx, constant.CtxKeySoiBucketID, soiBucketID)
+	}
+	// TODO 認証情報の埋め込み
+	return ctx
 }
 
-// root はルートパスのルーティングです
-func root(c *gin.Context) {
+// rootHandler はルートパスのハンドラです
+func rootHandler(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"Result": "OK",
 	})
 }
 
-// listHandler はsoiのリストを取得します
+// listHandler はsoiListを取得するハンドラです
 func listHandler(c *gin.Context) {
 	// 認証
 	authResult, err := auth.Authorize(c)
@@ -64,7 +60,7 @@ func listHandler(c *gin.Context) {
 	c.JSON(200, sb)
 }
 
-// postHandler は
+// postHandler はsoiを登録するハンドラです
 func postHandler(c *gin.Context) {
 	// 認証
 	authResult, err := auth.Authorize(c)
@@ -98,6 +94,7 @@ func postHandler(c *gin.Context) {
 	})
 }
 
+// replaceHandler は全てのsoisを洗い替えします
 func replaceHandler(c *gin.Context) {
 	// 認証
 	authResult, err := auth.Authorize(c)
@@ -129,15 +126,4 @@ func replaceHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"StoreAll": "OK",
 	})
-}
-
-func createContext(ctx context.Context, gc *gin.Context) context.Context {
-	if userID := gc.Param("user_id"); userID != "" {
-		ctx = context.WithValue(ctx, constant.CtxKeyUserID, userID)
-	}
-	if soiBucketID := gc.Param("soi_bucket_id"); soiBucketID != "" {
-		ctx = context.WithValue(ctx, constant.CtxKeySoiBucketID, soiBucketID)
-	}
-	// TODO 認証情報の埋め込み
-	return ctx
 }
