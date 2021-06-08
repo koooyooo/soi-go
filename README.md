@@ -1,9 +1,11 @@
 
 # Soi
 Soi is a url management CLI system. which could add url, find url and rename url.
+(Soi はURLを管理する CLIシステムです)
 
 ## Install
 Clone this repository, then run `make install` in the directory.
+
 ```
 $ git clone https://github.com/koooyooo/soi-go.git
 $ cd soi-go && make install

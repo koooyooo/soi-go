@@ -27,7 +27,9 @@ func LoadConfig() (*Config, error) {
 	}
 	confPath := filepath.Join(dir, ".soi", "config.json")
 	if !fileio2.Exists(confPath) {
-		initConfig(confPath)
+		if err := initConfig(confPath); err != nil {
+			return nil, err
+		}
 	}
 	b, err := ioutil.ReadFile(confPath)
 	if err != nil {
