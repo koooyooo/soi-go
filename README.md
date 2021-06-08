@@ -1,7 +1,7 @@
 
 # Soi
-Soi CLIベースのURL管理するツールです。 CLIベースなので操作性に慣れれば慣れるほど快適でシンプルな操作を行うことができます。  
-また、データはローカルにストアされるためレスポンスはクイックです。
+Soi CLIベースのURL管理するツールです。 CLIベースなので操作性に慣れれば慣れるほど快適でシンプルな操作を行うことができます。
+また、データはローカルに保管されるため、データ処理のレスポンスが早いのも特徴です。。
 
 ## 導入
 任意の ディレクトリに [git](https://git-scm.com/) ベースでクローンします。[make](https://www.gnu.org/software/make/) 経由でインストールを行います。
@@ -12,14 +12,14 @@ $ cd soi-go && make install
 
 ## 利用法
 ### 立ち上げ
-`soi`と打ち込むとSoiが立ち上がり、`soi>`形式のプロンプトを立ち上げてユーザにコマンド入力を促します。soiの操作を楽しみましょう。
+`soi`と打ち込むとSoiが立ち上がり、`soi>`形式のプロンプトを立ち上げてユーザにコマンド入力を促します。soiの操作を楽しんでください。
 
 ```
 $ soi
 soi> 
 ```
 
-#### 追加
+#### add (追加)
 `add`(追加) コマンドでURLを追加することが可能です。引数に目的のURLを渡しましょう。
 ```
 soi> add https://www.google.com
@@ -40,23 +40,23 @@ soi> add -n google https://www.google.com
 soi> add -d search -n google https://www.google.com
 ```
 
-#### リスト
-Type `list` to list up the links(sois).  
-- Then, you can choose a link by using `Tab` key.
-- Next, you can select links by using `Tab`, `Shift + Tab` or arrow keys.
-- Also, you can filter links by typing free words.
-- Finally, type `enter` key to open the site in a browser.
-- Default browser is `chrome`, if you like `firefox`, use `-f` option, or you prefer `safari`, use `-s` option.
+#### list (リストアップ）
+`list` (リストアップ) コマンドで URLをリストアップすることが可能です
+
+- `Tab`キーで候補を選択することができます（`Shift + Tab`で逆順に選択します）
+- `↑`・`↓`キーでも同じ操作が可能です。
+- 任意の文字列を打ち込むことで、パスや名前で絞り込みをかけることが可能です
+- 最後に`Enter`キーを打ち込むことで、ブラウザで当該 URLを開きます
 ```
-soi> list
-           [  0 00.0] search/google.json
-           [  0 00.0] search/yahoo.json
-           [  0 00.0] sns/facebook.json
+soi> list 
+           adf46ead [ 10 00.0] api/API設計ガイド                                
+           a73764ed [  1 00.0] books/GooglePlay-Audiobooks                      
+           46734e6c [  6 00.0] contents/MDN                                     
 ```
 
+#### Dig（掘り下げ）
+`dig`（掘り下げ）コマンドで、ディレクトリを階層的に探索することが可能です。`list`と同様に最終的には URLを開きますが、listが全体検索を行うイメージなのに対し、digはジャンルごとにコンテンツを掘り下げてゆくイメージです。
 
-#### Dig
-Type `Dig` to search links(sois) by digging directory one by one.
 ```
 soi> dig
           search/
