@@ -1,9 +1,11 @@
 
 # Soi
-Soi CLIベースのURL管理するツールです。CLIベースなので快適にURLを収集・検索することができます。
+Soi is a url management CLI system. which could add url, find url and rename url.
+(Soi はURLを管理する CLIシステムです)
 
-## 導入
-Gitベースでクローン・インストールを行います。
+## Install
+Clone this repository, then run `make install` in the directory.
+
 ```
 $ git clone https://github.com/koooyooo/soi-go.git
 $ cd soi-go && make install

@@ -1,47 +1,46 @@
 
 # Soi
-Soi is a url management CLI system. which could add url, find url and rename url.
-(Soi はURLを管理する CLIシステムです)
+Soi CLIベースのURL管理するツールです。 CLIベースなので操作性に慣れれば慣れるほど快適でシンプルな操作を行うことができます。  
+また、データはローカルにストアされるためレスポンスはクイックです。
 
-## Install
-Clone this repository, then run `make install` in the directory.
-
+## 導入
+任意の ディレクトリに [git](https://git-scm.com/) ベースでクローンします。[make](https://www.gnu.org/software/make/) 経由でインストールを行います。
 ```
 $ git clone https://github.com/koooyooo/soi-go.git
 $ cd soi-go && make install
 ```
 
-## Usage
+## 利用法
+### 立ち上げ
+`soi`と打ち込むとSoiが立ち上がり、`soi>`形式のプロンプトを立ち上げてユーザにコマンド入力を促します。soiの操作を楽しみましょう。
 
-### Run Soi
-Type `soi` then soi prompt appears.
 ```
 $ soi
 soi> 
 ```
 
-#### Add
-Type `add` to add a new link (soi).  
+#### 追加
+`add`(追加) コマンドでURLを追加することが可能です。引数に目的のURLを渡しましょう。
 ```
 soi> add https://www.google.com
 ```
 
-- You can specify its directory by `-d` option (default: `new`)
+- URLは任意のディレクトリに分類して管理することができます。ディレクトリを指定する際には `-d`オプションを付けてください。`-d`オプションがない場合は `new`ディレクトリが既定となります。ディレクトリは `/`区切りで階層的に表現することも可能です。
 ```
 soi> add -d search https://www.google.com
 ```
 
-- You can specify its name by `-n` option (default: HTML's `<title>` value)
+- URLには任意の名前をつけることが可能です。名前を指定する際には `-n`オプションを付けてください。`-n`オプションが無い場合には 対象のURLにアクセスし、HTML内の `<title>`属性値を取得して名前として利用します。
 ```
 soi> add -n google https://www.google.com
 ```
 
-- Specifying both `-d` and `-n` is the most preferable.
+- `-d`オプションと`-n`オプションは同時に付与することができます。これは最も望ましい利用法です。`-d`で登録時に細かやかな整理ができますし、`-n`で自分が使いやすい名前を指定できるからです。
 ```
 soi> add -d search -n google https://www.google.com
 ```
 
-#### List
+#### リスト
 Type `list` to list up the links(sois).  
 - Then, you can choose a link by using `Tab` key.
 - Next, you can select links by using `Tab`, `Shift + Tab` or arrow keys.
