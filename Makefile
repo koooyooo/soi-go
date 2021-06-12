@@ -53,3 +53,7 @@ deploy-image: push-image
 	--platform=managed \
 	--region=asia-northeast1 \
 	--set-env-vars=SOI_BUCKET_NAME=$(BUCKET_NAME)
+
+.PHONY: gen-grpc
+gen-grpc:
+	@ protoc --go_out=./soipb --go_opt=paths=source_relative --go-grpc_out=./soipb --go-grpc_opt=paths=source_relative pkg/srv/server/grpc/soi.proto

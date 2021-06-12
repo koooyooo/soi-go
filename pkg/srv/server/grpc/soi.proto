@@ -1,5 +1,9 @@
 syntax = "proto3";
 
+package soi;
+
+option go_package="soipb";
+
 // SoiData represents a SoiData
 message SoiData {
     string name = 1;
@@ -19,4 +23,18 @@ message SoiData {
 message UsageLog {
     string type = 1;
     int64 usedAt = 2;
+}
+
+//
+message SoiRequest {
+    SoiData data = 1;
+}
+
+//
+message SoiResponse {
+    int32 status = 1;
+}
+
+service SoiService {
+    rpc RegisterSoi(SoiRequest) returns (SoiResponse) {}
 }
