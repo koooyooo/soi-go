@@ -39,7 +39,7 @@ func (r *jsonRepository) Load(ctx context.Context, bucket string, hash string) (
 }
 
 func (r *jsonRepository) Store(ctx context.Context, bucket string, soi *model.SoiData) error {
-	return loader.StoreSoiData(filepath.Join(r.basePath, bucket, soi.Path+".json"), soi)
+	return loader.StoreSoiData(soi.FilePath(bucket), soi)
 }
 
 // TODO to path

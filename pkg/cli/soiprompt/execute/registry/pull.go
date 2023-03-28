@@ -80,12 +80,11 @@ func Pull(cfg *config.Config, bucket *model.Bucket, _ string) error {
 		if err != nil {
 			return err
 		}
-		relDir, file := path.Split(sv.Path)
-		fullDir := filepath.Join(soisDir, relDir)
-		if err := os.MkdirAll(fullDir, 0700); err != nil {
+		dir, file := path.Split(sv.FilePath(bucket.Name))
+		if err := os.MkdirAll(dir, 0700); err != nil {
 			return err
 		}
-		if err := ioutil.WriteFile(filepath.Join(fullDir, file), b, 0644); err != nil {
+		if err := os.WriteFile(filepath.Join(dir, file), b, 0644); err != nil {
 			return err
 		}
 	}

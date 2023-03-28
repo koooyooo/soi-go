@@ -6,4 +6,5 @@
 /soi-server
 /config/*.json
 **/*.db
+**/*.db*
 

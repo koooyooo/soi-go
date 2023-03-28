@@ -12,7 +12,7 @@ type Repository interface {
 	LoadAll(ctx context.Context, bucket string) ([]*model.SoiData, error)
 	Load(ctx context.Context, bucket string, hash string) (*model.SoiData, bool, error)
 	Store(ctx context.Context, bucket string, soi *model.SoiData) error
-	// to path
+	// to path (file repo can't load path from hash)
 	Exists(ctx context.Context, bucket string, hash string) (bool, error)
 	// to path
 	//Remove(ctx context.Context, bucket string, hash string) error
