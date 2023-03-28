@@ -1,0 +1,9 @@
+.idea/
+.env
+/repo/
+/soi
+/main
+/soi-server
+/config/*.json
+**/*.db
+

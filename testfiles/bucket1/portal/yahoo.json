@@ -1,0 +1,23 @@
+{
+  "name": "google",
+  "title": "",
+  "hash": "aa4f20c99b3c3d188ce5b6255a299a32d7fa9c79",
+  "path": "/portal/yahoo.json",
+  "uri": "https://www.yahoo.co.jp",
+  "tags": null,
+  "rate": 0,
+  "num_views": 4,
+  "num_reads": 2,
+  "comprehension": 0,
+  "created_at": "2021-12-03T10:16:57.132377Z",
+  "usage_log": [
+    {
+      "type": "open",
+      "used_at": "2021-12-03T10:17:04.326829Z"
+    },
+    {
+      "type": "open",
+      "used_at": "2021-12-04T03:33:46.704437+09:00"
+    }
+  ]
+}

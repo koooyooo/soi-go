@@ -1,0 +1,9 @@
+# usage:
+# $ docker compose run -- soi
+services:
+  soi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    tty: true
+    stdin_open: true
