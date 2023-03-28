@@ -40,6 +40,11 @@ func migrateFile(bucket string) error {
 		return err
 	}
 	for _, s := range sois {
+		idx := strings.LastIndex(s.Path, "/")
+		s.Path = s.Path[:idx]
+		s.Path = strings.TrimSuffix(s.Path, ".json")
+		fmt.Println(s.Path) // TODO
+
 		if err := storeSoi(soisDir, bucket, s); err != nil {
 			return err
 		}

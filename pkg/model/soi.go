@@ -6,8 +6,8 @@ import (
 
 type SoiData struct {
 	ID     int
-	Name   string   `json:"name"`
-	Title  string   `json:"title"`
+	Name   string   `json:"name"`  // ファイル名
+	Title  string   `json:"title"` // <title>属性
 	Hash   string   `json:"hash"`
 	Path   string   `json:"path"` // 保管したPathを設定
 	URI    string   `json:"uri"`

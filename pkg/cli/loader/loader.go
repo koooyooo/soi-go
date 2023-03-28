@@ -78,7 +78,7 @@ func LoadSoiData(filepath string) (*model.SoiData, error) {
 	if err := json.Unmarshal(b, &sd); err != nil {
 		return nil, err
 	}
-	// complement fields
+	// complement fields // TODO fix this
 	sd.Path = filepath
 	if sd.Hash == "" {
 		sd.Hash, err = hash.Sha1(sd.URI)
