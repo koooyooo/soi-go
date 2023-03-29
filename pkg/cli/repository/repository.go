@@ -14,6 +14,7 @@ const (
 
 type Repository interface {
 	Init(ctx context.Context) error
+	ListBucket(ctx context.Context) ([]string, error)
 	LoadAll(ctx context.Context, bucket string) ([]*model.SoiData, error)
 	Load(ctx context.Context, bucket string, hash string) (*model.SoiData, bool, error)
 	Store(ctx context.Context, bucket string, soi *model.SoiData) error

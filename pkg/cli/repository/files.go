@@ -27,6 +27,10 @@ func (r *filesRepository) Init(ctx context.Context) error {
 	return nil
 }
 
+func (r *filesRepository) ListBucket(ctx context.Context) ([]string, error) {
+	return model.ListBucketNames()
+}
+
 func (r *filesRepository) LoadAll(ctx context.Context, bucket string) ([]*model.SoiData, error) {
 	select {
 	case <-ctx.Done():

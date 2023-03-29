@@ -5,7 +5,9 @@ import (
 	"database/sql"
 	"github.com/koooyooo/soi-go/pkg/model"
 	_ "github.com/mattn/go-sqlite3"
+	"os"
 	"path/filepath"
+	"strings"
 )
 
 func NewSQLiteRepository(ctx context.Context, basePath, bucket string) (Repository, error) {
@@ -49,6 +51,23 @@ func initSchema(db *sql.DB) error {
 		return err
 	}
 	return tx.Commit()
+}
+
+func (r *sqliteRepository) ListBucket(ctx context.Context) ([]string, error) {
+	entries, err := os.ReadDir(r.basePath)
+	if err != nil {
+		return nil, err
+	}
+	var buckets []string
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+		if strings.HasSuffix(entry.Name(), ".db") {
+			buckets = append(buckets, strings.TrimSuffix(entry.Name(), ".db"))
+		}
+	}
+	return buckets, nil
 }
 
 func (r *sqliteRepository) LoadAll(ctx context.Context, bucket string) ([]*model.SoiData, error) {

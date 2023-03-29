@@ -1,6 +1,7 @@
 package complete
 
 import (
+	"golang.org/x/net/context"
 	"log"
 	"strings"
 
@@ -28,7 +29,7 @@ func (c *Completer) addCmd(d prompt.Document) []prompt.Suggest {
 		if err != nil {
 			log.Fatal(err)
 		}
-		dirs, err := utils.ListDirsRecursively(soiRoot, c.Bucket, false)
+		dirs, err := c.service.ListDir(context.Background()) // TODO fix context flow
 		if err != nil {
 			log.Fatal(err)
 		}

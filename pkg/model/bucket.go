@@ -41,7 +41,7 @@ func (l Bucket) Path() (string, error) {
 
 func ListBuckets() ([]*Bucket, error) {
 	var buckets []*Bucket
-	bucketNames, err := listBucketNames()
+	bucketNames, err := ListBucketNames()
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func ListBuckets() ([]*Bucket, error) {
 }
 
 // listBuckets はバケット一覧を取得する
-func listBucketNames() ([]string, error) {
+func ListBucketNames() ([]string, error) {
 	soisDir, err := constant.SoisDir()
 	if err != nil {
 		return nil, err

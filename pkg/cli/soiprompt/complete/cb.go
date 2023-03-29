@@ -1,22 +1,22 @@
 package complete
 
 import (
+	"golang.org/x/net/context"
 	"log"
 
 	"github.com/c-bata/go-prompt"
-	"github.com/koooyooo/soi-go/pkg/model"
 )
 
 // cbCmd はバケット変更時のSuggestを提示します
 func (c *Completer) cbCmd(d prompt.Document) []prompt.Suggest {
-	buckets, err := model.ListBuckets()
+	buckets, err := c.service.ListBucket(context.Background()) // TODO fix me
 	if err != nil {
 		log.Fatal(err)
 	}
 	var s []prompt.Suggest
 	for _, b := range buckets {
 		s = append(s, prompt.Suggest{
-			Text:        b.Name,
+			Text:        b,
 			Description: "existing bucket",
 		})
 	}

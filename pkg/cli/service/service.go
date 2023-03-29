@@ -10,12 +10,14 @@ import (
 
 type Service interface {
 	Init(ctx context.Context) error
+	ListBucket(ctx context.Context) ([]string, error)
 	ChangeBucket(ctx context.Context, bucket string) error
 	LoadAll(ctx context.Context) ([]*model.SoiData, error)
 	Load(ctx context.Context, hash string) (*model.SoiData, bool, error)
 	Store(ctx context.Context, soi *model.SoiData) error
 	Exists(ctx context.Context, hash string) (bool, error)
 	Remove(ctx context.Context, hash string) error
+	ListDir(ctx context.Context) ([]string, error)
 }
 
 func NewService(ctx context.Context, bucket string, r repository.Repository) Service {
@@ -32,6 +34,10 @@ type serviceImpl struct {
 
 func (s serviceImpl) Init(ctx context.Context) error {
 	return s.r.Init(ctx)
+}
+
+func (s serviceImpl) ListBucket(ctx context.Context) ([]string, error) {
+	return s.r.ListBucket(ctx)
 }
 
 func (s serviceImpl) ChangeBucket(ctx context.Context, bucket string) error {
@@ -57,6 +63,22 @@ func (s serviceImpl) Exists(ctx context.Context, hash string) (bool, error) {
 
 func (s serviceImpl) Remove(ctx context.Context, hash string) error {
 	return s.r.Remove(ctx, s.bucket, hash)
+}
+
+func (s serviceImpl) ListDir(ctx context.Context) ([]string, error) {
+	sois, err := s.LoadAll(ctx)
+	if err != nil {
+		return nil, err
+	}
+	var m map[string]struct{}
+	for _, soi := range sois {
+		m[soi.Path] = struct{}{}
+	}
+	var dirs []string
+	for k, _ := range m {
+		dirs = append(dirs, k)
+	}
+	return dirs, nil
 }
 
 func toHash(path string) (string, error) {
