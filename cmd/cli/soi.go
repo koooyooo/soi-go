@@ -2,6 +2,9 @@ package main
 
 import (
 	"github.com/koooyooo/soi-go/pkg/cli/config"
+	"github.com/koooyooo/soi-go/pkg/cli/repository"
+	"github.com/koooyooo/soi-go/pkg/cli/service"
+	"golang.org/x/net/context"
 	"log"
 	"os"
 
@@ -13,6 +16,7 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
 	cfg, err := config.Load()
 	if err != nil {
 		log.Fatalf("failed in loading config: %v", err)
@@ -34,7 +38,15 @@ func main() {
 	br := &model.BucketRef{
 		Bucket: b,
 	}
-	sp := soiprompt.NewPrompter(cfg, br)
+	repo, ok, err := repository.NewRepository(ctx, cfg)
+	if err != nil {
+		log.Fatalf("failed in creating repository: %v\n", err)
+	}
+	if !ok {
+		log.Fatal("no repository found")
+	}
+	svc := service.NewService(ctx, cfg.DefaultBucket, repo)
+	sp := soiprompt.NewPrompter(cfg, svc, br)
 
 	p := prompt.New(
 		sp.Execute,

@@ -1,6 +1,8 @@
 package complete
 
 import (
+	"github.com/koooyooo/soi-go/pkg/cli/config"
+	"github.com/koooyooo/soi-go/pkg/cli/service"
 	"strings"
 
 	"github.com/c-bata/go-prompt"
@@ -9,7 +11,17 @@ import (
 
 var EmptySuggests []prompt.Suggest
 
+func NewCompleter(conf *config.Config, service service.Service, b *model.BucketRef) *Completer {
+	return &Completer{
+		conf:      conf,
+		service:   service,
+		BucketRef: b,
+	}
+}
+
 type Completer struct {
+	conf    *config.Config
+	service service.Service
 	*model.BucketRef
 }
 

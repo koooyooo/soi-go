@@ -13,7 +13,8 @@ import (
 
 func TestSQLite(t *testing.T) {
 	os.RemoveAll("test.db")
-	repo, err := NewSQLiteRepository("test.db")
+	ctx := context.Background()
+	repo, err := NewSQLiteRepository(ctx, "", "test")
 	assert.NoError(t, err)
 	err = repo.Init(context.Background())
 	assert.NoError(t, err)
@@ -25,7 +26,7 @@ func TestStore(t *testing.T) {
 		Hash:  "test-hash",
 		Name:  "test-name",
 		Title: "test-title",
-		Path:  "test-path",
+		Path:  "test-basePath",
 		URI:   "test-uri",
 		Tags:  []string{"tag1", "tag2", "tag3"},
 		KVTags: []model.KVTag{
@@ -72,7 +73,7 @@ func TestStore(t *testing.T) {
 	ctx := context.Background()
 
 	os.RemoveAll("test.db")
-	repo, err := NewSQLiteRepository("test.db")
+	repo, err := NewSQLiteRepository(ctx, "", "test")
 	assert.NoError(t, err)
 
 	err = repo.Init(ctx)

@@ -15,8 +15,9 @@ import (
 
 // 設定情報
 type Config struct {
-	Server        string `json:"server"`
-	DefaultBucket string `json:"default_bucket"`
+	Server            string `json:"server"`
+	DefaultBucket     string `json:"default_bucket"`
+	DefaultRepository string `json:"default_repository"`
 }
 
 func Load() (*Config, error) {
@@ -74,6 +75,9 @@ func doLoad(path string) (*Config, error) {
 	}
 	if conf.DefaultBucket == "" {
 		conf.DefaultBucket = "default"
+	}
+	if conf.DefaultRepository == "" {
+		conf.DefaultRepository = "file"
 	}
 	return &conf, nil
 }

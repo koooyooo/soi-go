@@ -9,7 +9,7 @@ const (
 		hash text not null,
 		name text,
 		title text,
-		path text not null, 
+		basePath text not null, 
 		uri text,
 		rate real,
 		num_views integer,
@@ -71,16 +71,16 @@ var (
 	// sois
 	selectAllSoisQuery = `
 		select 
-			id, hash, name, title, path, uri, rate, num_views, num_reads, comprehension, created_at 
+			id, hash, name, title, basePath, uri, rate, num_views, num_reads, comprehension, created_at 
 		from
 			sois
 	where
 	   bucket = ? `
 	selectSoiQuery       = selectAllSoisQuery + " and hash = ? "
-	selectSoiByPathQuery = selectAllSoisQuery + " and path = ? "
+	selectSoiByPathQuery = selectAllSoisQuery + " and basePath = ? "
 	storeSoiQuery        = `
 		insert into sois 
-			(bucket, hash, name, title, path, uri, rate, num_views, num_reads, comprehension, created_at) 
+			(bucket, hash, name, title, basePath, uri, rate, num_views, num_reads, comprehension, created_at) 
 		values 
 			(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) `
 

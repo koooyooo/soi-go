@@ -4,22 +4,35 @@ import (
 	"context"
 	"database/sql"
 	"github.com/koooyooo/soi-go/pkg/model"
+	_ "github.com/mattn/go-sqlite3"
+	"path/filepath"
 )
 
-func NewSQLiteRepository(path string) (Repository, error) {
-	db, err := sql.Open("sqlite3", path)
-	if err != nil {
+func NewSQLiteRepository(ctx context.Context, basePath, bucket string) (Repository, error) {
+	r := sqliteRepository{
+		basePath:      basePath,
+		currentBucket: bucket,
+	}
+	if err := r.reload(ctx); err != nil {
 		return nil, err
 	}
-	return &sqliteRepository{
-		path: path,
-		db:   db,
-	}, nil
+	return &r, nil
 }
 
 type sqliteRepository struct {
-	path string
-	db   *sql.DB
+	basePath      string
+	currentBucket string
+	db            *sql.DB
+}
+
+func (r *sqliteRepository) reload(ctx context.Context) error {
+	dbFilePath := filepath.Join(r.basePath, r.currentBucket+".db")
+	db, err := sql.Open("sqlite3", dbFilePath)
+	if err != nil {
+		return err
+	}
+	r.db = db
+	return nil
 }
 
 func (r *sqliteRepository) Init(ctx context.Context) error {
@@ -39,6 +52,10 @@ func initSchema(db *sql.DB) error {
 }
 
 func (r *sqliteRepository) LoadAll(ctx context.Context, bucket string) ([]*model.SoiData, error) {
+	if r.currentBucket != bucket {
+		r.reload(ctx)
+		r.currentBucket = bucket
+	}
 	stmt, err := r.db.PrepareContext(ctx, selectAllSoisQuery)
 	if err != nil {
 		return nil, err
@@ -62,6 +79,10 @@ func (r *sqliteRepository) LoadAll(ctx context.Context, bucket string) ([]*model
 }
 
 func (r *sqliteRepository) Load(ctx context.Context, bucket string, hash string) (*model.SoiData, bool, error) {
+	if r.currentBucket != bucket {
+		r.reload(ctx)
+		r.currentBucket = bucket
+	}
 	stmt, err := r.db.PrepareContext(ctx, selectSoiQuery)
 	if err != nil {
 		return nil, false, err
@@ -174,6 +195,10 @@ func loadSoi(ctx context.Context, db *sql.DB, rs *sql.Rows) (*model.SoiData, err
 }
 
 func (r *sqliteRepository) Store(ctx context.Context, bucket string, soi *model.SoiData) error {
+	if r.currentBucket != bucket {
+		r.reload(ctx)
+		r.currentBucket = bucket
+	}
 	tx, err := r.db.Begin()
 	defer tx.Rollback()
 	if err != nil {
@@ -278,9 +303,22 @@ func (r *sqliteRepository) Store(ctx context.Context, bucket string, soi *model.
 }
 
 func (r *sqliteRepository) Exists(ctx context.Context, bucket string, hash string) (bool, error) {
+	if r.currentBucket != bucket {
+		r.reload(ctx)
+		r.currentBucket = bucket
+	}
 	_, ok, err := r.Load(ctx, bucket, hash)
 	if err != nil {
 		return ok, err
 	}
 	return ok, nil
+}
+
+func (r *sqliteRepository) Remove(ctx context.Context, bucket string, hash string) error {
+	if r.currentBucket != bucket {
+		r.reload(ctx)
+		r.currentBucket = bucket
+	}
+	//TODO implement me
+	panic("implement me")
 }

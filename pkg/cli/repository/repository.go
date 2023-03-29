@@ -1,36 +1,44 @@
 package repository
 
 import (
-	"github.com/koooyooo/soi-go/pkg/common/hash"
+	"github.com/koooyooo/soi-go/pkg/cli/config"
+	"github.com/koooyooo/soi-go/pkg/cli/constant"
 	"github.com/koooyooo/soi-go/pkg/model"
 	"golang.org/x/net/context"
-	"strings"
+)
+
+const (
+	RepoTypeFile   = "file"
+	RepoTypeSQLite = "sqlite"
 )
 
 type Repository interface {
 	Init(ctx context.Context) error
-	// TODO add "limit" args and -1 means no limit
 	LoadAll(ctx context.Context, bucket string) ([]*model.SoiData, error)
 	Load(ctx context.Context, bucket string, hash string) (*model.SoiData, bool, error)
 	Store(ctx context.Context, bucket string, soi *model.SoiData) error
 	Exists(ctx context.Context, bucket string, hash string) (bool, error)
-	//Remove(ctx context.Context, bucket string, hash string) error
+	Remove(ctx context.Context, bucket string, hash string) error
 }
 
-func toHash(path string) (string, error) {
-	return hash.Sha1(path)
-}
-
-func findHashes(r Repository, bucket, partialPath string) ([]string, error) {
-	sois, err := r.LoadAll(context.Background(), bucket)
+func NewRepository(ctx context.Context, conf *config.Config) (Repository, bool, error) {
+	soisDir, err := constant.SoisDir()
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
-	var hashes []string
-	for _, soi := range sois {
-		if strings.Contains(soi.Path, partialPath) {
-			hashes = append(hashes, soi.Hash)
+	switch conf.DefaultRepository {
+	case RepoTypeFile:
+		repo, err := NewFilesRepository(soisDir)
+		if err != nil {
+			return nil, true, err
 		}
+		return repo, true, nil
+	case RepoTypeSQLite:
+		repo, err := NewSQLiteRepository(ctx, soisDir, conf.DefaultBucket)
+		if err != nil {
+			return nil, true, err
+		}
+		return repo, true, nil
 	}
-	return hashes, nil
+	return nil, false, nil
 }

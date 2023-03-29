@@ -2,16 +2,25 @@ package execute
 
 import (
 	"fmt"
-	"github.com/koooyooo/soi-go/pkg/cli/config"
 	"strings"
 
-	"github.com/koooyooo/soi-go/pkg/model"
-
+	"github.com/koooyooo/soi-go/pkg/cli/config"
+	"github.com/koooyooo/soi-go/pkg/cli/service"
 	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/execute/registry"
+	"github.com/koooyooo/soi-go/pkg/model"
 )
 
+func NewExecutor(c *config.Config, s service.Service, r *model.BucketRef) *Executor {
+	return &Executor{
+		Conf:      c,
+		Service:   s,
+		BucketRef: r,
+	}
+}
+
 type Executor struct {
-	Conf *config.Config
+	Conf    *config.Config
+	Service service.Service
 	*model.BucketRef
 }
 

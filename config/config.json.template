@@ -1,4 +1,6 @@
 {
   "server": "http://localhost:8080",
-  "default_bucket": "default"
+  "default_bucket": "default",
+  "default_repository": "sqlite",
+  "default_browser": "firefox"
 }

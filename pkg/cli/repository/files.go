@@ -22,6 +22,7 @@ func (r *filesRepository) Init(ctx context.Context) error {
 	select {
 	case <-ctx.Done():
 		return ctx.Err()
+	default:
 	}
 	return nil
 }
@@ -30,6 +31,7 @@ func (r *filesRepository) LoadAll(ctx context.Context, bucket string) ([]*model.
 	select {
 	case <-ctx.Done():
 		return nil, ctx.Err()
+	default:
 	}
 	return loader.LoadSois(filepath.Join(r.basePath, bucket))
 }
@@ -38,6 +40,7 @@ func (r *filesRepository) Load(ctx context.Context, bucket string, hash string) 
 	select {
 	case <-ctx.Done():
 		return nil, false, ctx.Err()
+	default:
 	}
 	sois, err := r.LoadAll(ctx, bucket)
 	if err != nil {
@@ -51,6 +54,7 @@ func (r *filesRepository) Store(ctx context.Context, bucket string, soi *model.S
 	select {
 	case <-ctx.Done():
 		return ctx.Err()
+	default:
 	}
 	return loader.StoreSoiData(soi.FilePath(bucket), soi)
 }
@@ -59,6 +63,7 @@ func (r *filesRepository) Exists(ctx context.Context, bucket string, hash string
 	select {
 	case <-ctx.Done():
 		return false, ctx.Err()
+	default:
 	}
 	_, found, err := r.Load(ctx, bucket, hash)
 	return found, err
@@ -68,6 +73,7 @@ func (r *filesRepository) Remove(ctx context.Context, bucket string, hash string
 	select {
 	case <-ctx.Done():
 		return ctx.Err()
+	default:
 	}
 	s, found, err := r.Load(ctx, bucket, hash)
 	if err != nil {
