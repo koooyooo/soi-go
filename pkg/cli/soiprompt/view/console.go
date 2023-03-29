@@ -78,8 +78,7 @@ func ParseLine(s string) (*SoiLine, error) {
 }
 
 func ToLine(s *model.SoiData, soisDir string) string {
-	relPath := strings.TrimPrefix(s.Path, soisDir+"/")
-	baseName := strings.TrimSuffix(relPath, ".json")
+	baseName := s.Path + "/" + s.Name
 	return fmt.Sprintf("|%s| %s %s %s", s.Hash[0:8], metaString(s), baseName, tagsString(s))
 }
 

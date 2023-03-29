@@ -7,7 +7,7 @@ import (
 )
 
 func TestJSONsLoadAll(t *testing.T) {
-	repo, err := NewJsonsRepository("../../../testfiles")
+	repo, err := NewFilesRepository("../../../testfiles")
 	assert.NoError(t, err)
 
 	ctx := context.Background()
@@ -17,7 +17,7 @@ func TestJSONsLoadAll(t *testing.T) {
 }
 
 func TestJSONsLoad(t *testing.T) {
-	repo, err := NewJsonsRepository("../../../testfiles")
+	repo, err := NewFilesRepository("../../../testfiles")
 	assert.NoError(t, err)
 
 	ctx := context.Background()

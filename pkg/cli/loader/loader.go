@@ -3,6 +3,7 @@ package loader
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/koooyooo/soi-go/pkg/cli/constant"
 	"io/ioutil"
 	"log"
 	"os"
@@ -79,7 +80,16 @@ func LoadSoiData(filepath string) (*model.SoiData, error) {
 		return nil, err
 	}
 	// complement fields // TODO fix this
-	sd.Path = filepath
+	soisDir, err := constant.SoisDir()
+	if err != nil {
+		return nil, err
+	}
+	path := filepath
+	path = strings.TrimPrefix(path, soisDir+"/")
+	idxBucketTail := strings.Index(path, "/")
+	path = path[idxBucketTail+1:]
+	path = strings.TrimSuffix(sd.Path, ".json")
+	sd.Path = path
 	if sd.Hash == "" {
 		sd.Hash, err = hash.Sha1(sd.URI)
 		if err != nil {

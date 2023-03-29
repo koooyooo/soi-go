@@ -1,6 +1,7 @@
 package model
 
 import (
+	"path/filepath"
 	"time"
 )
 
@@ -27,6 +28,10 @@ type SoiData struct {
 	Comprehension int        `json:"comprehension"` // 理解度 1 - 100
 	CreatedAt     time.Time  `json:"created_at"`
 	UsageLogs     []UsageLog `json:"usage_log"`
+}
+
+func (s *SoiData) FilePath(basePath string) string {
+	return filepath.Join(basePath, s.Path, s.Name+".json")
 }
 
 type OGImage struct {

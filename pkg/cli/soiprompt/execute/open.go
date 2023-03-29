@@ -51,7 +51,7 @@ func (e *Executor) open(in string) error {
 	})
 
 	// Soiファイルを再登録
-	if err := loader.StoreSoiData(s.Path, s); err != nil {
+	if err := loader.StoreSoiData(s.FilePath(soisDir), s); err != nil {
 		return err
 	}
 

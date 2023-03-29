@@ -20,8 +20,12 @@ func (e *Executor) rm(in string) error {
 	if err = flags.Parse(strings.Split(in, " ")[1:]); err != nil {
 		return err
 	}
-
-	target := filepath.Join(baseDir, flags.Arg(0))
+	relDir := flags.Arg(0)
+	if relDir == "" {
+		fmt.Println("cannot delete bucket dir.")
+		return nil
+	}
+	target := filepath.Join(baseDir, relDir)
 	if !fileio2.Exists(target) {
 		fmt.Println("No file or dir found.")
 		return nil

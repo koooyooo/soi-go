@@ -3,7 +3,6 @@ package registry
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -30,7 +29,7 @@ func Push(cfg *config.Config, bucket *model.Bucket, _ string) error {
 		if !strings.HasSuffix(path, ".json") {
 			return nil
 		}
-		b, err := ioutil.ReadFile(path)
+		b, err := os.ReadFile(path)
 		if err != nil {
 			return err
 		}
@@ -38,7 +37,6 @@ func Push(cfg *config.Config, bucket *model.Bucket, _ string) error {
 		if err = json.Unmarshal(b, &s); err != nil {
 			return err
 		}
-		s.Path = strings.TrimPrefix(path, soisDir)
 		sb.Sois = append(sb.Sois, &s)
 		return nil
 	}); err != nil {
