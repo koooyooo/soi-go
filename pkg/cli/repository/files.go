@@ -19,14 +19,26 @@ func NewFilesRepository(path string) (Repository, error) {
 }
 
 func (r *filesRepository) Init(ctx context.Context) error {
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	}
 	return nil
 }
 
 func (r *filesRepository) LoadAll(ctx context.Context, bucket string) ([]*model.SoiData, error) {
+	select {
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	}
 	return loader.LoadSois(filepath.Join(r.basePath, bucket))
 }
 
 func (r *filesRepository) Load(ctx context.Context, bucket string, hash string) (*model.SoiData, bool, error) {
+	select {
+	case <-ctx.Done():
+		return nil, false, ctx.Err()
+	}
 	sois, err := r.LoadAll(ctx, bucket)
 	if err != nil {
 		return nil, false, err
@@ -36,15 +48,27 @@ func (r *filesRepository) Load(ctx context.Context, bucket string, hash string) 
 }
 
 func (r *filesRepository) Store(ctx context.Context, bucket string, soi *model.SoiData) error {
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	}
 	return loader.StoreSoiData(soi.FilePath(bucket), soi)
 }
 
 func (r *filesRepository) Exists(ctx context.Context, bucket string, hash string) (bool, error) {
+	select {
+	case <-ctx.Done():
+		return false, ctx.Err()
+	}
 	_, found, err := r.Load(ctx, bucket, hash)
 	return found, err
 }
 
 func (r *filesRepository) Remove(ctx context.Context, bucket string, hash string) error {
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	}
 	s, found, err := r.Load(ctx, bucket, hash)
 	if err != nil {
 		return err
