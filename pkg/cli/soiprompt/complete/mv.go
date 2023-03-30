@@ -1,6 +1,7 @@
 package complete
 
 import (
+	"golang.org/x/net/context"
 	"log"
 	"strings"
 
@@ -10,24 +11,15 @@ import (
 
 // mvCmd はmvコマンド系のSuggestを提示します
 func (c *Completer) mvCmd(d prompt.Document) []prompt.Suggest {
-	text := d.Text
-	is2ndArg := 2 < len(strings.Split(text, " "))
-
 	word := strings.TrimPrefix(d.GetWordBeforeCursor(), "mv ")
-
+	is2ndArg := 2 < len(strings.Split(d.Text, " "))
+	paths, err := c.service.ListPath(context.Background(), word, !is2ndArg)
+	if err != nil {
+		log.Fatal(err)
+	}
 	dir, err := c.Bucket.Path()
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	var files []string
-	if is2ndArg {
-		files, err = utils.ListDirsRecursively(dir, c.Bucket, true)
-	} else {
-		files, err = utils.ListFilesRecursively(dir)
-	}
-	if err != nil {
-		log.Fatal(err)
-	}
-	return utils.FilePathsToSuggests(dir, files, word)
+	return utils.FilePathsToSuggests(dir, paths, word)
 }

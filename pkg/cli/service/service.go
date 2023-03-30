@@ -5,6 +5,7 @@ import (
 	"github.com/koooyooo/soi-go/pkg/cli/repository"
 	"github.com/koooyooo/soi-go/pkg/common/hash"
 	"github.com/koooyooo/soi-go/pkg/model"
+	"sort"
 	"strings"
 )
 
@@ -88,6 +89,7 @@ func (s serviceImpl) ListPath(ctx context.Context, partialPath string, withName 
 		}
 		dirs = append(dirs, k)
 	}
+	sort.Strings(dirs)
 	return dirs, nil
 }
 
