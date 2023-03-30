@@ -29,7 +29,7 @@ func (c *Completer) addCmd(d prompt.Document) []prompt.Suggest {
 		if err != nil {
 			log.Fatal(err)
 		}
-		dirs, err := c.service.ListDir(context.Background()) // TODO fix context flow
+		dirs, err := c.service.ListPath(context.Background(), "", false) // TODO fix context flow
 		if err != nil {
 			log.Fatal(err)
 		}

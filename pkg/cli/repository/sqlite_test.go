@@ -82,7 +82,7 @@ func TestStore(t *testing.T) {
 	err = repo.Store(ctx, "test", soi)
 	assert.NoError(t, err)
 
-	result, ok, err := repo.Load(context.Background(), "test", soi.Hash)
+	result, ok, err := repo.Load(ctx, "test", soi.Hash)
 	assert.NoError(t, err)
 	assert.True(t, ok)
 
@@ -109,7 +109,10 @@ func TestStore(t *testing.T) {
 		assert.Equal(t, img, result.OGImages[i])
 	}
 
+	// usage log
+	assert.Equal(t, len(result.UsageLogs), 2)
 	for _, log := range result.UsageLogs {
-		fmt.Println("type", log.Type, "at", log.UsedAt)
+		assert.Equal(t, model.UsageTypeOpen, log.Type)
+		assert.NotNil(t, log.UsedAt)
 	}
 }

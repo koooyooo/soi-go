@@ -9,7 +9,7 @@ const (
 		hash text not null,
 		name text,
 		title text,
-		basePath text not null, 
+		path text not null, 
 		uri text,
 		rate real,
 		num_views integer,
@@ -17,6 +17,9 @@ const (
 		comprehension integer,
 		created_at datetime
 	);
+	create index idx_soi_hash on sois(hash);
+	create index idx_soi_path on sois(path);
+	create index idx_soi_name on sois(name);
 
 	create table ogs (
 		id integer not null primary key autoincrement,
@@ -71,18 +74,20 @@ var (
 	// sois
 	selectAllSoisQuery = `
 		select 
-			id, hash, name, title, basePath, uri, rate, num_views, num_reads, comprehension, created_at 
+			id, hash, name, title, path, uri, rate, num_views, num_reads, comprehension, created_at 
 		from
 			sois
 	where
 	   bucket = ? `
-	selectSoiQuery       = selectAllSoisQuery + " and hash = ? "
-	selectSoiByPathQuery = selectAllSoisQuery + " and basePath = ? "
+	selectSoiQuery       = selectAllSoisQuery + " and hash = ? order by path, name desc "
+	selectSoiByPathQuery = selectAllSoisQuery + " and path = ? order by path, name desc "
 	storeSoiQuery        = `
 		insert into sois 
-			(bucket, hash, name, title, basePath, uri, rate, num_views, num_reads, comprehension, created_at) 
+			(bucket, hash, name, title, path, uri, rate, num_views, num_reads, comprehension, created_at) 
 		values 
 			(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) `
+
+	//selectPathQuery = "select path, name, path || '/' || name as full_path from sois where bucket = ? and path like ? order by full_path desc"
 
 	// tags
 	selectTagQuery    = "select name from tags t join soi_tags st on (t.id == st.tag_id) where st.soi_id = ?"

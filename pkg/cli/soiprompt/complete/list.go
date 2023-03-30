@@ -2,6 +2,7 @@ package complete
 
 import (
 	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/utils"
+	"golang.org/x/net/context"
 	"log"
 	"strings"
 
@@ -10,7 +11,6 @@ import (
 	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/complete/soisort"
 
 	"github.com/c-bata/go-prompt"
-	"github.com/koooyooo/soi-go/pkg/cli/loader"
 )
 
 // listCmd はlistコマンド系のSuggestを提示します
@@ -23,22 +23,26 @@ func (c *Completer) listCmd(d prompt.Document) []prompt.Suggest {
 	if err != nil {
 		log.Fatal(err)
 	}
-	sois, err := loader.LoadSois(soisDir)
-	if err != nil {
-		log.Fatal(err)
+	input := removeOption(removeCmd(d.TextBeforeCursor()))
+	if len(c.listSoiCache) == 0 {
+		sois, err := c.service.LoadAll(context.Background())
+		if err != nil {
+			log.Fatal(err)
+		}
+		c.listSoiCache = sois
 	}
 
-	soisort.Exec(sois, d)
+	soisort.Exec(c.listSoiCache, d)
 
 	var sgs []prompt.Suggest
-	for _, s := range sois {
+	for _, s := range c.listSoiCache {
 		sgs = append(sgs, prompt.Suggest{
 			Text:        view.ToLine(s, soisDir),
 			Description: "",
 		})
 	}
 
-	words := strings.Split(removeOption(removeCmd(d.TextBeforeCursor())), " ")
+	words := strings.Split(input, " ")
 	return filterByMultiWords(words, sgs)
 }
 

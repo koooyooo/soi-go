@@ -17,7 +17,7 @@ type Service interface {
 	Store(ctx context.Context, soi *model.SoiData) error
 	Exists(ctx context.Context, hash string) (bool, error)
 	Remove(ctx context.Context, hash string) error
-	ListDir(ctx context.Context) ([]string, error)
+	ListPath(ctx context.Context, partialPath string, withName bool) ([]string, error)
 }
 
 func NewService(ctx context.Context, bucket string, r repository.Repository) Service {
@@ -65,17 +65,27 @@ func (s serviceImpl) Remove(ctx context.Context, hash string) error {
 	return s.r.Remove(ctx, s.bucket, hash)
 }
 
-func (s serviceImpl) ListDir(ctx context.Context) ([]string, error) {
+func (s serviceImpl) ListPath(ctx context.Context, partialPath string, withName bool) ([]string, error) {
 	sois, err := s.LoadAll(ctx)
 	if err != nil {
 		return nil, err
 	}
-	var m map[string]struct{}
+	var m = make(map[string]struct{})
 	for _, soi := range sois {
-		m[soi.Path] = struct{}{}
+		path := soi.Path
+		if withName {
+			path = path + "/" + soi.Name
+		}
+		if !strings.HasPrefix(path, partialPath) {
+			continue
+		}
+		m[path] = struct{}{}
 	}
 	var dirs []string
 	for k, _ := range m {
+		if !strings.HasPrefix(k, partialPath) {
+			continue
+		}
 		dirs = append(dirs, k)
 	}
 	return dirs, nil

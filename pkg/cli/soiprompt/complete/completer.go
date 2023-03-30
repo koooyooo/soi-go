@@ -23,6 +23,8 @@ type Completer struct {
 	conf    *config.Config
 	service service.Service
 	*model.BucketRef
+	listSoiCache []*model.SoiData
+	digPathCache []string
 }
 
 // Completer はSuggest候補を提示することで補完を実施します

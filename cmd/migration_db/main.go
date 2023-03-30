@@ -35,9 +35,8 @@ func main() {
 		log.Fatal(err)
 	}
 	ctx := context.Background()
-	dbPath := bucket + ".db"
-	os.RemoveAll(dbPath)
-	repo, err := repository.NewSQLiteRepository(dbPath)
+	os.RemoveAll("" + bucket + ".db")
+	repo, err := repository.NewSQLiteRepository(ctx, "", bucket)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"github.com/koooyooo/soi-go/pkg/model"
 	_ "github.com/mattn/go-sqlite3"
 	"os"
@@ -29,6 +30,7 @@ type sqliteRepository struct {
 
 func (r *sqliteRepository) reload(ctx context.Context) error {
 	dbFilePath := filepath.Join(r.basePath, r.currentBucket+".db")
+	fmt.Println("DB->", dbFilePath) // TODO
 	db, err := sql.Open("sqlite3", dbFilePath)
 	if err != nil {
 		return err
@@ -83,9 +85,7 @@ func (r *sqliteRepository) LoadAll(ctx context.Context, bucket string) ([]*model
 	if err != nil {
 		return nil, err
 	}
-	if !rows.Next() {
-		return nil, nil
-	}
+	defer rows.Close()
 	var sois []*model.SoiData
 	for rows.Next() {
 		soi, err := loadSoi(ctx, r.db, rows)
@@ -110,6 +110,7 @@ func (r *sqliteRepository) Load(ctx context.Context, bucket string, hash string)
 	if err != nil {
 		return nil, false, err
 	}
+	defer rows.Close()
 	if !rows.Next() {
 		return nil, false, nil
 	}
@@ -121,7 +122,7 @@ func (r *sqliteRepository) Load(ctx context.Context, bucket string, hash string)
 }
 
 func loadSoi(ctx context.Context, db *sql.DB, rs *sql.Rows) (*model.SoiData, error) {
-	soi := &model.SoiData{}
+	soi := model.SoiData{}
 	rs.Scan(
 		&soi.ID,
 		&soi.Hash,
@@ -141,6 +142,10 @@ func loadSoi(ctx context.Context, db *sql.DB, rs *sql.Rows) (*model.SoiData, err
 		return nil, err
 	}
 	trows, err := stmt.QueryContext(ctx, soi.ID)
+	if err != nil {
+		return nil, err
+	}
+	defer trows.Close()
 	for trows.Next() {
 		var tag string
 		if err := trows.Scan(&tag); err != nil {
@@ -154,6 +159,10 @@ func loadSoi(ctx context.Context, db *sql.DB, rs *sql.Rows) (*model.SoiData, err
 		return nil, err
 	}
 	kvtRows, err := kvtStmt.QueryContext(ctx, soi.ID)
+	if err != nil {
+		return nil, err
+	}
+	defer kvtRows.Close()
 	for kvtRows.Next() {
 		kvt := model.KVTag{}
 		if err := kvtRows.Scan(&kvt.Key, &kvt.Value); err != nil {
@@ -167,6 +176,10 @@ func loadSoi(ctx context.Context, db *sql.DB, rs *sql.Rows) (*model.SoiData, err
 		return nil, err
 	}
 	ulRows, err := ulStmt.QueryContext(ctx, soi.ID)
+	if err != nil {
+		return nil, err
+	}
+	defer ulRows.Close()
 	for ulRows.Next() {
 		ul := model.UsageLog{}
 		var soiID int
@@ -184,6 +197,7 @@ func loadSoi(ctx context.Context, db *sql.DB, rs *sql.Rows) (*model.SoiData, err
 	if err != nil {
 		return nil, err
 	}
+	defer ogRows.Close()
 	if !ogRows.Next() {
 		return nil, err
 	}
@@ -201,6 +215,7 @@ func loadSoi(ctx context.Context, db *sql.DB, rs *sql.Rows) (*model.SoiData, err
 	if err != nil {
 		return nil, err
 	}
+	defer ogiRows.Close()
 	for ogiRows.Next() {
 		ogi := model.OGImage{}
 		//var selectOGImgQuery = "select url, secure_url, type, width, height, alt from og_imgs where og_id = ?"
@@ -210,7 +225,7 @@ func loadSoi(ctx context.Context, db *sql.DB, rs *sql.Rows) (*model.SoiData, err
 		}
 		soi.OGImages = append(soi.OGImages, ogi)
 	}
-	return soi, nil
+	return &soi, nil
 }
 
 func (r *sqliteRepository) Store(ctx context.Context, bucket string, soi *model.SoiData) error {
