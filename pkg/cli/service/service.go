@@ -19,6 +19,7 @@ type Service interface {
 	Exists(ctx context.Context, hash string) (bool, error)
 	Remove(ctx context.Context, hash string) error
 	ListPath(ctx context.Context, partialPath string, withName bool) ([]string, error)
+	Size(ctx context.Context) (int, error)
 }
 
 func NewService(ctx context.Context, bucket string, r repository.Repository) Service {
@@ -80,7 +81,14 @@ func (s serviceImpl) ListPath(ctx context.Context, partialPath string, withName 
 		if !strings.HasPrefix(path, partialPath) {
 			continue
 		}
-		m[path] = struct{}{}
+		elm := strings.Split(path, "/")
+		for i := 0; i < len(elm); i++ {
+			path := strings.Join(elm[:i+1], "/")
+			if path == "" {
+				continue
+			}
+			m[path] = struct{}{}
+		}
 	}
 	var dirs []string
 	for k, _ := range m {
@@ -91,6 +99,14 @@ func (s serviceImpl) ListPath(ctx context.Context, partialPath string, withName 
 	}
 	sort.Strings(dirs)
 	return dirs, nil
+}
+
+func (s serviceImpl) Size(ctx context.Context) (int, error) {
+	sois, err := s.LoadAll(ctx)
+	if err != nil {
+		return -1, err
+	}
+	return len(sois), nil
 }
 
 func toHash(path string) (string, error) {

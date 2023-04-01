@@ -47,6 +47,8 @@ func (c *Completer) Complete(d prompt.Document) []prompt.Suggest {
 		return c.tagCmd(d)
 	case hasPrefixes(text, "help ", "h "):
 		return c.helpCmd(d)
+	case hasPrefixes(text, "size ", "s "):
+		return nil
 	default:
 		s := []prompt.Suggest{
 			{Text: "add", Description: "(a)dd url"},
@@ -60,6 +62,7 @@ func (c *Completer) Complete(d prompt.Document) []prompt.Suggest {
 			{Text: "pull", Description: "pull urls from repos"},
 			{Text: "push", Description: "push urls to repos"},
 			{Text: "help", Description: "(h)elp document"},
+			{Text: "size", Description: "show (s)ize of soi data"},
 			{Text: "quit", Description: "(q)uit model"},
 			{Text: "version", Description: "show (v)ersion"},
 		}

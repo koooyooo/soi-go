@@ -11,6 +11,10 @@ import (
 
 // addCmd はaddコマンド系のSuggestを提示します
 func (c *Completer) addCmd(d prompt.Document) []prompt.Suggest {
+	// remove cache
+	c.listSoiCache = nil
+	c.digPathCache = nil
+
 	// option探索
 	if utils.IsOptionWord(d) {
 		return []prompt.Suggest{

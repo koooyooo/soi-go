@@ -10,7 +10,7 @@ type SoiData struct {
 	Name   string   `json:"name"`  // ファイル名
 	Title  string   `json:"title"` // <title>属性
 	Hash   string   `json:"hash"`
-	Path   string   `json:"path"` // 保管したPathを設定
+	Path   string   `json:"path"` // (<basepath{soiroot + bucket}> + <path> + <name>.json)
 	URI    string   `json:"uri"`
 	Tags   []string `json:"tags"`
 	KVTags []KVTag  `json:"kv_tags"`

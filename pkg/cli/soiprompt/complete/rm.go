@@ -1,6 +1,7 @@
 package complete
 
 import (
+	"golang.org/x/net/context"
 	"log"
 	"sort"
 	"strings"
@@ -18,18 +19,12 @@ func (c *Completer) rmCmd(d prompt.Document) []prompt.Suggest {
 		log.Fatal(err)
 	}
 	var fileDirs []string
-	// ファイル系を追加
-	files, err := utils.ListFilesRecursively(dir)
+	ctx := context.Background() // TODO fix context flow
+	paths, err := c.service.ListPath(ctx, "", true)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fileDirs = append(fileDirs, files...)
-	// ディレクトリ系を追加
-	dirs, err := utils.ListDirsRecursively(dir, c.Bucket, false)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fileDirs = append(fileDirs, dirs...)
+	fileDirs = append(fileDirs, paths...)
 	sort.Strings(fileDirs)
 
 	return utils.FilePathsToSuggests(dir, fileDirs, word)

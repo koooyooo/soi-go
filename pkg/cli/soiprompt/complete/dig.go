@@ -14,13 +14,11 @@ import (
 
 // digCmd はppコマンド系のSuggestを提示します
 func (c *Completer) digCmd(d prompt.Document) []prompt.Suggest {
-	// option探索
 	if utils.IsOptionWord(d) {
 		return browserOptSuggests
 	}
 	digPath := removeOption(strings.Split(d.TextBeforeCursor(), " ")[1])
 
-	// 性能改善のため初期時にCacheを更新
 	if len(c.digPathCache) == 0 {
 		paths, err := c.service.ListPath(context.Background(), digPath, true)
 		if err != nil {
@@ -35,8 +33,6 @@ func (c *Completer) digCmd(d prompt.Document) []prompt.Suggest {
 	}
 	return suggests
 }
-
-// TODO dig の第一番目の結果が消えている気がする
 
 func nextElmPath(paths []string, part string) []string {
 	numElms := strings.Count(part, "/") + 1

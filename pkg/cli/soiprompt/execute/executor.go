@@ -55,6 +55,8 @@ func (e *Executor) Execute(in string) {
 		}
 	case "quit", "q", "exit":
 		op(e.quit, in)
+	case "size", "s":
+		op(e.size, in)
 	case "version", "v":
 		op(e.version, in)
 	}

@@ -59,6 +59,7 @@ func (e *Executor) add(in string) error {
 
 	s := model.SoiData{
 		Name:      name,
+		Path:      dir,
 		URI:       uri,
 		Hash:      hash,
 		Tags:      kTags,
@@ -77,7 +78,7 @@ func (e *Executor) add(in string) error {
 	if err = os.MkdirAll(baseDir, 0700); err != nil {
 		return err
 	}
-	return os.WriteFile(filepath.Join(baseDir, file.ToStorableName(name)), b, 0600)
+	return os.WriteFile(filepath.Join(baseDir, dir, file.ToStorableName(name)), b, 0600)
 }
 
 func parseArgs(args []string) (dir, name, uri string, tags []string) {
