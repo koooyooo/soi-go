@@ -2,26 +2,22 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
-	"github.com/koooyooo/soi-go/pkg/cli/opener"
-	"github.com/koooyooo/soi-go/pkg/model"
-	"golang.org/x/term"
 	"io"
 	"log"
 	"os"
 	"os/exec"
-	"syscall"
 )
 
+// 標準入力の内容を読み込んで、SoiDataを生成して、Firefoxで開く
 func main() {
 	control()
 }
 
+type simpleSoiData struct {
+	URI string `json:"uri"`
+}
+
 func control() {
-	if term.IsTerminal(syscall.Stdin) {
-		fmt.Println("This is a terminal")
-		return
-	}
 	b, err := io.ReadAll(os.Stdin)
 	if err != nil {
 		log.Fatalf("fail in reading stdin: %s", err)
@@ -30,11 +26,11 @@ func control() {
 	if err != nil {
 		log.Fatalf("fail in loading soi: %s", err)
 	}
-	opener.OpenFirefox(soi)
+	openFirefox(soi)
 }
 
-func loadSoi(b []byte) (*model.SoiData, error) {
-	var sd model.SoiData
+func loadSoi(b []byte) (*simpleSoiData, error) {
+	var sd simpleSoiData
 	if err := json.Unmarshal(b, &sd); err != nil {
 		return nil, err
 	}
@@ -42,6 +38,6 @@ func loadSoi(b []byte) (*model.SoiData, error) {
 }
 
 // duplicated from pkg/cli/loader/loader.go
-func openFirefox(s *model.SoiData) error {
+func openFirefox(s *simpleSoiData) error {
 	return exec.Command("open", "-a", "Firefox", s.URI).Start()
 }
