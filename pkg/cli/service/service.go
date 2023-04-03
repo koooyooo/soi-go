@@ -87,7 +87,7 @@ func (s serviceImpl) ListPath(ctx context.Context, partialPath string, withName 
 			if path == "" {
 				continue
 			}
-			if i != len(elm)-1 {
+			if !withName || i != len(elm)-1 {
 				path = path + "/"
 			}
 			m[path] = struct{}{}
