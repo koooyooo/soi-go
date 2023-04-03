@@ -5,6 +5,7 @@ import (
 	"github.com/koooyooo/soi-go/pkg/cli/repository"
 	"github.com/koooyooo/soi-go/pkg/common/hash"
 	"github.com/koooyooo/soi-go/pkg/model"
+	"path/filepath"
 	"sort"
 	"strings"
 )
@@ -22,16 +23,16 @@ type Service interface {
 	Size(ctx context.Context) (int, error)
 }
 
+type serviceImpl struct {
+	bucket string
+	r      repository.Repository
+}
+
 func NewService(ctx context.Context, bucket string, r repository.Repository) Service {
 	return &serviceImpl{
 		bucket: bucket,
 		r:      r,
 	}
-}
-
-type serviceImpl struct {
-	bucket string
-	r      repository.Repository
 }
 
 func (s serviceImpl) Init(ctx context.Context) error {
@@ -87,6 +88,9 @@ func (s serviceImpl) ListPath(ctx context.Context, partialPath string, withName 
 			if path == "" {
 				continue
 			}
+			if i != len(elm)-1 {
+				path = path + "/"
+			}
 			m[path] = struct{}{}
 		}
 	}
@@ -107,6 +111,25 @@ func (s serviceImpl) Size(ctx context.Context) (int, error) {
 		return -1, err
 	}
 	return len(sois), nil
+}
+
+type Path struct {
+	Dir  string
+	File string
+}
+
+func (p *Path) DirElements() []string {
+	return strings.Split(p.Dir, "/")
+}
+
+func (p *Path) DirPatterns() []string {
+	var patterns []string
+	var currentPath string
+	for _, e := range p.DirElements() {
+		currentPath = filepath.Join(currentPath, e)
+		patterns = append(patterns, currentPath)
+	}
+	return patterns
 }
 
 func toHash(path string) (string, error) {
