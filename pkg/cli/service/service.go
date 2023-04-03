@@ -5,7 +5,6 @@ import (
 	"github.com/koooyooo/soi-go/pkg/cli/repository"
 	"github.com/koooyooo/soi-go/pkg/common/hash"
 	"github.com/koooyooo/soi-go/pkg/model"
-	"path/filepath"
 	"sort"
 	"strings"
 )
@@ -111,25 +110,6 @@ func (s serviceImpl) Size(ctx context.Context) (int, error) {
 		return -1, err
 	}
 	return len(sois), nil
-}
-
-type Path struct {
-	Dir  string
-	File string
-}
-
-func (p *Path) DirElements() []string {
-	return strings.Split(p.Dir, "/")
-}
-
-func (p *Path) DirPatterns() []string {
-	var patterns []string
-	var currentPath string
-	for _, e := range p.DirElements() {
-		currentPath = filepath.Join(currentPath, e)
-		patterns = append(patterns, currentPath)
-	}
-	return patterns
 }
 
 func toHash(path string) (string, error) {
