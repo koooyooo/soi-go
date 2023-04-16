@@ -1,4 +1,4 @@
-CLI_MOD="cmd/cli/soi.go"
+CLI_MOD="soi.go"
 SERV_MOD="cmd/srv/soi-server.go"
 
 CLI_BIN="./soi"
