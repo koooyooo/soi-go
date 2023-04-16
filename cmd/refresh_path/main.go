@@ -59,10 +59,15 @@ func controlFile(soisDir, p string) error {
 
 	fmt.Printf("%s: [%s]\n", dirPath, filePath)
 	if soi.Path != dirPath {
-		fmt.Printf("  [Warn] soi path is not matched with file path: [%s] [%s]\n", soi.Path, dirPath)
+		fmt.Printf("  [Fix] soi path is fixed with file path: [%s] -> [%s]\n", soi.Path, dirPath)
+		soi.Path = dirPath
 	}
-	if soi.Name != filePath {
-		fmt.Printf("  [Err] soi name is not matched with file name: [%s] [%s] [%s]\n", soi.Name, filePath, pathElms[0:1])
+	d, err = json.Marshal(soi)
+	if err != nil {
+		return err
+	}
+	if err := os.WriteFile(p, d, 644); err != nil {
+		return err
 	}
 	return nil
 }
