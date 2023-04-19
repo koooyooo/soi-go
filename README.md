@@ -4,10 +4,8 @@ Soi CLIベースのURL管理するツールです。 CLIベースなので操作
 また、データはローカルに保管されるため、データ処理のレスポンスが早いのも特徴です。。
 
 ## 導入
-任意の ディレクトリに [git](https://git-scm.com/) ベースでクローンします。[make](https://www.gnu.org/software/make/) 経由でインストールを行います。
 ```
-$ git clone https://github.com/koooyooo/soi-go.git
-$ cd soi-go && make install
+$ go install github.com/koooyooo/soi-go@latest
 ```
 
 ## 利用法
