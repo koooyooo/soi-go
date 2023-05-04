@@ -1,4 +1,7 @@
-package main
+/*
+Copyright © 2023 NAME HERE <EMAIL ADDRESS>
+*/
+package cmd
 
 import (
 	"encoding/json"
@@ -6,18 +9,29 @@ import (
 	"log"
 	"os"
 	"os/exec"
+
+	"github.com/spf13/cobra"
 )
 
-// 標準入力の内容を読み込んで、SoiDataを生成して、Firefoxで開く
-func main() {
-	control()
+// openCmd represents the open command
+var openCmd = &cobra.Command{
+	Use:   "open",
+	Short: "open input files",
+	Long:  ``,
+	Run: func(cmd *cobra.Command, args []string) {
+		open()
+	},
+}
+
+func init() {
+	rootCmd.AddCommand(openCmd)
 }
 
 type simpleSoiData struct {
 	URI string `json:"uri"`
 }
 
-func control() {
+func open() {
 	b, err := io.ReadAll(os.Stdin)
 	if err != nil {
 		log.Fatalf("fail in reading stdin: %s", err)

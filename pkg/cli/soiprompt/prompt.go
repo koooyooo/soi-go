@@ -6,6 +6,7 @@ package soiprompt
 import (
 	"github.com/koooyooo/soi-go/pkg/cli/config"
 	"github.com/koooyooo/soi-go/pkg/cli/service"
+	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/cache"
 	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/complete"
 	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/execute"
 	"github.com/koooyooo/soi-go/pkg/model"
@@ -17,8 +18,9 @@ type Prompter struct {
 }
 
 func NewPrompter(conf *config.Config, s service.Service, b *model.BucketRef) *Prompter {
-	e := execute.NewExecutor(conf, s, b)
-	c := complete.NewCompleter(conf, s, b)
+	ca := new(cache.Cache)
+	e := execute.NewExecutor(conf, s, ca, b)
+	c := complete.NewCompleter(conf, s, ca, b)
 
 	return &Prompter{
 		Executor:  e,

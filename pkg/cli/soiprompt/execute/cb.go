@@ -3,6 +3,7 @@ package execute
 import (
 	"flag"
 	"fmt"
+	"golang.org/x/net/context"
 	"os"
 	"path/filepath"
 	"strings"
@@ -14,6 +15,7 @@ import (
 
 // cb はbucketの変更を行います
 func (e *Executor) cb(in string) error {
+	ctx := context.Background()
 	flags := flag.NewFlagSet("cb", flag.PanicOnError)
 	if err := flags.Parse(strings.Split(in, " ")[1:]); err != nil {
 		return err
@@ -33,7 +35,11 @@ func (e *Executor) cb(in string) error {
 	// 存在するBucketなら変更
 	for _, b := range buckets {
 		if b.Name == bucketName {
+			e.Cache.Clear()
 			e.Bucket = b
+			if err := e.Service.ChangeBucket(ctx, bucketName); err != nil {
+				return err
+			}
 			fmt.Printf("change current bucket: %s \n", b.Name)
 			return nil
 		}
@@ -50,7 +56,12 @@ func (e *Executor) cb(in string) error {
 	if err != nil {
 		return err
 	}
+	e.Cache.Clear()
 	e.Bucket = b
+
+	if err := e.Service.ChangeBucket(ctx, bucketName); err != nil {
+		return err
+	}
 	fmt.Printf("create & change current bucket: %s \n", b.Name)
 	return nil
 }
