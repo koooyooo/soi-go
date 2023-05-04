@@ -1,6 +1,8 @@
 
 ![soi](./soi.jpg)
 
+![example event parameter](https://github.com/github/docs/actions/workflows/main.yml/badge.svg?event=push)
+
 # soi
 `soi` は `golang`製の CLIによるブックマークマネージャです。CLIによる快適な操作が可能です。データはローカルストレージに保存されます。ローカルストレージとしては `${HOME}/.soi` が割り当てられます。
 
@@ -70,7 +72,7 @@ soi> dig search/
 - Finally, type `enter` key to open the site in a browser
 - Default browser is `chrome`, if you like `firefox`, use `-f` option, or you prefer `safari`, use `-s` option.
 
-
+<!--
 ### tag              
 ```
   Desc:  not implemented now
@@ -81,9 +83,12 @@ soi> dig search/
   Desc:  move file to dir 
   Usage: mv (current path) to (dir)
 ```
+-->
 
-### quit
+### `quit`
+`quit` コマンドで `soi`プロンプトを抜けることができます
+
 ```
-  Desc:  quit soi> and go back to console $
-  Usage: quit
+soi> quit
+$
 ```
