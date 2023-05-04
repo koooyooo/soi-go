@@ -3,6 +3,7 @@ package complete
 import (
 	"github.com/koooyooo/soi-go/pkg/cli/config"
 	"github.com/koooyooo/soi-go/pkg/cli/service"
+	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/cache"
 	"strings"
 
 	"github.com/c-bata/go-prompt"
@@ -11,10 +12,11 @@ import (
 
 var EmptySuggests []prompt.Suggest
 
-func NewCompleter(conf *config.Config, service service.Service, b *model.BucketRef) *Completer {
+func NewCompleter(conf *config.Config, service service.Service, ca *cache.Cache, b *model.BucketRef) *Completer {
 	return &Completer{
 		conf:      conf,
 		service:   service,
+		cache:     ca,
 		BucketRef: b,
 	}
 }
@@ -22,9 +24,8 @@ func NewCompleter(conf *config.Config, service service.Service, b *model.BucketR
 type Completer struct {
 	conf    *config.Config
 	service service.Service
+	cache   *cache.Cache
 	*model.BucketRef
-	listSoiCache []*model.SoiData
-	digPathCache []string
 }
 
 // Completer はSuggest候補を提示することで補完を実施します

@@ -2,6 +2,7 @@ package execute
 
 import (
 	"fmt"
+	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/cache"
 	"strings"
 
 	"github.com/koooyooo/soi-go/pkg/cli/config"
@@ -10,10 +11,11 @@ import (
 	"github.com/koooyooo/soi-go/pkg/model"
 )
 
-func NewExecutor(c *config.Config, s service.Service, r *model.BucketRef) *Executor {
+func NewExecutor(c *config.Config, s service.Service, ca *cache.Cache, r *model.BucketRef) *Executor {
 	return &Executor{
 		Conf:      c,
 		Service:   s,
+		Cache:     ca,
 		BucketRef: r,
 	}
 }
@@ -21,6 +23,7 @@ func NewExecutor(c *config.Config, s service.Service, r *model.BucketRef) *Execu
 type Executor struct {
 	Conf    *config.Config
 	Service service.Service
+	Cache   *cache.Cache
 	*model.BucketRef
 }
 

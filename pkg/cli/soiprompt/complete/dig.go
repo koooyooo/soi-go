@@ -16,16 +16,16 @@ func (c *Completer) digCmd(d prompt.Document) []prompt.Suggest {
 	}
 	digPath := removeOption(strings.Split(d.TextBeforeCursor(), " ")[1])
 
-	if len(c.digPathCache) == 0 {
+	if len(c.cache.DigPathCache) == 0 {
 		paths, err := c.service.ListPath(context.Background(), digPath, true)
 		if err != nil {
 			log.Fatal(err)
 		}
-		c.digPathCache = paths
+		c.cache.DigPathCache = paths
 	}
 
 	var suggests []prompt.Suggest
-	for _, nextPath := range nextElmPath(c.digPathCache, digPath) {
+	for _, nextPath := range nextElmPath(c.cache.DigPathCache, digPath) {
 		suggests = append(suggests, prompt.Suggest{Text: nextPath})
 	}
 	return suggests

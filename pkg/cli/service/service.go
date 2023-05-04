@@ -27,47 +27,47 @@ type serviceImpl struct {
 	r      repository.Repository
 }
 
-func NewService(ctx context.Context, bucket string, r repository.Repository) Service {
+func NewService(_ context.Context, bucket string, r repository.Repository) Service {
 	return &serviceImpl{
 		bucket: bucket,
 		r:      r,
 	}
 }
 
-func (s serviceImpl) Init(ctx context.Context) error {
+func (s *serviceImpl) Init(ctx context.Context) error {
 	return s.r.Init(ctx)
 }
 
-func (s serviceImpl) ListBucket(ctx context.Context) ([]string, error) {
+func (s *serviceImpl) ListBucket(ctx context.Context) ([]string, error) {
 	return s.r.ListBucket(ctx)
 }
 
-func (s serviceImpl) ChangeBucket(ctx context.Context, bucket string) error {
+func (s *serviceImpl) ChangeBucket(_ context.Context, bucket string) error {
 	s.bucket = bucket
 	return nil
 }
 
-func (s serviceImpl) LoadAll(ctx context.Context) ([]*model.SoiData, error) {
+func (s *serviceImpl) LoadAll(ctx context.Context) ([]*model.SoiData, error) {
 	return s.r.LoadAll(ctx, s.bucket)
 }
 
-func (s serviceImpl) Load(ctx context.Context, hash string) (*model.SoiData, bool, error) {
+func (s *serviceImpl) Load(ctx context.Context, hash string) (*model.SoiData, bool, error) {
 	return s.r.Load(ctx, s.bucket, hash)
 }
 
-func (s serviceImpl) Store(ctx context.Context, soi *model.SoiData) error {
+func (s *serviceImpl) Store(ctx context.Context, soi *model.SoiData) error {
 	return s.r.Store(ctx, s.bucket, soi)
 }
 
-func (s serviceImpl) Exists(ctx context.Context, hash string) (bool, error) {
+func (s *serviceImpl) Exists(ctx context.Context, hash string) (bool, error) {
 	return s.r.Exists(ctx, s.bucket, hash)
 }
 
-func (s serviceImpl) Remove(ctx context.Context, hash string) error {
+func (s *serviceImpl) Remove(ctx context.Context, hash string) error {
 	return s.r.Remove(ctx, s.bucket, hash)
 }
 
-func (s serviceImpl) ListPath(ctx context.Context, partialPath string, withName bool) ([]string, error) {
+func (s *serviceImpl) ListPath(ctx context.Context, partialPath string, withName bool) ([]string, error) {
 	sois, err := s.LoadAll(ctx)
 	if err != nil {
 		return nil, err
@@ -104,7 +104,7 @@ func (s serviceImpl) ListPath(ctx context.Context, partialPath string, withName 
 	return dirs, nil
 }
 
-func (s serviceImpl) Size(ctx context.Context) (int, error) {
+func (s *serviceImpl) Size(ctx context.Context) (int, error) {
 	sois, err := s.LoadAll(ctx)
 	if err != nil {
 		return -1, err

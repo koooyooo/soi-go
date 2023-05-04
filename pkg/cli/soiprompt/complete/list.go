@@ -24,18 +24,18 @@ func (c *Completer) listCmd(d prompt.Document) []prompt.Suggest {
 		log.Fatal(err)
 	}
 	input := removeOption(removeCmd(d.TextBeforeCursor()))
-	if len(c.listSoiCache) == 0 {
+	if len(c.cache.ListSoiCache) == 0 {
 		sois, err := c.service.LoadAll(context.Background())
 		if err != nil {
 			log.Fatal(err)
 		}
-		c.listSoiCache = sois
+		c.cache.ListSoiCache = sois
 	}
 
-	soisort.Exec(c.listSoiCache, d)
+	soisort.Exec(c.cache.ListSoiCache, d)
 
 	var sgs []prompt.Suggest
-	for _, s := range c.listSoiCache {
+	for _, s := range c.cache.ListSoiCache {
 		sgs = append(sgs, prompt.Suggest{
 			Text:        view.ToLine(s, soisDir),
 			Description: "",
