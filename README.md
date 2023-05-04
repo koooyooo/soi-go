@@ -2,7 +2,8 @@
 ![soi](./soi.jpg)
 
 # soi
-[![basic](https://github.com/koooyooo/soi-go/actions/workflows/basic.yaml/badge.svg)](https://github.com/koooyooo/soi-go/actions/workflows/basic.yaml)
+[![test](https://github.com/koooyooo/soi-go/actions/workflows/test.yaml/badge.svg)](https://github.com/koooyooo/soi-go/actions/workflows/test.yaml)
+[![lint](https://github.com/koooyooo/soi-go/actions/workflows/lint.yaml/badge.svg)](https://github.com/koooyooo/soi-go/actions/workflows/lint.yaml)
 
 `soi` は `golang`製の CLIによるブックマークマネージャです。CLIによる快適な操作が可能です。データはローカルストレージに保存されます。ローカルストレージとしては `${HOME}/.soi` が割り当てられます。
 
