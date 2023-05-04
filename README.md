@@ -12,6 +12,16 @@
 $ go install github.com/koooyooo/soi-go@latest
 ```
 
+## Config
+`${HOME}/.soi/config.json` で設定します。
+```json
+{
+  "default_bucket": "default",
+  "default_repository": "file",
+  "default_browser": "firefox"
+}
+```
+
 ## Usage
 ### `soi` >
 `soi`と打ち込むと `soi>`形式のプロンプトが立ち上がります。
@@ -27,18 +37,26 @@ soi>
 soi> add　{dir} {name} https://www.google.com
 ```
 
-- `-d`オプションでディレクトリを明示的に指定できます
-- 省略時のデフォルトディレクトリは `new`です
-- ディレクトリは `/`区切りで階層的に表現することも可能です
+- `#`で開始された用語はタグとなります
 ```
-soi> add -d search https://www.google.com
+soi> add　{dir} {name} https://www.google.com #search #entry
 ```
 
-- `-n`オプションで名前を明示的に指定できます
-- `-n`オプションが無い場合のデフォルト値は 対象URL内の `<title>`要素です
-```
-soi> add -n google https://www.google.com
-```
+> #### options
+> オプションで各要素を明示的に指定できます。
+> 
+> - `-d`オプションでディレクトリを明示的に指定できます
+> - 省略時のデフォルトディレクトリは `new`です
+> - ディレクトリは `/`区切りで階層的に表現することも可能です
+> ```
+> soi> add -d search https://www.google.com
+> ```
+> 
+> - `-n`オプションで名前を明示的に指定できます
+> - `-n`オプションが無い場合のデフォルト値は 対象URL内の `<title>`要素です
+> ```
+> soi> add -n google https://www.google.com
+> ```
 
 
 ### `list`
@@ -63,15 +81,14 @@ soi> dig
           search/
           sns/
 ```
-- Then, type `Tab` key and choose one directory
-- Next, type `→` key to dig the chosen directory
+- `Tab` キーや `↓` キーでディレクトリを選択します
+- 選択した状態で `→` を選ぶと内部要素が提示されます
 ```
 soi> dig search/
                  search/google.json
                  search/yahoo.json
 ``` 
-- Finally, type `enter` key to open the site in a browser
-- Default browser is `chrome`, if you like `firefox`, use `-f` option, or you prefer `safari`, use `-s` option.
+- `Enter` キーを押下すると、ブラウザでブックマークを開きます
 
 <!--
 ### tag              
