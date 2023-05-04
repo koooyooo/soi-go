@@ -2,16 +2,16 @@
 ![soi](./soi.jpg)
 
 # soi
-`soi` は CLI形式のブックマークマネージャです。CLIによる快適な操作が可能です。データはローカルストレージに保存されます。ローカルストレージとしては `${HOME}/.soi` が割り当てられます。
+`soi` は `golang`製の CLIによるブックマークマネージャです。CLIによる快適な操作が可能です。データはローカルストレージに保存されます。ローカルストレージとしては `${HOME}/.soi` が割り当てられます。
 
-## 導入
+## Install
 `$ go install` 
 ```
 $ go install github.com/koooyooo/soi-go@latest
 ```
 
-## 利用法
-### 起動
+## Usage
+### `soi` >
 `soi`と打ち込むと `soi>`形式のプロンプトが立ち上がります。
 ```
 $ soi
