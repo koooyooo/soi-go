@@ -27,7 +27,8 @@ func main() {
 }
 
 func migrateFile(bucket string) error {
-	repo, err := repository.NewSQLiteRepository(bucket + ".db")
+	ctx := context.Background()
+	repo, err := repository.NewSQLiteRepository(ctx, bucket+".db", bucket)
 	if err != nil {
 		return err
 	}
