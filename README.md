@@ -56,6 +56,7 @@ soi> add　{dir} {name} https://www.google.com
 ```
 
 - `#`で開始された用語はタグとなります
+  - タグは後述の `list`, `dig` コマンドにおける絞り込みで活用可能です。
 ```bash
 soi> add　{dir} {name} https://www.google.com #search #entry
 ```
