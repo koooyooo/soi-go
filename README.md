@@ -5,6 +5,7 @@
 [![test](https://github.com/koooyooo/soi-go/actions/workflows/test.yaml/badge.svg)](https://github.com/koooyooo/soi-go/actions/workflows/test.yaml)
 [![lint](https://github.com/koooyooo/soi-go/actions/workflows/lint.yaml/badge.svg)](https://github.com/koooyooo/soi-go/actions/workflows/lint.yaml)
 
+
 `soi` は `golang`製の CLIによるブックマークマネージャです。CLIによる快適な操作が可能です。データはローカルストレージに保存されます。ローカルストレージとしては `${HOME}/.soi` が割り当てられます。
 
 ## Install
@@ -21,6 +22,17 @@ $ go install github.com/koooyooo/soi-go@latest
   "default_repository": "file",
   "default_browser": "firefox"
 }
+```
+
+（設定例）
+```bash
+$ mkdir "${HOME}/.soi" && cat << EOS > "${HOME}/.soi/config.json"
+{
+  "default_bucket": "default",
+  "default_repository": "file",
+  "default_browser": "firefox"
+}
+EOS
 ```
 
 ## Usage
