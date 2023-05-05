@@ -30,6 +30,7 @@ $ go install github.com/koooyooo/soi-go@latest
   "default_browser": "firefox"
 }
 ```
+> `default_browser` の選択肢は `firefox` | `chrome` | `safari` です
 
 （設定例）
 ```bash
@@ -81,17 +82,37 @@ soi> add　{dir} {name} https://www.google.com #search #entry
 
 
 ### `list`
-`list` コマンドで ブックマークをリストアップすることが可能です
+`list` コマンドで ブックマークをリストアップし、絞り込み、最後に選択することが可能です。
 
 - `Tab`（`Shift + Tab`）キーや `↑`・`↓`キーで対象を選択します
-- ディレクトリや名前の一部をタイプすることで対象の絞り込めます
-- 選択した行で`Enter`を押下すると、ブラウザでブックマークを開きます
 ```bash
 soi> list 
-           adf46ead [ 10 00.0] api/API設計ガイド                                
+           adf46ead [ 10 00.0] api/API設計ガイド [#guide #api]                               
            a73764ed [  1 00.0] books/GooglePlay-Audiobooks                      
-           46734e6c [  6 00.0] contents/MDN                                     
+           46734e6c [  6 00.0] contents/MDN [#guide]                                    
 ```
+
+- ディレクトリや名前の一部, タグ名をタイプすることで対象の絞り込みを行います
+
+#### 名前で絞り込み
+```bash
+soi> list MDN
+           46734e6c [  6 00.0] contents/MDN [#guide]                                    
+```
+
+#### タグで絞り込み
+```bash
+soi> list #guide
+           adf46ead [ 10 00.0] api/API設計ガイド [#guide #api]                               
+           46734e6c [  6 00.0] contents/MDN [#guide]                                    
+```
+
+- 選択した行で`Enter`を押下すると、対象のブックマークをブラウザで開きます
+
+> Note: リスト時にブラウザ指定オプションを付けることで指定したブラウザが開きます。それ以外の場合は設定ファイルで指定したデフォルトブラウザが起動します。
+> - `-c` `chrome`
+> - `-f` `firefox`
+> - `-s` `safari`
 
 ### `dig`
 `dig` コマンドで、ディレクトリを階層的に探索します。
@@ -130,21 +151,6 @@ change current bucket: hobby
 soi> cb
 current bucket: [hobby]
 ```
-
-
-<!--
-### tag              
-```
-  Desc:  not implemented now
-```
-
-### mv
-```
-  Desc:  move file to dir 
-  Usage: mv (current path) to (dir)
-```
--->
-
 ### `quit`
 `quit` コマンドで `soi`プロンプトを抜けることができます
 
