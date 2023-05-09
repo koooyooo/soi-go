@@ -66,8 +66,12 @@ func controlFile(soisDir, p string) error {
 
 	pathElms := strings.Split(pathFromSoiDir, "/")
 	dirPath := strings.Join(pathElms[1:len(pathElms)-1], "/") // skipping bucket elm from head & file one from tail
-	filePath := strings.TrimSuffix(pathElms[len(pathElms)-1], ".json")
+	fileName := pathElms[len(pathElms)-1]
+	filePath := strings.TrimSuffix(fileName, ".json")
 
+	if soi.Name != fileName {
+		soi.Name = fileName
+	}
 	if soi.Path != dirPath {
 		fmt.Printf("  [Fix] soi path for [%s] is fixed with file path:  [%s] -> [%s]\n", filePath, soi.Path, dirPath)
 		soi.Path = dirPath
