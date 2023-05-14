@@ -14,7 +14,7 @@ import (
 var yearsAgo100 = time.Now().Add(24 * 365 * -100 * time.Hour)
 
 func Exec(sois []*model.SoiData, d prompt.Document) {
-	sorters := []soiSorter{ViewSorter, MostRecentlyUsedSorter, MostRecentlyCreatedSorter}
+	sorters := []soiSorter{NumViewSorter, AddDaySorter, ViewDaySorter}
 	for _, s := range sorters {
 		if strings.Contains(d.Text, fmt.Sprintf(" %s ", s.opt)) {
 			sort.SliceStable(sois, s.sortFunc(sois))
@@ -27,8 +27,8 @@ type soiSorter struct {
 	sortFunc func([]*model.SoiData) func(i, j int) bool
 }
 
-var ViewSorter = soiSorter{
-	opt: "-v",
+var NumViewSorter = soiSorter{
+	opt: "-n",
 	sortFunc: func(sois []*model.SoiData) func(i, j int) bool {
 		return func(i, j int) bool {
 			return sois[i].NumViews > sois[j].NumViews
@@ -36,8 +36,17 @@ var ViewSorter = soiSorter{
 	},
 }
 
-var MostRecentlyUsedSorter = soiSorter{
-	opt: "-u",
+var AddDaySorter = soiSorter{
+	opt: "-a",
+	sortFunc: func(sois []*model.SoiData) func(i, j int) bool {
+		return func(i, j int) bool {
+			return sois[i].CreatedAt.After(sois[j].CreatedAt)
+		}
+	},
+}
+
+var ViewDaySorter = soiSorter{
+	opt: "-v",
 	sortFunc: func(sois []*model.SoiData) func(i, j int) bool {
 		return func(i, j int) bool {
 			lastUsageTime := func(sois []*model.SoiData, idx int) time.Time {
@@ -49,15 +58,6 @@ var MostRecentlyUsedSorter = soiSorter{
 				return soi.UsageLogs[len(soi.UsageLogs)-1].UsedAt
 			}
 			return lastUsageTime(sois, i).After(lastUsageTime(sois, j))
-		}
-	},
-}
-
-var MostRecentlyCreatedSorter = soiSorter{
-	opt: "-r",
-	sortFunc: func(sois []*model.SoiData) func(i, j int) bool {
-		return func(i, j int) bool {
-			return sois[i].CreatedAt.After(sois[j].CreatedAt)
 		}
 	},
 }

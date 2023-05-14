@@ -22,9 +22,9 @@ func (e *Executor) open(in string) error {
 	firefox := flags.Bool("f", false, "use firefox")
 	safari := flags.Bool("s", false, "use safari")
 
-	_ = flags.Bool("v", false, "view sort for list")
-	_ = flags.Bool("u", false, "date sort for list")
-	_ = flags.Bool("r", false, "date sort for list")
+	_ = flags.Bool("n", false, "sort by num-views")
+	_ = flags.Bool("a", false, "sort by add-day")
+	_ = flags.Bool("v", false, "sort by view-day")
 
 	if err := flags.Parse(strings.Split(in, " ")[1:]); err != nil {
 		return err
