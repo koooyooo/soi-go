@@ -50,9 +50,9 @@ var browserOptSuggests = []prompt.Suggest{
 	{Text: "-c", Description: "open w/ chrome"},
 	{Text: "-f", Description: "open w/ firefox"},
 	{Text: "-s", Description: "open w/ safari"},
-	{Text: "-v", Description: "sort by num-views"},
-	{Text: "-u", Description: "sort by used-day"},
-	{Text: "-r", Description: "sort by created-day"},
+	{Text: "-n", Description: "sort by num-views"},
+	{Text: "-a", Description: "sort by add-day"},
+	{Text: "-v", Description: "sort by view-day"},
 }
 
 func removeCmd(text string) string {
@@ -64,7 +64,7 @@ func removeCmd(text string) string {
 
 func removeOption(text string) string {
 	// TODO 通常の順に並べ文字数順にソートするロジックに変更する
-	options := []string{"-c", "-f", "-s", "-v", "-u", "-r"}
+	options := []string{"-c", "-f", "-s", "-n", "-a", "-v"}
 	for _, opt := range options {
 		text = strings.ReplaceAll(text, opt, "")
 	}
