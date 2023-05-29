@@ -4,6 +4,7 @@ import (
 	"errors"
 	"flag"
 	"github.com/koooyooo/soi-go/pkg/cli/opener"
+	"golang.org/x/net/context"
 	"os/exec"
 	"path"
 	"strings"
@@ -50,8 +51,8 @@ func (e *Executor) open(in string) error {
 		UsedAt: time.Now(),
 	})
 
-	// Soiファイルを再登録
-	if err := loader.StoreSoiData(s.FilePath(soisDir), s); err != nil {
+	ctx := context.Background()
+	if err := e.Service.Store(ctx, s); err != nil {
 		return err
 	}
 

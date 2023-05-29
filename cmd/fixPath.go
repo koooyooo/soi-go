@@ -9,6 +9,7 @@ import (
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
 	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/utils"
 	"github.com/koooyooo/soi-go/pkg/model"
+	"log"
 	"os"
 	"strings"
 
@@ -21,7 +22,9 @@ var fixPathCmd = &cobra.Command{
 	Short: "A brief description of your command",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		controlFixPath()
+		if err := controlFixPath(); err != nil {
+			log.Fatal(err)
+		}
 	},
 }
 
@@ -67,13 +70,13 @@ func controlFile(soisDir, p string) error {
 	pathElms := strings.Split(pathFromSoiDir, "/")
 	dirPath := strings.Join(pathElms[1:len(pathElms)-1], "/") // skipping bucket elm from head & file one from tail
 	fileName := pathElms[len(pathElms)-1]
-	filePath := strings.TrimSuffix(fileName, ".json")
+	soiName := strings.TrimSuffix(fileName, ".json")
 
-	if soi.Name != fileName {
-		soi.Name = fileName
+	if soi.Name != soiName {
+		soi.Name = soiName
 	}
 	if soi.Path != dirPath {
-		fmt.Printf("  [Fix] soi path for [%s] is fixed with file path:  [%s] -> [%s]\n", filePath, soi.Path, dirPath)
+		fmt.Printf("  [Fix] soi path for [%s] is fixed with file path:  [%s] -> [%s]\n", soiName, soi.Path, dirPath)
 		soi.Path = dirPath
 	}
 	d, err = json.Marshal(soi)

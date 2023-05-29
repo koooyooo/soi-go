@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
-	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -105,7 +104,7 @@ func StoreSoiData(filepath string, s *model.SoiData) error {
 	if err != nil {
 		return err
 	}
-	if err := ioutil.WriteFile(filepath, ub, 0600); err != nil {
+	if err := os.WriteFile(filepath, ub, 0600); err != nil {
 		return err
 	}
 	return nil

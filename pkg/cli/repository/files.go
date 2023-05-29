@@ -60,7 +60,7 @@ func (r *filesRepository) Store(ctx context.Context, bucket string, soi *model.S
 		return ctx.Err()
 	default:
 	}
-	return loader.StoreSoiData(soi.FilePath(bucket), soi)
+	return loader.StoreSoiData(filepath.Join(r.basePath, soi.FilePath(bucket)), soi)
 }
 
 func (r *filesRepository) Exists(ctx context.Context, bucket string, hash string) (bool, error) {
