@@ -4,7 +4,6 @@ import (
 	"errors"
 	"flag"
 	"github.com/koooyooo/soi-go/pkg/cli/opener"
-	"github.com/koooyooo/soi-go/pkg/cli/service"
 	"golang.org/x/net/context"
 	"os/exec"
 	"strings"
@@ -31,7 +30,7 @@ func (e *Executor) open(in string) error {
 	}
 
 	ctx := context.Background()
-	s, err := findSoi(ctx, e.Service, flags.Args())
+	s, err := findSoi(e.Cache.ListSoiCache, flags.Args())
 	if err != nil {
 		return err
 	}
@@ -72,11 +71,7 @@ func (e *Executor) open(in string) error {
 	return exec.Command("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", s.URI).Start()
 }
 
-func findSoi(ctx context.Context, s service.Service, args []string) (*model.SoiData, error) {
-	sois, err := s.LoadAll(ctx)
-	if err != nil {
-		return nil, err
-	}
+func findSoi(sois []*model.SoiData, args []string) (*model.SoiData, error) {
 	hash, findHash := view.ParseLine4Hash(args)
 	if findHash {
 		for _, soi := range sois {
