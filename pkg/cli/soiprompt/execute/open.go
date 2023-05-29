@@ -4,14 +4,13 @@ import (
 	"errors"
 	"flag"
 	"github.com/koooyooo/soi-go/pkg/cli/opener"
+	"github.com/koooyooo/soi-go/pkg/cli/service"
 	"golang.org/x/net/context"
 	"os/exec"
-	"path"
 	"strings"
 	"time"
 
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
-	"github.com/koooyooo/soi-go/pkg/cli/loader"
 	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/view"
 	"github.com/koooyooo/soi-go/pkg/model"
 )
@@ -31,13 +30,8 @@ func (e *Executor) open(in string) error {
 		return err
 	}
 
-	// Soiファイルを特定
-	soisDir, err := e.Bucket.Path()
-	if err != nil {
-		return err
-	}
-
-	s, err := findSoi(soisDir, flags.Args())
+	ctx := context.Background()
+	s, err := findSoi(ctx, e.Service, flags.Args())
 	if err != nil {
 		return err
 	}
@@ -51,7 +45,6 @@ func (e *Executor) open(in string) error {
 		UsedAt: time.Now(),
 	})
 
-	ctx := context.Background()
 	if err := e.Service.Store(ctx, s); err != nil {
 		return err
 	}
@@ -79,13 +72,13 @@ func (e *Executor) open(in string) error {
 	return exec.Command("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", s.URI).Start()
 }
 
-func findSoi(soisDir string, args []string) (*model.SoiData, error) {
+func findSoi(ctx context.Context, s service.Service, args []string) (*model.SoiData, error) {
+	sois, err := s.LoadAll(ctx)
+	if err != nil {
+		return nil, err
+	}
 	hash, findHash := view.ParseLine4Hash(args)
 	if findHash {
-		sois, err := loader.LoadSois(soisDir)
-		if err != nil {
-			return nil, err
-		}
 		for _, soi := range sois {
 			if strings.HasPrefix(soi.Hash, hash) {
 				return soi, nil
@@ -94,12 +87,11 @@ func findSoi(soisDir string, args []string) (*model.SoiData, error) {
 	}
 	pathTail, findPath := view.ParseLine4Path(args)
 	if findPath {
-		p := path.Join(soisDir, pathTail+".json")
-		soi, err := loader.LoadSoiData(p)
-		if err != nil {
-			return nil, err
+		for _, soi := range sois {
+			if strings.Contains(soi.Path+"/"+soi.Name, pathTail) {
+				return soi, nil
+			}
 		}
-		return soi, nil
 	}
 	return nil, errors.New("no path found")
 }
