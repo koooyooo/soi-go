@@ -20,6 +20,7 @@ func (e *Executor) open(in string) error {
 	chrome := flags.Bool("c", false, "use chrome")
 	firefox := flags.Bool("f", false, "use firefox")
 	safari := flags.Bool("s", false, "use safari")
+	private := flags.Bool("p", false, "private mode")
 
 	_ = flags.Bool("n", false, "sort by num-views")
 	_ = flags.Bool("a", false, "sort by add-day")
@@ -48,25 +49,27 @@ func (e *Executor) open(in string) error {
 		return err
 	}
 
-	// 環境設定に応じてブラウザオープン
 	if *chrome {
-		return opener.OpenChrome(s)
+		return opener.OpenChrome(s, *private)
 	}
 	if *firefox {
-		return opener.OpenFirefox(s)
+		return opener.OpenFirefox(s, *private)
 	}
 	if *safari {
-		return opener.OpenSafari(s)
+		return opener.OpenSafari(s, *private)
+	}
+	if !*chrome && !*firefox && !*safari {
+
 	}
 	defB := strings.ToLower(constant.EnvKeyDefaultBrowser.Get())
 	if defB == "chrome" {
-		return opener.OpenChrome(s)
+		return opener.OpenChrome(s, *private)
 	}
 	if defB == "firefox" {
-		return opener.OpenFirefox(s)
+		return opener.OpenFirefox(s, *private)
 	}
 	if defB == "safari" {
-		return opener.OpenSafari(s)
+		return opener.OpenSafari(s, *private)
 	}
 	return exec.Command("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", s.URI).Start()
 }
