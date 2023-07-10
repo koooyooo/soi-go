@@ -47,6 +47,7 @@ func (c *Completer) listCmd(d prompt.Document) []prompt.Suggest {
 }
 
 var browserOptSuggests = []prompt.Suggest{
+	{Text: "-p", Description: "open in private mode"},
 	{Text: "-c", Description: "open w/ chrome"},
 	{Text: "-f", Description: "open w/ firefox"},
 	{Text: "-s", Description: "open w/ safari"},
@@ -64,7 +65,7 @@ func removeCmd(text string) string {
 
 func removeOption(text string) string {
 	// TODO 通常の順に並べ文字数順にソートするロジックに変更する
-	options := []string{"-c", "-f", "-s", "-n", "-a", "-v"}
+	options := []string{"-p", "-c", "-f", "-s", "-n", "-a", "-v"}
 	for _, opt := range options {
 		text = strings.ReplaceAll(text, opt, "")
 	}

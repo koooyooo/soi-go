@@ -58,9 +58,6 @@ func (e *Executor) open(in string) error {
 	if *safari {
 		return opener.OpenSafari(s, *private)
 	}
-	if !*chrome && !*firefox && !*safari {
-
-	}
 	defB := strings.ToLower(constant.EnvKeyDefaultBrowser.Get())
 	if defB == "chrome" {
 		return opener.OpenChrome(s, *private)
