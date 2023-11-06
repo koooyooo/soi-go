@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/koooyooo/soi-go/pkg/model"
+	"soi-go/pkg/model"
 )
 
 type SoiLine struct {

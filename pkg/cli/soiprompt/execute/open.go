@@ -3,15 +3,15 @@ package execute
 import (
 	"errors"
 	"flag"
-	"github.com/koooyooo/soi-go/pkg/cli/opener"
 	"golang.org/x/net/context"
 	"os/exec"
+	"soi-go/pkg/cli/opener"
 	"strings"
 	"time"
 
-	"github.com/koooyooo/soi-go/pkg/cli/constant"
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/view"
-	"github.com/koooyooo/soi-go/pkg/model"
+	"soi-go/pkg/cli/constant"
+	"soi-go/pkg/cli/soiprompt/view"
+	"soi-go/pkg/model"
 )
 
 // open は指定されたSoiを元にブラウザを開きます

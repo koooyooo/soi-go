@@ -4,7 +4,7 @@ import (
 	"encoding/base64"
 	"fmt"
 
-	"github.com/koooyooo/soi-go/pkg/cli/constant"
+	"soi-go/pkg/cli/constant"
 )
 
 func generateAuthValues() (user string, pass string, authValue string, err error) {

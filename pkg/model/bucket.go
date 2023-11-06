@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/koooyooo/soi-go/pkg/cli/constant"
+	"soi-go/pkg/cli/constant"
 )
 
 type BucketRef struct {

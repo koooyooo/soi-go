@@ -5,15 +5,15 @@ package cmd
 
 import (
 	"github.com/c-bata/go-prompt"
-	"github.com/koooyooo/soi-go/pkg/cli/config"
-	"github.com/koooyooo/soi-go/pkg/cli/repository"
-	"github.com/koooyooo/soi-go/pkg/cli/service"
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt"
-	"github.com/koooyooo/soi-go/pkg/common/file"
-	"github.com/koooyooo/soi-go/pkg/model"
 	"golang.org/x/net/context"
 	"log"
 	"os"
+	"soi-go/pkg/cli/config"
+	"soi-go/pkg/cli/repository"
+	"soi-go/pkg/cli/service"
+	"soi-go/pkg/cli/soiprompt"
+	"soi-go/pkg/common/file"
+	"soi-go/pkg/model"
 
 	"github.com/spf13/cobra"
 )

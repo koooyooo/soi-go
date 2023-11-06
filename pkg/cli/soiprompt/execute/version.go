@@ -3,7 +3,7 @@ package execute
 import (
 	"fmt"
 
-	"github.com/koooyooo/soi-go/pkg/cli/constant"
+	"soi-go/pkg/cli/constant"
 )
 
 func (e *Executor) version(_ string) error {

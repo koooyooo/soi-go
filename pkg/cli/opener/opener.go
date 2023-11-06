@@ -1,8 +1,8 @@
 package opener
 
 import (
-	"github.com/koooyooo/soi-go/pkg/model"
 	"os/exec"
+	"soi-go/pkg/model"
 )
 
 func OpenChrome(s *model.SoiData, _ bool) error {

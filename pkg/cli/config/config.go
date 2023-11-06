@@ -1,16 +1,13 @@
 package config
 
 import (
-	"bufio"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
-	"os"
 	"path/filepath"
 
-	"github.com/koooyooo/soi-go/pkg/common/file"
 	"github.com/mitchellh/go-homedir"
+	"soi-go/pkg/common/file"
 )
 
 // 設定情報
@@ -46,14 +43,15 @@ func exists(path string) (bool, error) {
 }
 
 func initialize(path string) error {
-	sc := bufio.NewScanner(os.Stdin)
-	fmt.Println(`server url? (ex. https://server:80")`)
-	fmt.Print("> ")
-	sc.Scan()
-	txt := sc.Text()
-	if txt == "" {
-		return errors.New("no servername specified")
-	}
+	//sc := bufio.NewScanner(os.Stdin)
+	//fmt.Println(`server url? (ex. https://server:80")`)
+	//fmt.Print("> ")
+	//sc.Scan()
+	//txt := sc.Text()
+	//if txt == "" {
+	//	return errors.New("no servername specified")
+	//}
+	txt := ""
 	cfg := Config{
 		Server: txt,
 	}

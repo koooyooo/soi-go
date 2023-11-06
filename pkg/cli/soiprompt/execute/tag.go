@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/koooyooo/soi-go/pkg/cli/loader"
+	"soi-go/pkg/cli/loader"
 )
 
 // tag はsoiのタグ付けを行います
