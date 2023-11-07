@@ -3,8 +3,13 @@ package macos
 import (
 	"errors"
 	"os/exec"
+	"soi-go/pkg/cli/opener"
 	"soi-go/pkg/model"
 )
+
+func NewOpener() opener.Opener {
+	return &macOSOpener{}
+}
 
 type macOSOpener struct{}
 
