@@ -5,7 +5,8 @@ import (
 	"flag"
 	"golang.org/x/net/context"
 	"os/exec"
-	"soi-go/pkg/cli/opener"
+	"runtime"
+	"soi-go/pkg/cli/opener/macos"
 	"strings"
 	"time"
 
@@ -49,24 +50,31 @@ func (e *Executor) open(in string) error {
 		return err
 	}
 
+	// TODO
+	switch runtime.GOOS {
+	case "darwin":
+	case "windows":
+	case "linux":
+	}
+
 	if *chrome {
-		return opener.OpenChrome(s, *private)
+		return macos.OpenChrome(s, *private)
 	}
 	if *firefox {
-		return opener.OpenFirefox(s, *private)
+		return macos.OpenFirefox(s, *private)
 	}
 	if *safari {
-		return opener.OpenSafari(s, *private)
+		return macos.OpenSafari(s, *private)
 	}
 	defB := strings.ToLower(constant.EnvKeyDefaultBrowser.Get())
 	if defB == "chrome" {
-		return opener.OpenChrome(s, *private)
+		return macos.OpenChrome(s, *private)
 	}
 	if defB == "firefox" {
-		return opener.OpenFirefox(s, *private)
+		return macos.OpenFirefox(s, *private)
 	}
 	if defB == "safari" {
-		return opener.OpenSafari(s, *private)
+		return macos.OpenSafari(s, *private)
 	}
 	return exec.Command("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", s.URI).Start()
 }

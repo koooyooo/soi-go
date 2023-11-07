@@ -3,7 +3,7 @@ package config
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"github.com/mitchellh/go-homedir"
@@ -26,6 +26,7 @@ func Load() (*Config, error) {
 	if err != nil {
 		return nil, fmt.Errorf("fail in checking conf file existence: %v", err)
 	}
+	fmt.Println(exists, path) // TODO
 	if !exists {
 		if err := initialize(path); err != nil {
 			return nil, fmt.Errorf("fail in initializing conf file: %v", err)
@@ -59,11 +60,11 @@ func initialize(path string) error {
 	if err != nil {
 		return err
 	}
-	return ioutil.WriteFile(path, b, 0600)
+	return os.WriteFile(path, b, 0644)
 }
 
 func doLoad(path string) (*Config, error) {
-	b, err := ioutil.ReadFile(path)
+	b, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
@@ -85,9 +86,11 @@ func confPath() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	confPath := filepath.Join(dir, ".soi", "config.json")
-	if !file.Exists(confPath) {
-		return "", nil
+	confDir := filepath.Join(dir, ".soi")
+	if !file.Exists(confDir) {
+		if err := os.Mkdir(confDir, 0755); err != nil {
+			return "", err
+		}
 	}
-	return confPath, nil
+	return filepath.Join(confDir, "config.json"), nil
 }
