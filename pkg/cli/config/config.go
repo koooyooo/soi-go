@@ -26,7 +26,6 @@ func Load() (*Config, error) {
 	if err != nil {
 		return nil, fmt.Errorf("fail in checking conf file existence: %v", err)
 	}
-	fmt.Println(exists, path) // TODO
 	if !exists {
 		if err := initialize(path); err != nil {
 			return nil, fmt.Errorf("fail in initializing conf file: %v", err)
