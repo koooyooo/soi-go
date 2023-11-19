@@ -94,7 +94,7 @@ func control(_ *cobra.Command, _ []string) {
 		sp.Complete,
 		prompt.OptionTitle("soi input"),
 		prompt.OptionPrefix("soi> "),
-		prompt.OptionPrefixTextColor(prompt.Black),
+		prompt.OptionPrefixTextColor(prompt.DarkBlue),
 		//prompt.OptionSelectedSuggestionBGColor(prompt.DarkGray),
 		prompt.OptionSelectedSuggestionBGColor(prompt.Blue),
 		prompt.OptionSelectedSuggestionTextColor(prompt.White),
