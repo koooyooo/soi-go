@@ -6,13 +6,15 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/mitchellh/go-homedir"
 	"soi-go/pkg/common/file"
+
+	"github.com/mitchellh/go-homedir"
 )
 
 // 設定情報
 type Config struct {
 	Server            string `json:"server"`
+	Theme             string `json:"theme"`
 	DefaultBucket     string `json:"default_bucket"`
 	DefaultRepository string `json:"default_repository"`
 }
