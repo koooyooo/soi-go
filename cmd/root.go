@@ -4,8 +4,6 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/c-bata/go-prompt"
-	"golang.org/x/net/context"
 	"log"
 	"os"
 	"os/exec"
@@ -15,6 +13,9 @@ import (
 	"soi-go/pkg/cli/soiprompt"
 	"soi-go/pkg/common/file"
 	"soi-go/pkg/model"
+
+	"github.com/c-bata/go-prompt"
+	"golang.org/x/net/context"
 
 	"github.com/spf13/cobra"
 )
@@ -76,7 +77,7 @@ func control(_ *cobra.Command, _ []string) {
 
 	var basicOpts = []prompt.Option{
 		prompt.OptionTitle("soi input"),
-		prompt.OptionPrefix("soi>> "),
+		prompt.OptionPrefix("soi> "),
 		prompt.OptionMaxSuggestion(15),
 	}
 	var themedOpts []prompt.Option
@@ -96,7 +97,7 @@ func control(_ *cobra.Command, _ []string) {
 
 func blackBgTheme(baseOpts ...prompt.Option) []prompt.Option {
 	theme := []prompt.Option{
-		prompt.OptionPrefixTextColor(prompt.DarkBlue),
+		prompt.OptionPrefixTextColor(prompt.Blue),
 		prompt.OptionSelectedSuggestionBGColor(prompt.Blue),
 		prompt.OptionSelectedSuggestionTextColor(prompt.White),
 		prompt.OptionSelectedDescriptionBGColor(prompt.DarkGray),
@@ -105,7 +106,7 @@ func blackBgTheme(baseOpts ...prompt.Option) []prompt.Option {
 		prompt.OptionDescriptionBGColor(prompt.LightGray),
 		prompt.OptionScrollbarThumbColor(prompt.Black),
 		prompt.OptionScrollbarBGColor(prompt.DarkGray),
-		prompt.OptionInputTextColor(prompt.White),
+		prompt.OptionInputTextColor(prompt.LightGray),
 		prompt.OptionPreviewSuggestionTextColor(prompt.DarkBlue),
 	}
 	return append(baseOpts, theme...)
