@@ -27,7 +27,7 @@ type Executor struct {
 	*model.BucketRef
 }
 
-// Executor は入力されたコマンドに応じた処理を行います
+// Execute は入力されたコマンドに応じた処理を実行します
 func (e *Executor) Execute(in string) {
 	in = strings.Trim(in, " ")
 	cmd := strings.Split(in, " ")[0]
