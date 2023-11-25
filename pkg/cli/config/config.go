@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/caarlos0/env/v10"
+
 	"soi-go/pkg/common/file"
 
 	"github.com/mitchellh/go-homedir"
@@ -13,10 +15,11 @@ import (
 
 // 設定情報
 type Config struct {
-	Server            string `json:"server"`
-	Theme             string `json:"theme"`
-	DefaultBucket     string `json:"default_bucket"`
-	DefaultRepository string `json:"default_repository"`
+	Theme             string `env:"SOI_THEME" json:"theme"`
+	DefaultBrowser    string `env:"SOI_DEFAULT_BROWSER" json:"default_browser"`
+	DefaultBucket     string `env:"SOI_DEFAULT_BUCKET" json:"default_bucket"`
+	Server            string `env:"SOI_SERVER" json:"server"`
+	DefaultRepository string `env:"SOI_DEFAULT_REPOSITORY" json:"default_repository"`
 }
 
 func Load() (*Config, error) {
@@ -71,6 +74,9 @@ func doLoad(path string) (*Config, error) {
 	}
 	var conf Config
 	if err := json.Unmarshal(b, &conf); err != nil {
+		return nil, err
+	}
+	if err := env.Parse(&conf); err != nil {
 		return nil, err
 	}
 	if conf.DefaultBucket == "" {
