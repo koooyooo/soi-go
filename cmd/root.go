@@ -4,7 +4,6 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -49,7 +48,6 @@ func control(_ *cobra.Command, _ []string) {
 	if err != nil {
 		log.Fatalf("failed in loading config: %v", err)
 	}
-	fmt.Printf("%v", cfg) // TODO
 	b, err := model.NewBucket(cfg.DefaultBucket)
 	if err != nil {
 		log.Fatalf("failed in creating default bucket: %v", err)

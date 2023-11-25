@@ -3,8 +3,6 @@ package execute
 import (
 	"errors"
 	"flag"
-	"fmt"
-	"golang.org/x/net/context"
 	"runtime"
 	"soi-go/pkg/cli/opener"
 	"soi-go/pkg/cli/opener/linux"
@@ -13,7 +11,8 @@ import (
 	"strings"
 	"time"
 
-	"soi-go/pkg/cli/constant"
+	"golang.org/x/net/context"
+
 	"soi-go/pkg/cli/soiprompt/view"
 	"soi-go/pkg/model"
 )
@@ -54,15 +53,9 @@ func (e *Executor) open(in string) error {
 		return err
 	}
 
-	fmt.Println("OS:", runtime.GOOS) // TODO
-	var opn opener.Opener
-	switch runtime.GOOS {
-	case "darwin":
-		opn = macos.NewOpener()
-	case "windows":
-		opn = windows.NewOpener()
-	case "linux":
-		opn = linux.NewLinuxOpener()
+	opn, ok := getOpener(runtime.GOOS)
+	if !ok {
+		return errors.New("unsupported os :" + runtime.GOOS)
 	}
 
 	if *chrome {
@@ -78,20 +71,31 @@ func (e *Executor) open(in string) error {
 		return opn.OpenEdge(s, *private)
 	}
 
-	defB := strings.ToLower(constant.EnvKeyDefaultBrowser.Get())
-	if defB == "chrome" {
+	defB := strings.ToLower(e.Conf.DefaultBrowser)
+	switch defB {
+	case "chrome":
+		return opn.OpenChrome(s, *private)
+	case "firefox":
+		return opn.OpenFirefox(s, *private)
+	case "safari":
+		return opn.OpenSafari(s, *private)
+	case "edge":
+		return opn.OpenEdge(s, *private)
+	default:
 		return opn.OpenChrome(s, *private)
 	}
-	if defB == "firefox" {
-		return opn.OpenFirefox(s, *private)
+}
+
+func getOpener(os string) (opener.Opener, bool) {
+	switch runtime.GOOS {
+	case "darwin":
+		return macos.NewOpener(), true
+	case "windows":
+		return windows.NewOpener(), true
+	case "linux":
+		return linux.NewLinuxOpener(), true
 	}
-	if defB == "safari" {
-		return opn.OpenSafari(s, *private)
-	}
-	if defB == "edge" {
-		return opn.OpenEdge(s, *private)
-	}
-	return opn.OpenChrome(s, *private)
+	return nil, false
 }
 
 func findSoi(sois []*model.SoiData, args []string) (*model.SoiData, error) {

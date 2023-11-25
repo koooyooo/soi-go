@@ -19,6 +19,8 @@ type Config struct {
 	DefaultBrowser    string `env:"SOI_DEFAULT_BROWSER" json:"default_browser"`
 	DefaultBucket     string `env:"SOI_DEFAULT_BUCKET" json:"default_bucket"`
 	Server            string `env:"SOI_SERVER" json:"server"`
+	UserName          string `env:"SOI_USER_NAME" json:"user_name"`
+	UserPass          string `env:"SOI_USER_PASS" json:"user_pass"`
 	DefaultRepository string `env:"SOI_DEFAULT_REPOSITORY" json:"default_repository"`
 }
 
