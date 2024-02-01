@@ -87,7 +87,7 @@ func (e *Executor) open(in string) error {
 }
 
 func getOpener(os string) (opener.Opener, bool) {
-	switch runtime.GOOS {
+	switch os {
 	case "darwin":
 		return macos.NewOpener(), true
 	case "windows":
