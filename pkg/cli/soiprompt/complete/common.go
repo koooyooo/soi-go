@@ -3,9 +3,9 @@ package complete
 import (
 	"context"
 	"github.com/c-bata/go-prompt"
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/complete/soisort"
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/view"
 	"log"
+	"soi-go/pkg/cli/soiprompt/complete/soisort"
+	"soi-go/pkg/cli/soiprompt/view"
 	"strings"
 )
 
@@ -35,4 +35,31 @@ func (c *Completer) baseList(d prompt.Document, commands ...string) []prompt.Sug
 
 	words := strings.Split(input, " ")
 	return filterByMultiWords(words, sgs)
+}
+
+func removeCmd(text string, commands ...string) string {
+	text = strings.TrimSpace(text)
+	for _, cmd := range commands {
+		text = strings.TrimLeft(text, cmd+" ")
+	}
+	return text
+}
+
+func removeOption(text string) string {
+	// TODO 通常の順に並べ文字数順にソートするロジックに変更する
+	options := []string{"-p", "-c", "-f", "-s", "-n", "-a", "-v"}
+	for _, opt := range options {
+		text = strings.ReplaceAll(text, opt, "")
+	}
+	return strings.TrimSpace(text)
+}
+
+func filterByMultiWords(words []string, filtered []prompt.Suggest) []prompt.Suggest {
+	for _, word := range words {
+		if word == "" {
+			continue
+		}
+		filtered = prompt.FilterContains(filtered, word, true)
+	}
+	return filtered
 }

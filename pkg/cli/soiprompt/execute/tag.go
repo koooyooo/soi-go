@@ -1,39 +1,35 @@
 package execute
 
 import (
+	"context"
 	"flag"
-	"fmt"
-	"path/filepath"
+	"soi-go/pkg/model"
 	"strings"
-
-	"github.com/koooyooo/soi-go/pkg/cli/loader"
 )
 
 // tag はsoiのタグ付けを行います
 func (e *Executor) tag(in string) error {
-	baseDir, err := e.Bucket.Path()
-	if err != nil {
-		return err
-	}
-	flags := flag.NewFlagSet("rm", flag.PanicOnError)
-	if err = flags.Parse(strings.Split(in, " ")[1:]); err != nil {
+	ctx := context.Background()
+	flags := flag.NewFlagSet("tag", flag.PanicOnError)
+	if err := flags.Parse(strings.Split(in, " ")[1:]); err != nil {
 		return err
 	}
 
 	args := flags.Args()
+	hash := args[0]
 	tags := args[1:]
 
-	target := filepath.Join(baseDir, args[0])
-	if !loader.Exists(target) {
-		fmt.Println("No file or dir found.")
-		return nil
+	sois := e.Cache.ListSoiCache
+	var tgt *model.SoiData
+	for _, s := range sois {
+		if s.Hash == hash {
+			tgt = s
+		}
 	}
-
-	soi, err := loader.LoadSoiData(target)
-	soi.Tags = removeTagHead(tags)
+	tgt.Tags = removeTagHead(tags)
 	// TODO 既存タグを全置き換え、KVタグは無視してしまっている
 
-	if err := loader.StoreSoiData(target, soi); err != nil {
+	if err := e.Service.Store(ctx, tgt); err != nil {
 		return err
 	}
 	return nil

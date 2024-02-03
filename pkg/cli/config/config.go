@@ -1,23 +1,27 @@
 package config
 
 import (
-	"bufio"
 	"encoding/json"
-	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
-	"github.com/koooyooo/soi-go/pkg/common/file"
+	"github.com/caarlos0/env/v10"
+
+	"soi-go/pkg/common/file"
+
 	"github.com/mitchellh/go-homedir"
 )
 
 // 設定情報
 type Config struct {
-	Server            string `json:"server"`
-	DefaultBucket     string `json:"default_bucket"`
-	DefaultRepository string `json:"default_repository"`
+	Theme             string `env:"SOI_THEME" json:"theme"`
+	DefaultBrowser    string `env:"SOI_DEFAULT_BROWSER" json:"default_browser"`
+	DefaultBucket     string `env:"SOI_DEFAULT_BUCKET" json:"default_bucket"`
+	Server            string `env:"SOI_SERVER" json:"server"`
+	UserName          string `env:"SOI_USER_NAME" json:"user_name"`
+	UserPass          string `env:"SOI_USER_PASS" json:"user_pass"`
+	DefaultRepository string `env:"SOI_DEFAULT_REPOSITORY" json:"default_repository"`
 }
 
 func Load() (*Config, error) {
@@ -46,14 +50,15 @@ func exists(path string) (bool, error) {
 }
 
 func initialize(path string) error {
-	sc := bufio.NewScanner(os.Stdin)
-	fmt.Println(`server url? (ex. https://server:80")`)
-	fmt.Print("> ")
-	sc.Scan()
-	txt := sc.Text()
-	if txt == "" {
-		return errors.New("no servername specified")
-	}
+	//sc := bufio.NewScanner(os.Stdin)
+	//fmt.Println(`server url? (ex. https://server:80")`)
+	//fmt.Print("> ")
+	//sc.Scan()
+	//txt := sc.Text()
+	//if txt == "" {
+	//	return errors.New("no servername specified")
+	//}
+	txt := ""
 	cfg := Config{
 		Server: txt,
 	}
@@ -61,16 +66,19 @@ func initialize(path string) error {
 	if err != nil {
 		return err
 	}
-	return ioutil.WriteFile(path, b, 0600)
+	return os.WriteFile(path, b, 0644)
 }
 
 func doLoad(path string) (*Config, error) {
-	b, err := ioutil.ReadFile(path)
+	b, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
 	var conf Config
 	if err := json.Unmarshal(b, &conf); err != nil {
+		return nil, err
+	}
+	if err := env.Parse(&conf); err != nil {
 		return nil, err
 	}
 	if conf.DefaultBucket == "" {
@@ -87,9 +95,11 @@ func confPath() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	confPath := filepath.Join(dir, ".soi", "config.json")
-	if !file.Exists(confPath) {
-		return "", nil
+	confDir := filepath.Join(dir, ".soi")
+	if !file.Exists(confDir) {
+		if err := os.Mkdir(confDir, 0755); err != nil {
+			return "", err
+		}
 	}
-	return confPath, nil
+	return filepath.Join(confDir, "config.json"), nil
 }

@@ -4,10 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/koooyooo/soi-go/pkg/model"
 	_ "github.com/mattn/go-sqlite3"
 	"os"
 	"path/filepath"
+	"soi-go/pkg/model"
 	"strings"
 )
 

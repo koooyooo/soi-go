@@ -3,19 +3,19 @@ package loader
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/koooyooo/soi-go/pkg/cli/constant"
 	"log"
 	"os"
+	"soi-go/pkg/cli/constant"
 	"strings"
 	"sync"
 
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/utils"
+	"soi-go/pkg/cli/soiprompt/utils"
 
-	"github.com/koooyooo/soi-go/pkg/common/file"
+	"soi-go/pkg/common/file"
 
-	"github.com/koooyooo/soi-go/pkg/common/hash"
+	"soi-go/pkg/common/hash"
 
-	"github.com/koooyooo/soi-go/pkg/model"
+	"soi-go/pkg/model"
 )
 
 var isSoiFile = func(soiPath string) bool {

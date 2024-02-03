@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/koooyooo/soi-go/pkg/cli/config"
-	"github.com/koooyooo/soi-go/pkg/common/hash"
-	"github.com/koooyooo/soi-go/pkg/model"
+	"soi-go/pkg/cli/config"
+	"soi-go/pkg/common/hash"
+	"soi-go/pkg/model"
 )
 
 func Push(cfg *config.Config, bucket *model.Bucket, _ string) error {
@@ -44,7 +44,7 @@ func Push(cfg *config.Config, bucket *model.Bucket, _ string) error {
 	}
 
 	// リクエスト作成
-	user, pass, headerVal, err := generateAuthValues()
+	user, pass, headerVal, err := generateAuthValues(cfg)
 	if err != nil {
 		return err
 	}

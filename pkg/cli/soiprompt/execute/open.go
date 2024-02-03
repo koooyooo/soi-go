@@ -3,15 +3,18 @@ package execute
 import (
 	"errors"
 	"flag"
-	"github.com/koooyooo/soi-go/pkg/cli/opener"
-	"golang.org/x/net/context"
-	"os/exec"
+	"runtime"
+	"soi-go/pkg/cli/opener"
+	"soi-go/pkg/cli/opener/linux"
+	"soi-go/pkg/cli/opener/macos"
+	"soi-go/pkg/cli/opener/windows"
 	"strings"
 	"time"
 
-	"github.com/koooyooo/soi-go/pkg/cli/constant"
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/view"
-	"github.com/koooyooo/soi-go/pkg/model"
+	"golang.org/x/net/context"
+
+	"soi-go/pkg/cli/soiprompt/view"
+	"soi-go/pkg/model"
 )
 
 // open は指定されたSoiを元にブラウザを開きます
@@ -20,6 +23,7 @@ func (e *Executor) open(in string) error {
 	chrome := flags.Bool("c", false, "use chrome")
 	firefox := flags.Bool("f", false, "use firefox")
 	safari := flags.Bool("s", false, "use safari")
+	edge := flags.Bool("e", false, "use edge")
 	private := flags.Bool("p", false, "private mode")
 
 	_ = flags.Bool("n", false, "sort by num-views")
@@ -49,26 +53,49 @@ func (e *Executor) open(in string) error {
 		return err
 	}
 
+	opn, ok := getOpener(runtime.GOOS)
+	if !ok {
+		return errors.New("unsupported os :" + runtime.GOOS)
+	}
+
 	if *chrome {
-		return opener.OpenChrome(s, *private)
+		return opn.OpenChrome(s, *private)
 	}
 	if *firefox {
-		return opener.OpenFirefox(s, *private)
+		return opn.OpenFirefox(s, *private)
 	}
 	if *safari {
-		return opener.OpenSafari(s, *private)
+		return opn.OpenSafari(s, *private)
 	}
-	defB := strings.ToLower(constant.EnvKeyDefaultBrowser.Get())
-	if defB == "chrome" {
-		return opener.OpenChrome(s, *private)
+	if *edge {
+		return opn.OpenEdge(s, *private)
 	}
-	if defB == "firefox" {
-		return opener.OpenFirefox(s, *private)
+
+	defB := strings.ToLower(e.Conf.DefaultBrowser)
+	switch defB {
+	case "chrome":
+		return opn.OpenChrome(s, *private)
+	case "firefox":
+		return opn.OpenFirefox(s, *private)
+	case "safari":
+		return opn.OpenSafari(s, *private)
+	case "edge":
+		return opn.OpenEdge(s, *private)
+	default:
+		return opn.OpenChrome(s, *private)
 	}
-	if defB == "safari" {
-		return opener.OpenSafari(s, *private)
+}
+
+func getOpener(os string) (opener.Opener, bool) {
+	switch os {
+	case "darwin":
+		return macos.NewOpener(), true
+	case "windows":
+		return windows.NewOpener(), true
+	case "linux":
+		return linux.NewLinuxOpener(), true
 	}
-	return exec.Command("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", s.URI).Start()
+	return nil, false
 }
 
 func findSoi(sois []*model.SoiData, args []string) (*model.SoiData, error) {
