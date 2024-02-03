@@ -12,7 +12,7 @@ import (
 // digCmd はppコマンド系のSuggestを提示します
 func (c *Completer) digCmd(d prompt.Document) []prompt.Suggest {
 	if utils.IsOptionWord(d) {
-		return browserOptSuggests
+		return listOptSuggests
 	}
 	digPath := removeOption(strings.Split(d.TextBeforeCursor(), " ")[1])
 
