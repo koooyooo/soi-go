@@ -3,7 +3,7 @@ package model
 import (
 	"encoding/json"
 
-	"github.com/koooyooo/soi-go/pkg/common/hash"
+	"soi-go/pkg/common/hash"
 )
 
 type ServerBucket struct {

@@ -2,13 +2,13 @@ package execute
 
 import (
 	"fmt"
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/cache"
+	"soi-go/pkg/cli/soiprompt/cache"
 	"strings"
 
-	"github.com/koooyooo/soi-go/pkg/cli/config"
-	"github.com/koooyooo/soi-go/pkg/cli/service"
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/execute/registry"
-	"github.com/koooyooo/soi-go/pkg/model"
+	"soi-go/pkg/cli/config"
+	"soi-go/pkg/cli/service"
+	"soi-go/pkg/cli/soiprompt/execute/registry"
+	"soi-go/pkg/model"
 )
 
 func NewExecutor(c *config.Config, s service.Service, ca *cache.Cache, r *model.BucketRef) *Executor {
@@ -27,7 +27,7 @@ type Executor struct {
 	*model.BucketRef
 }
 
-// Executor は入力されたコマンドに応じた処理を行います
+// Execute は入力されたコマンドに応じた処理を実行します
 func (e *Executor) Execute(in string) {
 	in = strings.Trim(in, " ")
 	cmd := strings.Split(in, " ")[0]

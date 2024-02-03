@@ -1,14 +1,14 @@
 package complete
 
 import (
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/utils"
 	"golang.org/x/net/context"
 	"log"
+	"soi-go/pkg/cli/soiprompt/utils"
 	"strings"
 
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/view"
+	"soi-go/pkg/cli/soiprompt/view"
 
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/complete/soisort"
+	"soi-go/pkg/cli/soiprompt/complete/soisort"
 
 	"github.com/c-bata/go-prompt"
 )

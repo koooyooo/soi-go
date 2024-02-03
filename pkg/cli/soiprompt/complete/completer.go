@@ -1,13 +1,13 @@
 package complete
 
 import (
-	"github.com/koooyooo/soi-go/pkg/cli/config"
-	"github.com/koooyooo/soi-go/pkg/cli/service"
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/cache"
+	"soi-go/pkg/cli/config"
+	"soi-go/pkg/cli/service"
+	"soi-go/pkg/cli/soiprompt/cache"
 	"strings"
 
 	"github.com/c-bata/go-prompt"
-	"github.com/koooyooo/soi-go/pkg/model"
+	"soi-go/pkg/model"
 )
 
 var EmptySuggests []prompt.Suggest
