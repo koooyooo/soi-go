@@ -42,6 +42,8 @@ func (e *Executor) Execute(in string) {
 		op(e.cb, in)
 	case "tag", "t":
 		op(e.tag, in)
+	case "edit", "e":
+		op(e.edit, in)
 	case "open", "o", "list", "ls", "l", "dig", "d":
 		op(e.open, in)
 	case "help", "h":

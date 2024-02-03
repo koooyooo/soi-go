@@ -12,6 +12,7 @@ import (
 type Service interface {
 	Init(ctx context.Context) error
 	ListBucket(ctx context.Context) ([]string, error)
+	CurrentBucket(ctx context.Context) (string, error)
 	ChangeBucket(ctx context.Context, bucket string) error
 	LoadAll(ctx context.Context) ([]*model.SoiData, error)
 	Load(ctx context.Context, hash string) (*model.SoiData, bool, error)
@@ -40,6 +41,10 @@ func (s *serviceImpl) Init(ctx context.Context) error {
 
 func (s *serviceImpl) ListBucket(ctx context.Context) ([]string, error) {
 	return s.r.ListBucket(ctx)
+}
+
+func (s *serviceImpl) CurrentBucket(ctx context.Context) (string, error) {
+	return s.bucket, nil
 }
 
 func (s *serviceImpl) ChangeBucket(_ context.Context, bucket string) error {

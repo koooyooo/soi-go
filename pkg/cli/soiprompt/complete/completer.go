@@ -57,6 +57,7 @@ func (c *Completer) Complete(d prompt.Document) []prompt.Suggest {
 			{Text: "add", Description: "(a)dd url"},
 			{Text: "dig", Description: "(d)ig urls"},
 			{Text: "list", Description: "(l)ist and filter urls"},
+			{Text: "edit", Description: "(e)dit soi file"},
 			{Text: "cb", Description: "change bucket"},
 			{Text: "tag", Description: "add tags (TODO)"},
 			{Text: "mv", Description: "move file to dir"},
