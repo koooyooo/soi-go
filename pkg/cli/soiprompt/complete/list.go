@@ -2,51 +2,20 @@ package complete
 
 import (
 	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/utils"
-	"golang.org/x/net/context"
-	"log"
 	"strings"
-
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/view"
-
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/complete/soisort"
 
 	"github.com/c-bata/go-prompt"
 )
 
 // listCmd はlistコマンド系のSuggestを提示します
 func (c *Completer) listCmd(d prompt.Document) []prompt.Suggest {
-	// option探索
 	if utils.IsOptionWord(d) {
-		return browserOptSuggests
+		return listOptSuggests
 	}
-	soisDir, err := c.Bucket.Path()
-	if err != nil {
-		log.Fatal(err)
-	}
-	input := removeOption(removeCmd(d.TextBeforeCursor()))
-	if len(c.cache.ListSoiCache) == 0 {
-		sois, err := c.service.LoadAll(context.Background())
-		if err != nil {
-			log.Fatal(err)
-		}
-		c.cache.ListSoiCache = sois
-	}
-
-	soisort.Exec(c.cache.ListSoiCache, d)
-
-	var sgs []prompt.Suggest
-	for _, s := range c.cache.ListSoiCache {
-		sgs = append(sgs, prompt.Suggest{
-			Text:        view.ToLine(s, soisDir),
-			Description: "",
-		})
-	}
-
-	words := strings.Split(input, " ")
-	return filterByMultiWords(words, sgs)
+	return c.baseList(d, "list", "ls", "l")
 }
 
-var browserOptSuggests = []prompt.Suggest{
+var listOptSuggests = []prompt.Suggest{
 	{Text: "-p", Description: "open in private mode"},
 	{Text: "-c", Description: "open w/ chrome"},
 	{Text: "-f", Description: "open w/ firefox"},
@@ -56,10 +25,11 @@ var browserOptSuggests = []prompt.Suggest{
 	{Text: "-v", Description: "sort by view-day"},
 }
 
-func removeCmd(text string) string {
+func removeCmd(text string, commands ...string) string {
 	text = strings.TrimSpace(text)
-	text = strings.TrimLeft(text, "list ")
-	text = strings.TrimLeft(text, "l ")
+	for _, cmd := range commands {
+		text = strings.TrimLeft(text, cmd+" ")
+	}
 	return text
 }
 

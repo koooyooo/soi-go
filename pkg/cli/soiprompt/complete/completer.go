@@ -42,6 +42,8 @@ func (c *Completer) Complete(d prompt.Document) []prompt.Suggest {
 		return c.digCmd(d)
 	case hasPrefixes(text, "list ", "ls", "l "):
 		return c.listCmd(d)
+	case hasPrefixes(text, "edit ", "e "):
+		return c.editCmd(d)
 	case hasPrefixes(text, "cb ", "c "):
 		return c.cbCmd(d)
 	case hasPrefixes(text, "tag ", "t "):
