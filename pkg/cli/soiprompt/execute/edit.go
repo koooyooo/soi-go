@@ -2,7 +2,6 @@ package execute
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -24,7 +23,6 @@ func (e *Executor) edit(in string) error {
 		return err
 	}
 	path := s.FilePath(bucketPath)
-	fmt.Printf("path: %s\n", path) // TODO
 
 	var cName, cArgs string
 	switch runtime.GOOS {
@@ -35,7 +33,7 @@ func (e *Executor) edit(in string) error {
 		cName = "cmd"
 		cArgs = "/c start notepad.exe " + path
 	}
-	c := exec.Command(cName, cArgs) // mac can also use 'open'
+	c := exec.Command(cName, cArgs)
 	c.Stdin = os.Stdin
 	c.Stdout = os.Stdout
 	c.Stderr = os.Stderr
