@@ -42,6 +42,8 @@ func (c *Completer) Complete(d prompt.Document) []prompt.Suggest {
 		return c.digCmd(d)
 	case hasPrefixes(text, "list ", "ls", "l "):
 		return c.listCmd(d)
+	case hasPrefixes(text, "edit ", "e "):
+		return c.editCmd(d)
 	case hasPrefixes(text, "cb ", "c "):
 		return c.cbCmd(d)
 	case hasPrefixes(text, "tag ", "t "):
@@ -55,6 +57,7 @@ func (c *Completer) Complete(d prompt.Document) []prompt.Suggest {
 			{Text: "add", Description: "(a)dd url"},
 			{Text: "dig", Description: "(d)ig urls"},
 			{Text: "list", Description: "(l)ist and filter urls"},
+			{Text: "edit", Description: "(e)dit soi file"},
 			{Text: "cb", Description: "change bucket"},
 			{Text: "tag", Description: "add tags (TODO)"},
 			{Text: "mv", Description: "move file to dir"},
