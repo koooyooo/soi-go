@@ -45,11 +45,24 @@ func removeCmd(text string, commands ...string) string {
 	return text
 }
 
+var listOptSuggests = []prompt.Suggest{
+	{Text: "-p", Description: "open in private mode"},
+	{Text: "-c", Description: "open w/ chrome"},
+	{Text: "-f", Description: "open w/ firefox"},
+	{Text: "-s", Description: "open w/ safari"},
+	{Text: "-n", Description: "sort by num-views"},
+	{Text: "-a", Description: "sort by add-day"},
+	{Text: "-v", Description: "sort by view-day"},
+}
+
 func removeOption(text string) string {
 	// TODO 通常の順に並べ文字数順にソートするロジックに変更する
-	options := []string{" -p", " -c", " -f", " -s", " -n", " -a", " -v"}
+	var options []string
+	for _, s := range listOptSuggests {
+		options = append(options, s.Text)
+	}
 	for _, opt := range options {
-		text = strings.ReplaceAll(text, opt, "")
+		text = strings.ReplaceAll(text, " "+opt, "")
 	}
 	return strings.TrimSpace(text)
 }

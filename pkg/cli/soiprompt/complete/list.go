@@ -12,13 +12,3 @@ func (c *Completer) listCmd(d prompt.Document) []prompt.Suggest {
 	}
 	return c.baseList(d, "list", "ls", "l")
 }
-
-var listOptSuggests = []prompt.Suggest{
-	{Text: "-p", Description: "open in private mode"},
-	{Text: "-c", Description: "open w/ chrome"},
-	{Text: "-f", Description: "open w/ firefox"},
-	{Text: "-s", Description: "open w/ safari"},
-	{Text: "-n", Description: "sort by num-views"},
-	{Text: "-a", Description: "sort by add-day"},
-	{Text: "-v", Description: "sort by view-day"},
-}
