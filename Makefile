@@ -22,6 +22,9 @@ build:
 install:
 	@ go install "$(CLI_MOD)"
 
+install-ex: install
+	@ cp ~/go/bin/soi ~/.goenv/shims/soi
+
 clean:
 	@ rm "$(CLI_BIN)"
 
