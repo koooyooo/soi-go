@@ -47,7 +47,7 @@ func removeCmd(text string, commands ...string) string {
 
 func removeOption(text string) string {
 	// TODO 通常の順に並べ文字数順にソートするロジックに変更する
-	options := []string{"-p", "-c", "-f", "-s", "-n", "-a", "-v"}
+	options := []string{" -p", " -c", " -f", " -s", " -n", " -a", " -v"}
 	for _, opt := range options {
 		text = strings.ReplaceAll(text, opt, "")
 	}
