@@ -62,7 +62,7 @@ func removeOption(text string) string {
 		options = append(options, s.Text)
 	}
 	for _, opt := range options {
-		text = strings.ReplaceAll(text, " "+opt, "")
+		text = strings.ReplaceAll(text, opt, "")
 	}
 	return strings.TrimSpace(text)
 }
