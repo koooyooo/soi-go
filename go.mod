@@ -1,4 +1,4 @@
-module soi-go
+module github.com/koooyooo/soi-go
 
 go 1.21.0
 
