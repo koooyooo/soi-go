@@ -3,11 +3,11 @@ package execute
 import (
 	"errors"
 	"flag"
-	"runtime"
 	"github.com/koooyooo/soi-go/pkg/cli/opener"
 	"github.com/koooyooo/soi-go/pkg/cli/opener/linux"
 	"github.com/koooyooo/soi-go/pkg/cli/opener/macos"
 	"github.com/koooyooo/soi-go/pkg/cli/opener/windows"
+	"runtime"
 	"strings"
 	"time"
 

@@ -4,14 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	_ "github.com/mattn/go-sqlite3"
-	"log"
-	"os"
-	"path/filepath"
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
 	"github.com/koooyooo/soi-go/pkg/cli/repository"
 	"github.com/koooyooo/soi-go/pkg/common/file"
 	"github.com/koooyooo/soi-go/pkg/model"
+	_ "github.com/mattn/go-sqlite3"
+	"log"
+	"os"
+	"path/filepath"
 	"strings"
 )
 

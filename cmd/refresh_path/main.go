@@ -3,11 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"log"
-	"os"
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
 	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/utils"
 	"github.com/koooyooo/soi-go/pkg/model"
+	"log"
+	"os"
 	"strings"
 )
 

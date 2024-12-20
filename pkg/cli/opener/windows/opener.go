@@ -2,9 +2,9 @@ package windows
 
 import (
 	"errors"
-	"os/exec"
 	"github.com/koooyooo/soi-go/pkg/cli/opener"
 	"github.com/koooyooo/soi-go/pkg/model"
+	"os/exec"
 )
 
 func NewOpener() opener.Opener {

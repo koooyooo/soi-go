@@ -6,13 +6,12 @@ import "strings"
 //
 // see: flags_test.go for example
 //
-//     var tags StringArray
+//	var tags StringArray
 //
-//     func main() {
-//         flag.Var(&tags, "t", "tag of the uri")
-//         fmt.Printf("tags=%v", tags)
-//     }
-//
+//	func main() {
+//	    flag.Var(&tags, "t", "tag of the uri")
+//	    fmt.Printf("tags=%v", tags)
+//	}
 type StringArray []string
 
 func (s *StringArray) String() string {

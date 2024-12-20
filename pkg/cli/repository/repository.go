@@ -1,10 +1,10 @@
 package repository
 
 import (
-	"golang.org/x/net/context"
 	"github.com/koooyooo/soi-go/pkg/cli/config"
 	"github.com/koooyooo/soi-go/pkg/cli/constant"
 	"github.com/koooyooo/soi-go/pkg/model"
+	"golang.org/x/net/context"
 )
 
 const (
