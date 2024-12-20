@@ -4,12 +4,12 @@
 package soiprompt
 
 import (
-	"soi-go/pkg/cli/config"
-	"soi-go/pkg/cli/service"
-	"soi-go/pkg/cli/soiprompt/cache"
-	"soi-go/pkg/cli/soiprompt/complete"
-	"soi-go/pkg/cli/soiprompt/execute"
-	"soi-go/pkg/model"
+	"github.com/koooyooo/soi-go/pkg/cli/config"
+	"github.com/koooyooo/soi-go/pkg/cli/service"
+	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/cache"
+	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/complete"
+	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/execute"
+	"github.com/koooyooo/soi-go/pkg/model"
 )
 
 type Prompter struct {

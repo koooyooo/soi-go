@@ -6,7 +6,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/stretchr/testify/assert"
 	"os"
-	"soi-go/pkg/model"
+	"github.com/koooyooo/soi-go/pkg/model"
 	"testing"
 	"time"
 )

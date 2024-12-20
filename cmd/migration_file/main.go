@@ -8,10 +8,10 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"soi-go/pkg/cli/constant"
-	"soi-go/pkg/cli/repository"
-	"soi-go/pkg/common/file"
-	"soi-go/pkg/model"
+	"github.com/koooyooo/soi-go/pkg/cli/constant"
+	"github.com/koooyooo/soi-go/pkg/cli/repository"
+	"github.com/koooyooo/soi-go/pkg/common/file"
+	"github.com/koooyooo/soi-go/pkg/model"
 	"strings"
 )
 

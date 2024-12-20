@@ -1,6 +1,6 @@
 package cache
 
-import "soi-go/pkg/model"
+import "github.com/koooyooo/soi-go/pkg/model"
 
 type Cache struct {
 	ListSoiCache []*model.SoiData

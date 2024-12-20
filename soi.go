@@ -4,7 +4,7 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package main
 
 import (
-	"soi-go/cmd"
+	"github.com/koooyooo/soi-go/cmd"
 )
 
 func main() {

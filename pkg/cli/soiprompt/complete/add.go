@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/c-bata/go-prompt"
-	"soi-go/pkg/cli/soiprompt/utils"
+	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/utils"
 )
 
 // addCmd はaddコマンド系のSuggestを提示します

@@ -2,9 +2,9 @@ package service
 
 import (
 	"context"
-	"soi-go/pkg/cli/repository"
-	"soi-go/pkg/common/hash"
-	"soi-go/pkg/model"
+	"github.com/koooyooo/soi-go/pkg/cli/repository"
+	"github.com/koooyooo/soi-go/pkg/common/hash"
+	"github.com/koooyooo/soi-go/pkg/model"
 	"sort"
 	"strings"
 )

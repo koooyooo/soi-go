@@ -4,7 +4,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
-	"soi-go/pkg/cli/config"
+	"github.com/koooyooo/soi-go/pkg/cli/config"
 )
 
 func generateAuthValues(cfg *config.Config) (user string, pass string, authValue string, err error) {

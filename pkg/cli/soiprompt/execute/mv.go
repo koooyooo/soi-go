@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"soi-go/pkg/common/file"
+	"github.com/koooyooo/soi-go/pkg/common/file"
 )
 
 // mv はsoiの移動を行います

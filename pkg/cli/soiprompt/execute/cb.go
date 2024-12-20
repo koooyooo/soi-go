@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"soi-go/pkg/model"
+	"github.com/koooyooo/soi-go/pkg/model"
 
-	"soi-go/pkg/cli/constant"
+	"github.com/koooyooo/soi-go/pkg/cli/constant"
 )
 
 // cb はbucketの変更を行います

@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	fileio2 "soi-go/pkg/common/file"
+	fileio2 "github.com/koooyooo/soi-go/pkg/common/file"
 )
 
 // rm はsoiの削除を行います

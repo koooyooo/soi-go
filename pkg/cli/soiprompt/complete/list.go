@@ -2,7 +2,7 @@ package complete
 
 import (
 	"github.com/c-bata/go-prompt"
-	"soi-go/pkg/cli/soiprompt/utils"
+	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/utils"
 )
 
 // listCmd はlistコマンド系のSuggestを提示します

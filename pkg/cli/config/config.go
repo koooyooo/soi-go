@@ -8,7 +8,7 @@ import (
 
 	"github.com/caarlos0/env/v10"
 
-	"soi-go/pkg/common/file"
+	"github.com/koooyooo/soi-go/pkg/common/file"
 
 	"github.com/mitchellh/go-homedir"
 )

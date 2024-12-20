@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/c-bata/go-prompt"
-	"soi-go/pkg/cli/soiprompt/utils"
+	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/utils"
 )
 
 // rmCmd はrmコマンド系のSuggestを提示します

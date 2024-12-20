@@ -8,7 +8,7 @@ import (
 
 	"github.com/c-bata/go-prompt"
 
-	"soi-go/pkg/model"
+	"github.com/koooyooo/soi-go/pkg/model"
 )
 
 var yearsAgo100 = time.Now().Add(24 * 365 * -100 * time.Hour)

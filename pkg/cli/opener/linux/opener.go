@@ -2,8 +2,8 @@ package linux
 
 import (
 	"os/exec"
-	"soi-go/pkg/cli/opener"
-	"soi-go/pkg/model"
+	"github.com/koooyooo/soi-go/pkg/cli/opener"
+	"github.com/koooyooo/soi-go/pkg/model"
 )
 
 type linuxOpener struct{}

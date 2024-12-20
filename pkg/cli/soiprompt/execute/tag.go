@@ -3,7 +3,7 @@ package execute
 import (
 	"context"
 	"flag"
-	"soi-go/pkg/model"
+	"github.com/koooyooo/soi-go/pkg/model"
 	"strings"
 )
 

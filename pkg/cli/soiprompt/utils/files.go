@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/c-bata/go-prompt"
-	"soi-go/pkg/model"
+	"github.com/koooyooo/soi-go/pkg/model"
 )
 
 func ListFileDirs(dir string, addDir, dirLastSlash bool) ([]string, error) {

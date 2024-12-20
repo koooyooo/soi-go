@@ -4,8 +4,8 @@ import (
 	"context"
 	"os"
 	"path/filepath"
-	"soi-go/pkg/cli/loader"
-	"soi-go/pkg/model"
+	"github.com/koooyooo/soi-go/pkg/cli/loader"
+	"github.com/koooyooo/soi-go/pkg/model"
 )
 
 type filesRepository struct {

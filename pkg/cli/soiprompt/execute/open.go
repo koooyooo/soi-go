@@ -4,17 +4,17 @@ import (
 	"errors"
 	"flag"
 	"runtime"
-	"soi-go/pkg/cli/opener"
-	"soi-go/pkg/cli/opener/linux"
-	"soi-go/pkg/cli/opener/macos"
-	"soi-go/pkg/cli/opener/windows"
+	"github.com/koooyooo/soi-go/pkg/cli/opener"
+	"github.com/koooyooo/soi-go/pkg/cli/opener/linux"
+	"github.com/koooyooo/soi-go/pkg/cli/opener/macos"
+	"github.com/koooyooo/soi-go/pkg/cli/opener/windows"
 	"strings"
 	"time"
 
 	"golang.org/x/net/context"
 
-	"soi-go/pkg/cli/soiprompt/view"
-	"soi-go/pkg/model"
+	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/view"
+	"github.com/koooyooo/soi-go/pkg/model"
 )
 
 // open は指定されたSoiを元にブラウザを開きます

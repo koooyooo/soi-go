@@ -1,6 +1,6 @@
 package opener
 
-import "soi-go/pkg/model"
+import "github.com/koooyooo/soi-go/pkg/model"
 
 type Opener interface {
 	OpenChrome(*model.SoiData, bool) error

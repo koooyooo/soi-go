@@ -4,8 +4,8 @@ import (
 	"context"
 	"github.com/c-bata/go-prompt"
 	"log"
-	"soi-go/pkg/cli/soiprompt/complete/soisort"
-	"soi-go/pkg/cli/soiprompt/view"
+	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/complete/soisort"
+	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/view"
 	"strings"
 )
 

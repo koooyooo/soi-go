@@ -8,9 +8,9 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"soi-go/pkg/cli/constant"
-	"soi-go/pkg/cli/soiprompt/utils"
-	"soi-go/pkg/model"
+	"github.com/koooyooo/soi-go/pkg/cli/constant"
+	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/utils"
+	"github.com/koooyooo/soi-go/pkg/model"
 	"strings"
 
 	"github.com/spf13/cobra"

@@ -7,10 +7,10 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"os"
-	"soi-go/pkg/cli/config"
-	"soi-go/pkg/cli/loader"
-	"soi-go/pkg/cli/repository"
-	"soi-go/pkg/model"
+	"github.com/koooyooo/soi-go/pkg/cli/config"
+	"github.com/koooyooo/soi-go/pkg/cli/loader"
+	"github.com/koooyooo/soi-go/pkg/cli/repository"
+	"github.com/koooyooo/soi-go/pkg/model"
 )
 
 func main() {
