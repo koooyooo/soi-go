@@ -45,7 +45,7 @@ EOS
 
 ## Usage
 ### `soi` >
-`soi`と打ち込むと `soi>`形式のプロンプトが立ち上がります。
+`soi` (go install の場合は `soi-go`) と打ち込むと `soi>`形式のプロンプトが立ち上がります。
 ```bash
 $ soi
 soi> 

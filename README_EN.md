@@ -14,7 +14,7 @@ $ cd soi-go && make install
 ## Usage
 
 ### Run Soi
-Type `soi` then soi prompt appears.
+Type `soi` (or `soi-go`: install by go install)  then soi prompt appears.
 ```
 $ soi
 soi> 
