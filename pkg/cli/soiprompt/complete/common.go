@@ -2,11 +2,12 @@ package complete
 
 import (
 	"context"
+	"log"
+	"strings"
+
 	"github.com/c-bata/go-prompt"
 	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/complete/soisort"
 	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/view"
-	"log"
-	"strings"
 )
 
 func (c *Completer) baseList(d prompt.Document, commands ...string) []prompt.Suggest {
@@ -57,6 +58,7 @@ var listOptSuggests = []prompt.Suggest{
 
 func removeOption(text string) string {
 	// TODO 通常の順に並べ文字数順にソートするロジックに変更する
+	// TODO 両端にスペースを付けて引っ掛けて、半角スペースと置換する
 	var options []string
 	for _, s := range listOptSuggests {
 		options = append(options, s.Text)
