@@ -2,6 +2,7 @@ package complete
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strings"
 
@@ -61,10 +62,10 @@ func removeOption(text string) string {
 	// TODO 両端にスペースを付けて引っ掛けて、半角スペースと置換する
 	var options []string
 	for _, s := range listOptSuggests {
-		options = append(options, s.Text)
+		options = append(options, fmt.Sprintf(" %s ", s.Text))
 	}
 	for _, opt := range options {
-		text = strings.ReplaceAll(text, opt, "")
+		text = strings.ReplaceAll(text, opt, " ")
 	}
 	return strings.TrimSpace(text)
 }
