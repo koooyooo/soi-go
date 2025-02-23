@@ -3,13 +3,17 @@ package execute
 import (
 	"errors"
 	"flag"
+	"fmt"
+	"os"
+	"runtime"
+	"strings"
+	"time"
+
 	"github.com/koooyooo/soi-go/pkg/cli/opener"
 	"github.com/koooyooo/soi-go/pkg/cli/opener/linux"
 	"github.com/koooyooo/soi-go/pkg/cli/opener/macos"
 	"github.com/koooyooo/soi-go/pkg/cli/opener/windows"
-	"runtime"
-	"strings"
-	"time"
+	"github.com/koooyooo/soi-go/pkg/cli/opener/wsl"
 
 	"golang.org/x/net/context"
 
@@ -87,15 +91,28 @@ func (e *Executor) open(in string) error {
 }
 
 func getOpener(os string) (opener.Opener, bool) {
+	fmt.Println("os", os) // TODO
 	switch os {
 	case "darwin":
 		return macos.NewOpener(), true
 	case "windows":
 		return windows.NewOpener(), true
 	case "linux":
+		if isWSL() {
+			return wsl.NewOpener(), true
+		}
 		return linux.NewLinuxOpener(), true
 	}
 	return nil, false
+}
+
+// isWSL checks if the current Linux environment is running under WSL
+func isWSL() bool {
+	content, err := os.ReadFile("/proc/version")
+	if err != nil {
+		return false
+	}
+	return strings.Contains(strings.ToLower(string(content)), "microsoft")
 }
 
 func findSoi(sois []*model.SoiData, args []string) (*model.SoiData, error) {
