@@ -40,7 +40,7 @@ func Load() (*Config, error) {
 	}
 	cfg, err := doLoad(path)
 	if err != nil {
-		fmt.Errorf("fail in loading path: %v", err)
+		return nil, fmt.Errorf("fail in loading path: %v", err)
 	}
 	return cfg, err
 }
