@@ -17,7 +17,6 @@ func (c *Completer) baseList(d prompt.Document, commands ...string) []prompt.Sug
 		log.Fatal(err)
 	}
 	input := removeOption(removeCmd(d.TextBeforeCursor(), commands...))
-	fmt.Println("input: ", input) // TODO
 	if len(c.cache.ListSoiCache) == 0 {
 		sois, err := c.service.LoadAll(context.Background())
 		if err != nil {
