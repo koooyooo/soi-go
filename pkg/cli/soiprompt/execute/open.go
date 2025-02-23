@@ -3,7 +3,6 @@ package execute
 import (
 	"errors"
 	"flag"
-	"fmt"
 	"os"
 	"runtime"
 	"strings"
@@ -91,7 +90,6 @@ func (e *Executor) open(in string) error {
 }
 
 func getOpener(os string) (opener.Opener, bool) {
-	fmt.Println("os", os) // TODO
 	switch os {
 	case "darwin":
 		return macos.NewOpener(), true
