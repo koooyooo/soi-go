@@ -2,7 +2,7 @@ package view
 
 import "strings"
 
-var SigleOptions = []SingleOption{
+var SingleOptions = []SingleOption{
 	{"c", "use chrome"},
 	{"f", "use firefox"},
 	{"s", "use safari"},

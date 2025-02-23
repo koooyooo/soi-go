@@ -15,15 +15,15 @@ DOCKER_IMAGE_NAME=${SOI_DOCKER_IMAGE_NAME}
 run:
 	@ go run "$(CLI_MOD)"
 
-build:
+build: clean
 	@ go build -o "$(CLI_BIN)" "$(CLI_MOD)"
 
 #   go install always use "main.go"'s "main" as a binary name
-install:
+install: build
 	@ go install "$(CLI_MOD)"
 
 install-ex: install
-	@ cp ~/go/bin/soi ~/.goenv/shims/soi
+	@ cp "$(CLI_MOD)" ~/.goenv/shims/soi
 
 clean:
 	@ rm "$(CLI_BIN)"

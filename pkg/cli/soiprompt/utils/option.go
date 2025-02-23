@@ -7,5 +7,5 @@ import (
 )
 
 func IsOptionWord(d prompt.Document) bool {
-	return strings.HasPrefix(d.GetWordBeforeCursor(), " -")
+	return strings.HasSuffix(d.GetWordBeforeCursor(), " -")
 }

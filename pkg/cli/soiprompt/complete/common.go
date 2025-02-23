@@ -42,7 +42,7 @@ func (c *Completer) baseList(d prompt.Document, commands ...string) []prompt.Sug
 func removeCmd(text string, commands ...string) string {
 	text = strings.TrimSpace(text)
 	for _, cmd := range commands {
-		text = strings.TrimLeft(text, cmd+" ")
+		strings.TrimPrefix(text, cmd+" ")
 	}
 	return text
 }
@@ -62,10 +62,10 @@ func removeOption(text string) string {
 	// TODO 両端にスペースを付けて引っ掛けて、半角スペースと置換する
 	var options []string
 	for _, s := range listOptSuggests {
-		options = append(options, fmt.Sprintf(" %s ", s.Text))
+		options = append(options, s.Text)
 	}
 	for _, opt := range options {
-		text = strings.ReplaceAll(text, opt, " ")
+		text = strings.ReplaceAll(text, fmt.Sprintf(" %s ", opt), " ")
 	}
 	return strings.TrimSpace(text)
 }
