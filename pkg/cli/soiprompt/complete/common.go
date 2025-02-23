@@ -17,6 +17,7 @@ func (c *Completer) baseList(d prompt.Document, commands ...string) []prompt.Sug
 		log.Fatal(err)
 	}
 	input := removeOption(removeCmd(d.TextBeforeCursor(), commands...))
+	fmt.Println("input: ", input) // TODO
 	if len(c.cache.ListSoiCache) == 0 {
 		sois, err := c.service.LoadAll(context.Background())
 		if err != nil {
@@ -42,7 +43,7 @@ func (c *Completer) baseList(d prompt.Document, commands ...string) []prompt.Sug
 func removeCmd(text string, commands ...string) string {
 	text = strings.TrimSpace(text)
 	for _, cmd := range commands {
-		strings.TrimPrefix(text, cmd+" ")
+		text = strings.TrimPrefix(text, cmd+" ")
 	}
 	return text
 }
@@ -59,13 +60,14 @@ var listOptSuggests = []prompt.Suggest{
 
 func removeOption(text string) string {
 	// TODO 通常の順に並べ文字数順にソートするロジックに変更する
-	// TODO 両端にスペースを付けて引っ掛けて、半角スペースと置換する
 	var options []string
 	for _, s := range listOptSuggests {
 		options = append(options, s.Text)
 	}
 	for _, opt := range options {
-		text = strings.ReplaceAll(text, fmt.Sprintf(" %s ", opt), " ")
+		origin := " " + text // add space for "head options without space" to mark replace target
+		target := fmt.Sprintf(" %s ", opt)
+		text = strings.Replace(origin, target, " ", 1)
 	}
 	return strings.TrimSpace(text)
 }
