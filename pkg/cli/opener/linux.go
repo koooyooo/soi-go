@@ -1,14 +1,14 @@
-package linux
+package opener
 
 import (
-	"github.com/koooyooo/soi-go/pkg/cli/opener"
-	"github.com/koooyooo/soi-go/pkg/model"
 	"os/exec"
+
+	"github.com/koooyooo/soi-go/pkg/model"
 )
 
 type linuxOpener struct{}
 
-func NewLinuxOpener() opener.Opener {
+func NewLinuxOpener() Opener {
 	return &linuxOpener{}
 }
 

@@ -1,15 +1,14 @@
-package wsl
+package opener
 
 import (
 	"os/exec"
 
-	"github.com/koooyooo/soi-go/pkg/cli/opener"
 	"github.com/koooyooo/soi-go/pkg/model"
 )
 
 type wslOpener struct{}
 
-func NewOpener() opener.Opener {
+func NewWSLOpener() Opener {
 	return &wslOpener{}
 }
 

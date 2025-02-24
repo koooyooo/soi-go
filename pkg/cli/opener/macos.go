@@ -1,14 +1,13 @@
-package macos
+package opener
 
 import (
 	"errors"
 	"os/exec"
 
-	"github.com/koooyooo/soi-go/pkg/cli/opener"
 	"github.com/koooyooo/soi-go/pkg/model"
 )
 
-func NewOpener() opener.Opener {
+func NewMacOpener() Opener {
 	return &macOSOpener{}
 }
 

@@ -9,10 +9,6 @@ import (
 	"time"
 
 	"github.com/koooyooo/soi-go/pkg/cli/opener"
-	"github.com/koooyooo/soi-go/pkg/cli/opener/linux"
-	"github.com/koooyooo/soi-go/pkg/cli/opener/macos"
-	"github.com/koooyooo/soi-go/pkg/cli/opener/windows"
-	"github.com/koooyooo/soi-go/pkg/cli/opener/wsl"
 
 	"golang.org/x/net/context"
 
@@ -92,14 +88,14 @@ func (e *Executor) open(in string) error {
 func getOpener(os string) (opener.Opener, bool) {
 	switch os {
 	case "darwin":
-		return macos.NewOpener(), true
+		return opener.NewMacOpener(), true
 	case "windows":
-		return windows.NewOpener(), true
+		return opener.NewWindowsOpener(), true
 	case "linux":
 		if isWSL() {
-			return wsl.NewOpener(), true
+			return opener.NewWSLOpener(), true
 		}
-		return linux.NewLinuxOpener(), true
+		return opener.NewLinuxOpener(), true
 	}
 	return nil, false
 }
