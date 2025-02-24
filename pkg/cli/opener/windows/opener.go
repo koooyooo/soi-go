@@ -15,7 +15,7 @@ func NewOpener() opener.Opener {
 type winOpener struct{}
 
 func (o winOpener) OpenChrome(s *model.SoiData, _ bool) error {
-	return exec.Command("cmd", "/c", "start", "firefox", s.URI).Start()
+	return exec.Command("cmd", "/c", "start", "chrome", s.URI).Start()
 }
 
 func (o winOpener) OpenFirefox(s *model.SoiData, private bool) error {
