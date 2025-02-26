@@ -58,9 +58,10 @@ func initialize(path string) error {
 	//if txt == "" {
 	//	return errors.New("no servername specified")
 	//}
-	txt := ""
 	cfg := Config{
-		Server: txt,
+		DefaultBrowser:    "firefox",
+		DefaultBucket:     "default",
+		DefaultRepository: "file",
 	}
 	b, err := json.Marshal(&cfg)
 	if err != nil {

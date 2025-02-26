@@ -4,15 +4,16 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/koooyooo/soi-go/pkg/cli/config"
-	"github.com/koooyooo/soi-go/pkg/cli/repository"
-	"github.com/koooyooo/soi-go/pkg/cli/service"
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt"
-	"github.com/koooyooo/soi-go/pkg/common/file"
-	"github.com/koooyooo/soi-go/pkg/model"
 	"log"
 	"os"
 	"os/exec"
+
+	"github.com/koooyooo/soi-go/pkg/common/file"
+	"github.com/koooyooo/soi-go/pkg/config"
+	"github.com/koooyooo/soi-go/pkg/model"
+	"github.com/koooyooo/soi-go/pkg/repository"
+	"github.com/koooyooo/soi-go/pkg/service"
+	"github.com/koooyooo/soi-go/pkg/soiprompt"
 
 	"github.com/c-bata/go-prompt"
 	"golang.org/x/net/context"

@@ -4,13 +4,14 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/koooyooo/soi-go/pkg/cli/config"
-	"github.com/koooyooo/soi-go/pkg/cli/loader"
-	"github.com/koooyooo/soi-go/pkg/cli/repository"
-	"github.com/koooyooo/soi-go/pkg/model"
-	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"os"
+
+	"github.com/koooyooo/soi-go/pkg/config"
+	"github.com/koooyooo/soi-go/pkg/loader"
+	"github.com/koooyooo/soi-go/pkg/model"
+	"github.com/koooyooo/soi-go/pkg/repository"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {

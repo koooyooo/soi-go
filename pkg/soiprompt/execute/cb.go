@@ -3,14 +3,15 @@ package execute
 import (
 	"flag"
 	"fmt"
-	"golang.org/x/net/context"
 	"os"
 	"path/filepath"
 	"strings"
 
+	"golang.org/x/net/context"
+
 	"github.com/koooyooo/soi-go/pkg/model"
 
-	"github.com/koooyooo/soi-go/pkg/cli/constant"
+	"github.com/koooyooo/soi-go/pkg/constant"
 )
 
 // cb はbucketの変更を行います

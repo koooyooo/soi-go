@@ -8,11 +8,11 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/koooyooo/soi-go/pkg/cli/constant"
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/utils"
 	"github.com/koooyooo/soi-go/pkg/common/file"
 	"github.com/koooyooo/soi-go/pkg/common/hash"
+	"github.com/koooyooo/soi-go/pkg/constant"
 	"github.com/koooyooo/soi-go/pkg/model"
+	"github.com/koooyooo/soi-go/pkg/soiprompt/utils"
 )
 
 var isSoiFile = func(soiPath string) bool {

@@ -6,12 +6,13 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/koooyooo/soi-go/pkg/cli/constant"
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/utils"
-	"github.com/koooyooo/soi-go/pkg/model"
 	"log"
 	"os"
 	"strings"
+
+	"github.com/koooyooo/soi-go/pkg/constant"
+	"github.com/koooyooo/soi-go/pkg/model"
+	"github.com/koooyooo/soi-go/pkg/soiprompt/utils"
 
 	"github.com/spf13/cobra"
 )

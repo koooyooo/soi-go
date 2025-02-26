@@ -1,10 +1,11 @@
 package complete
 
 import (
-	"github.com/koooyooo/soi-go/pkg/cli/config"
-	"github.com/koooyooo/soi-go/pkg/cli/service"
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/cache"
 	"strings"
+
+	"github.com/koooyooo/soi-go/pkg/config"
+	"github.com/koooyooo/soi-go/pkg/service"
+	"github.com/koooyooo/soi-go/pkg/soiprompt/cache"
 
 	"github.com/c-bata/go-prompt"
 	"github.com/koooyooo/soi-go/pkg/model"

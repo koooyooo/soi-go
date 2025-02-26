@@ -8,12 +8,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/koooyooo/soi-go/pkg/cli/opener"
+	"github.com/koooyooo/soi-go/pkg/opener"
 
 	"golang.org/x/net/context"
 
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/view"
 	"github.com/koooyooo/soi-go/pkg/model"
+	"github.com/koooyooo/soi-go/pkg/soiprompt/view"
 )
 
 // open は指定されたSoiを元にブラウザを開きます

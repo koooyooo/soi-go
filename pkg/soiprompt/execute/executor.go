@@ -2,13 +2,14 @@ package execute
 
 import (
 	"fmt"
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/cache"
 	"strings"
 
-	"github.com/koooyooo/soi-go/pkg/cli/config"
-	"github.com/koooyooo/soi-go/pkg/cli/service"
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/execute/registry"
+	"github.com/koooyooo/soi-go/pkg/soiprompt/cache"
+
+	"github.com/koooyooo/soi-go/pkg/config"
 	"github.com/koooyooo/soi-go/pkg/model"
+	"github.com/koooyooo/soi-go/pkg/service"
+	"github.com/koooyooo/soi-go/pkg/soiprompt/execute/registry"
 )
 
 func NewExecutor(c *config.Config, s service.Service, ca *cache.Cache, r *model.BucketRef) *Executor {
