@@ -2,12 +2,13 @@ package repository
 
 import (
 	"context"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestJSONsLoadAll(t *testing.T) {
-	repo, err := NewFilesRepository("../../../testfiles")
+	repo, err := NewFilesRepository("../../testfiles")
 	assert.NoError(t, err)
 
 	ctx := context.Background()
@@ -17,7 +18,7 @@ func TestJSONsLoadAll(t *testing.T) {
 }
 
 func TestJSONsLoad(t *testing.T) {
-	repo, err := NewFilesRepository("../../../testfiles")
+	repo, err := NewFilesRepository("../../testfiles")
 	assert.NoError(t, err)
 
 	ctx := context.Background()

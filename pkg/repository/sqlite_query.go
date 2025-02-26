@@ -79,9 +79,8 @@ var (
 			sois
 	where
 	   bucket = ? `
-	selectSoiQuery       = selectAllSoisQuery + " and hash = ? order by path, name desc "
-	selectSoiByPathQuery = selectAllSoisQuery + " and path = ? order by path, name desc "
-	storeSoiQuery        = `
+	selectSoiQuery = selectAllSoisQuery + " and hash = ? order by path, name desc "
+	storeSoiQuery  = `
 		insert into sois 
 			(bucket, hash, name, title, path, uri, rate, num_views, num_reads, comprehension, created_at) 
 		values 
