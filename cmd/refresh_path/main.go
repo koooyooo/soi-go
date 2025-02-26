@@ -67,7 +67,7 @@ func controlFile(soisDir, p string) error {
 	if err != nil {
 		return err
 	}
-	if err := os.WriteFile(p, d, 644); err != nil {
+	if err := os.WriteFile(p, d, 0644); err != nil {
 		return err
 	}
 	return nil

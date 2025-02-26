@@ -5,7 +5,6 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/koooyooo/soi-go/pkg/common/hash"
 	"github.com/koooyooo/soi-go/pkg/model"
 	"github.com/koooyooo/soi-go/pkg/repository"
 )
@@ -100,7 +99,7 @@ func (s *serviceImpl) ListPath(ctx context.Context, partialPath string, withName
 		}
 	}
 	var dirs []string
-	for k, _ := range m {
+	for k := range m {
 		if !strings.HasPrefix(k, partialPath) {
 			continue
 		}
@@ -116,22 +115,4 @@ func (s *serviceImpl) Size(ctx context.Context) (int, error) {
 		return -1, err
 	}
 	return len(sois), nil
-}
-
-func toHash(path string) (string, error) {
-	return hash.Sha1(path)
-}
-
-func findHashes(r repository.Repository, bucket, partialPath string) ([]string, error) {
-	sois, err := r.LoadAll(context.Background(), bucket)
-	if err != nil {
-		return nil, err
-	}
-	var hashes []string
-	for _, soi := range sois {
-		if strings.Contains(soi.Path, partialPath) {
-			hashes = append(hashes, soi.Hash)
-		}
-	}
-	return hashes, nil
 }

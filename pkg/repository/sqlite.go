@@ -4,11 +4,12 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/koooyooo/soi-go/pkg/model"
-	_ "github.com/mattn/go-sqlite3"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/koooyooo/soi-go/pkg/model"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func NewSQLiteRepository(ctx context.Context, basePath, bucket string) (Repository, error) {
@@ -28,7 +29,7 @@ type sqliteRepository struct {
 	db            *sql.DB
 }
 
-func (r *sqliteRepository) reload(ctx context.Context) error {
+func (r *sqliteRepository) reload(_ context.Context) error {
 	dbFilePath := filepath.Join(r.basePath, r.currentBucket+".db")
 	fmt.Println("DB->", dbFilePath) // TODO
 	db, err := sql.Open("sqlite3", dbFilePath)
