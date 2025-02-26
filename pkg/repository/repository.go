@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"github.com/koooyooo/soi-go/pkg/cli/config"
-	"github.com/koooyooo/soi-go/pkg/cli/constant"
+	"github.com/koooyooo/soi-go/pkg/config"
+	"github.com/koooyooo/soi-go/pkg/constant"
 	"github.com/koooyooo/soi-go/pkg/model"
 	"golang.org/x/net/context"
 )

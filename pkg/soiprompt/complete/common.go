@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/c-bata/go-prompt"
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/complete/soisort"
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/view"
+	"github.com/koooyooo/soi-go/pkg/soiprompt/complete/soisort"
+	"github.com/koooyooo/soi-go/pkg/soiprompt/view"
 )
 
 func (c *Completer) baseList(d prompt.Document, commands ...string) []prompt.Suggest {

@@ -9,9 +9,9 @@ import (
 	"path"
 	"path/filepath"
 
-	"github.com/koooyooo/soi-go/pkg/cli/config"
 	"github.com/koooyooo/soi-go/pkg/common/file"
 	"github.com/koooyooo/soi-go/pkg/common/hash"
+	"github.com/koooyooo/soi-go/pkg/config"
 	"github.com/koooyooo/soi-go/pkg/model"
 )
 

@@ -1,11 +1,11 @@
 package model
 
 import (
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/koooyooo/soi-go/pkg/cli/constant"
+	"github.com/koooyooo/soi-go/pkg/constant"
 )
 
 type BucketRef struct {
@@ -62,7 +62,7 @@ func ListBucketNames() ([]string, error) {
 		return nil, err
 	}
 
-	files, err := ioutil.ReadDir(soisDir)
+	files, err := os.ReadDir(soisDir)
 	if err != nil {
 		return nil, err
 	}

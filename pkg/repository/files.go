@@ -2,10 +2,11 @@ package repository
 
 import (
 	"context"
-	"github.com/koooyooo/soi-go/pkg/cli/loader"
-	"github.com/koooyooo/soi-go/pkg/model"
 	"os"
 	"path/filepath"
+
+	"github.com/koooyooo/soi-go/pkg/loader"
+	"github.com/koooyooo/soi-go/pkg/model"
 )
 
 type filesRepository struct {

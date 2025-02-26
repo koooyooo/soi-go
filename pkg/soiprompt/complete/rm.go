@@ -1,13 +1,14 @@
 package complete
 
 import (
-	"golang.org/x/net/context"
 	"log"
 	"sort"
 	"strings"
 
+	"golang.org/x/net/context"
+
 	"github.com/c-bata/go-prompt"
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/utils"
+	"github.com/koooyooo/soi-go/pkg/soiprompt/utils"
 )
 
 // rmCmd はrmコマンド系のSuggestを提示します
