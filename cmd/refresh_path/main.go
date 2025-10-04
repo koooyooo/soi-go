@@ -3,12 +3,13 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/koooyooo/soi-go/pkg/cli/constant"
-	"github.com/koooyooo/soi-go/pkg/cli/soiprompt/utils"
-	"github.com/koooyooo/soi-go/pkg/model"
 	"log"
 	"os"
 	"strings"
+
+	"github.com/koooyooo/soi-go/pkg/constant"
+	"github.com/koooyooo/soi-go/pkg/model"
+	"github.com/koooyooo/soi-go/pkg/soiprompt/utils"
 )
 
 func main() {
@@ -66,7 +67,7 @@ func controlFile(soisDir, p string) error {
 	if err != nil {
 		return err
 	}
-	if err := os.WriteFile(p, d, 644); err != nil {
+	if err := os.WriteFile(p, d, 0644); err != nil {
 		return err
 	}
 	return nil

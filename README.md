@@ -1,4 +1,3 @@
-
 ![soi](./soi.jpg)
 
 # soi
@@ -6,23 +5,26 @@
 [![lint](https://github.com/koooyooo/soi-go/actions/workflows/lint.yaml/badge.svg)](https://github.com/koooyooo/soi-go/actions/workflows/lint.yaml)
 
 
-`soi` は `golang`製の CLIによるブックマークマネージャです。CLIによる快適な操作が可能です。
-データはローカルストレージに保存されます。このディレクトリは `soi-dir`と呼ばれ、`${HOME}/.soi` が割り当てられます。
+## 概要
+`soi` は CLIベースの ローカルで高速なブックマークマネージャです。機能としてはブックマークの追加・検索・閲覧が存在します。追加されたブックマークはローカルストレージ（`${HOME}/.soi`）に管理されますが、このストレージをクラウドストレージと連携することで、異なるPC間の同期も可能です。
 
-`soi-dir`を Dropbox, GoogleDrive等で連携したり、git連携することで異なるPC間で同期することが可能です。
+## 主な機能
+- **ブックマークの追加**: `soi> add {dir} {name} {url}` でブックマークを追加できます。
+- **ブックマークの検索**: `soi> list` でブックマークをリストアップし、任意のキーワードで絞り込めます。
+- **ブックマークの閲覧**: `soi> open {id}` でブックマークを閲覧できます。
 
-また、データは簡単なファイルツリーと jsonファイルで構成されているため、テキストファイルとして複製・移動等の編集をCLI越しに行うことが可能です。
 
-> Note: 現状 MacOS 環境にしか対応していません。
+## インストール
 
-## Install
-`$ go install` 
-```
-$ go install github.com/koooyooo/soi-go@latest
-```
+### 必要要件
+- `go` がインストールされていること
 
-## Config
-`${HOME}/.soi/config.json` で設定します。
+### インストール手順
+
+#### 設定ファイル
+`${HOME}/.soi/config.json` を作成します。最初は以下の様な設定にします。
+> 設定ファイル及び設定ディレクトリが存在しない場合、起動時に規定のファイルが生成されます。
+
 ```json
 {
   "default_bucket": "default",
@@ -32,23 +34,18 @@ $ go install github.com/koooyooo/soi-go@latest
 ```
 > `default_browser` の選択肢は `firefox` | `chrome` | `safari` です
 
-（設定例）
-```bash
-$ mkdir "${HOME}/.soi" && cat << EOS > "${HOME}/.soi/config.json"
-{
-  "default_bucket": "default",
-  "default_repository": "file",
-  "default_browser": "firefox"
-}
-EOS
+#### バイナリインストール 
+`$ go install` でインストールします
+```
+$ go install github.com/koooyooo/soi-go@latest
 ```
 
-## Usage
-### `soi` >
-`soi` (go install の場合は `soi-go`) と打ち込むと `soi>`形式のプロンプトが立ち上がります。
+### 起動
+`$ soi-go` と打ち込むと `soi>` 形式のプロンプトが立ち上がります
+
 ```bash
-$ soi
-soi> 
+~$ soi-go
+soi>
 ```
 
 ### `add`

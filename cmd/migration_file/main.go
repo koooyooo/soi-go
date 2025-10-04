@@ -4,15 +4,16 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/koooyooo/soi-go/pkg/cli/constant"
-	"github.com/koooyooo/soi-go/pkg/cli/repository"
-	"github.com/koooyooo/soi-go/pkg/common/file"
-	"github.com/koooyooo/soi-go/pkg/model"
-	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/koooyooo/soi-go/pkg/common/file"
+	"github.com/koooyooo/soi-go/pkg/constant"
+	"github.com/koooyooo/soi-go/pkg/model"
+	"github.com/koooyooo/soi-go/pkg/repository"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
