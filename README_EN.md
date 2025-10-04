@@ -1,4 +1,6 @@
-![soi](./_img/soi-logo.png)
+<div style="text-align: center;">
+  <img src="./_img/soi-logo.png" style="width: 400px;">
+</div>
 
 # Soi
 Soi is a url management CLI system. which could add url, find url and rename url.
