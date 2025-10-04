@@ -42,7 +42,7 @@ func (c *Completer) baseList(d prompt.Document, commands ...string) []prompt.Sug
 func removeCmd(text string, commands ...string) string {
 	text = strings.TrimSpace(text)
 	for _, cmd := range commands {
-		text = strings.TrimPrefix(text, cmd+" ")
+		text = strings.TrimPrefix(text, cmd)
 	}
 	return text
 }
