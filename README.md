@@ -1,6 +1,6 @@
-<div style="text-align: center;">
-  <img src="./_img/soi-logo.png" style="width: 400px;">
-</div>
+<p align="center">
+  <img src="./_img/soi-logo.png" width="400">
+</p>
 
 # soi
 [![test](https://github.com/koooyooo/soi-go/actions/workflows/test.yaml/badge.svg)](https://github.com/koooyooo/soi-go/actions/workflows/test.yaml)
