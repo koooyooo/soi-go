@@ -1,3 +1,4 @@
+![soi](./_img/soi-logo.png)
 
 # Soi
 Soi is a url management CLI system. which could add url, find url and rename url.
