@@ -25,16 +25,23 @@ func (e *Executor) open(in string) error {
 	edge := flags.Bool("e", false, "use edge")
 	private := flags.Bool("p", false, "private mode")
 
-	_ = flags.Bool("n", false, "sort by num-views")
-	_ = flags.Bool("a", false, "sort by add-day")
-	_ = flags.Bool("v", false, "sort by view-day")
+	sortByNumViews := flags.Bool("n", false, "sort by num-views")
+	sortByAddDay := flags.Bool("a", false, "sort by add-day")
+	sortByViewDay := flags.Bool("v", false, "sort by view-day")
 
 	if err := flags.Parse(strings.Split(in, " ")[1:]); err != nil {
 		return err
 	}
 
 	ctx := context.Background()
-	s, err := findSoi(e.Cache.ListSoiCache, flags.Args())
+	
+	// ソート処理を適用
+	sortedSois := e.Cache.ListSoiCache
+	if *sortByNumViews || *sortByAddDay || *sortByViewDay {
+		sortedSois = applySorting(e.Cache.ListSoiCache, *sortByNumViews, *sortByAddDay, *sortByViewDay)
+	}
+	
+	s, err := findSoi(sortedSois, flags.Args())
 	if err != nil {
 		return err
 	}
@@ -127,4 +134,64 @@ func findSoi(sois []*model.SoiData, args []string) (*model.SoiData, error) {
 		}
 	}
 	return nil, errors.New("no path found")
+}
+
+// applySorting はソートオプションに基づいてSoiDataをソートします
+func applySorting(sois []*model.SoiData, sortByNumViews, sortByAddDay, sortByViewDay bool) []*model.SoiData {
+	// コピーを作成してソート
+	sorted := make([]*model.SoiData, len(sois))
+	copy(sorted, sois)
+	
+	if sortByNumViews {
+		// 閲覧回数でソート（降順）
+		for i := 0; i < len(sorted)-1; i++ {
+			for j := i + 1; j < len(sorted); j++ {
+				if sorted[i].NumViews < sorted[j].NumViews {
+					sorted[i], sorted[j] = sorted[j], sorted[i]
+				}
+			}
+		}
+	} else if sortByAddDay {
+		// 追加日でソート（新しい順）
+		for i := 0; i < len(sorted)-1; i++ {
+			for j := i + 1; j < len(sorted); j++ {
+				if sorted[i].CreatedAt.Before(sorted[j].CreatedAt) {
+					sorted[i], sorted[j] = sorted[j], sorted[i]
+				}
+			}
+		}
+	} else if sortByViewDay {
+		// 最終閲覧日でソート（新しい順）
+		for i := 0; i < len(sorted)-1; i++ {
+			for j := i + 1; j < len(sorted); j++ {
+				iLastView := getLastViewTime(sorted[i])
+				jLastView := getLastViewTime(sorted[j])
+				if iLastView.Before(jLastView) {
+					sorted[i], sorted[j] = sorted[j], sorted[i]
+				}
+			}
+		}
+	}
+	
+	return sorted
+}
+
+// getLastViewTime は最後の閲覧時間を取得します
+func getLastViewTime(soi *model.SoiData) time.Time {
+	if len(soi.UsageLogs) == 0 {
+		return soi.CreatedAt
+	}
+	
+	var lastView time.Time
+	for _, log := range soi.UsageLogs {
+		if log.Type == model.UsageTypeOpen && log.UsedAt.After(lastView) {
+			lastView = log.UsedAt
+		}
+	}
+	
+	if lastView.IsZero() {
+		return soi.CreatedAt
+	}
+	
+	return lastView
 }
