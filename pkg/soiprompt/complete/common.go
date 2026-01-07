@@ -2,7 +2,6 @@ package complete
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"strings"
 
@@ -58,17 +57,24 @@ var listOptSuggests = []prompt.Suggest{
 }
 
 func removeOption(text string) string {
-	// TODO 通常の順に並べ文字数順にソートするロジックに変更する
-	var options []string
+	// スペースで分割して単語ごとに処理
+	words := strings.Fields(text)
+	var filteredWords []string
+
+	// オプション一覧を作成
+	optionSet := make(map[string]bool)
 	for _, s := range listOptSuggests {
-		options = append(options, s.Text)
+		optionSet[s.Text] = true
 	}
-	for _, opt := range options {
-		origin := " " + text // add space for "head options without space" to mark replace target
-		target := fmt.Sprintf(" %s ", opt)
-		text = strings.Replace(origin, target, " ", 1)
+
+	// オプションでない単語のみを残す
+	for _, word := range words {
+		if !optionSet[word] {
+			filteredWords = append(filteredWords, word)
+		}
 	}
-	return strings.TrimSpace(text)
+
+	return strings.Join(filteredWords, " ")
 }
 
 func filterByMultiWords(words []string, filtered []prompt.Suggest) []prompt.Suggest {
