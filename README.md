@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./_img/soi-logo.png" width="400">
+  <img src="./_img/soi-logo.jpg" width="400">
 </p>
 
 # soi
