@@ -3,6 +3,7 @@ package execute
 import (
 	"encoding/json"
 	"flag"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -26,46 +27,21 @@ func (e *Executor) mv(in string) error {
 		return flag.ErrHelp
 	}
 
-	from, err := pathutil.ResolveUnderRoot(baseDir, flags.Arg(0))
+	from, err := pathutil.ResolveExistingUnderRoot(baseDir, flags.Arg(0))
+	if err != nil {
+		return fmt.Errorf("mv from: %w", err)
+	}
+
+	to, err := resolveMvDestination(baseDir, flags.Arg(1), from)
 	if err != nil {
 		return err
 	}
-	to, err := pathutil.ResolveUnderRoot(baseDir, flags.Arg(1))
-	if err != nil {
+	if err := os.MkdirAll(filepath.Dir(to), 0700); err != nil {
 		return err
 	}
-
-	toDir := filepath.Dir(to)
-	toIsDir := false
-	if file.Exists(to) {
-		toIsDir, err = file.IsDir(to)
-		if err != nil {
-			return err
-		}
-	} else if strings.HasSuffix(flags.Arg(1), "/") {
-		toIsDir = true
-		toDir = to
-	}
-
-	if toIsDir {
-		if err := os.MkdirAll(to, 0700); err != nil {
-			return err
-		}
-		to = filepath.Join(to, filepath.Base(from))
-	} else {
-		if err := os.MkdirAll(toDir, 0700); err != nil {
-			return err
-		}
-		if !strings.HasSuffix(to, ".json") && strings.HasSuffix(from, ".json") {
-			to = to + ".json"
-		}
-	}
-
 	if err := os.Rename(from, to); err != nil {
 		return err
 	}
-
-	// 単一 JSON なら内部 Path / Name を実ファイル位置に合わせて書き戻す
 	if strings.HasSuffix(to, ".json") {
 		if err := rewriteSoiLocation(baseDir, to); err != nil {
 			return err
@@ -73,6 +49,28 @@ func (e *Executor) mv(in string) error {
 	}
 	e.Cache.Clear()
 	return nil
+}
+
+func resolveMvDestination(baseDir, toArg, fromAbs string) (string, error) {
+	if strings.HasSuffix(toArg, "/") {
+		toDir, err := pathutil.ResolveUnderRoot(baseDir, toArg)
+		if err != nil {
+			return "", err
+		}
+		if err := os.MkdirAll(toDir, 0700); err != nil {
+			return "", err
+		}
+		return filepath.Join(toDir, filepath.Base(fromAbs)), nil
+	}
+
+	if existing, err := pathutil.ResolveExistingUnderRoot(baseDir, toArg); err == nil {
+		if ok, dirErr := file.IsDir(existing); dirErr == nil && ok {
+			return filepath.Join(existing, filepath.Base(fromAbs)), nil
+		}
+		return existing, nil
+	}
+
+	return pathutil.ResolveDestUnderRoot(baseDir, toArg)
 }
 
 func rewriteSoiLocation(bucketRoot, absFile string) error {

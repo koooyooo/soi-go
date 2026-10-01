@@ -143,9 +143,12 @@ soi> dig search/
 
 ### `mv` / `rm`
 同一バケット内での移動・削除です。バケット外へのパス脱出は拒否されます。
+`list` と同じ論理パス（拡張子なし）でも指定できます。実ファイル名（`.json`）でも構いません。
 
 ```bash
-soi> mv search/google.json archive/google.json
+soi> mv search/google archive/google
+soi> rm archive/google
+# または
 soi> rm archive/google.json
 ```
 

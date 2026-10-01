@@ -6,7 +6,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/koooyooo/soi-go/pkg/common/file"
 	"github.com/koooyooo/soi-go/pkg/common/pathutil"
 )
 
@@ -25,12 +24,9 @@ func (e *Executor) rm(in string) error {
 		fmt.Println("cannot delete bucket dir.")
 		return nil
 	}
-	target, err := pathutil.ResolveUnderRoot(baseDir, relDir)
+	target, err := pathutil.ResolveExistingUnderRoot(baseDir, relDir)
 	if err != nil {
-		return err
-	}
-	if !file.Exists(target) {
-		fmt.Println("No file or dir found.")
+		fmt.Println(err.Error())
 		return nil
 	}
 	if err := os.RemoveAll(target); err != nil {
