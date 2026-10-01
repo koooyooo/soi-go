@@ -47,6 +47,8 @@
 $ go install github.com/koooyooo/soi-go@latest
 ```
 
+ローカルで開発する場合は `make install` でも同じ場所（`$(go env GOPATH)/bin`）に `soi-go` を配置します。
+
 ### 起動
 `$ soi-go` と打ち込むと `soi>` 形式のプロンプトが立ち上がります
 

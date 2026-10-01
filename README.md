@@ -45,6 +45,8 @@ Create `${HOME}/.soi/config.json` if needed. If it is missing, a default file is
 $ go install github.com/koooyooo/soi-go@latest
 ```
 
+For a local checkout, `make install` builds and installs `soi-go` into `$(go env GOPATH)/bin` (same destination as `go install`).
+
 ### Start
 ```bash
 ~$ soi-go
