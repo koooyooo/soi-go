@@ -45,6 +45,8 @@ Create `${HOME}/.soi/config.json` if needed. If it is missing, a default file is
 $ go install github.com/koooyooo/soi-go@latest
 ```
 
+For a local checkout, `make install` builds and installs `soi-go` into `$(go env GOPATH)/bin` (same destination as `go install`).
+
 ### Start
 ```bash
 ~$ soi-go
@@ -139,7 +141,8 @@ soi> dig search/
 
 ### `mv` / `rm`
 Move or remove within the current bucket. Paths outside the bucket are rejected.  
-You can use the same logical path as in `list` (no extension), or the on-disk `.json` name.
+You can use the same logical path as in `list` (no extension), or the on-disk `.json` name.  
+If deletion fails, check `(bucket: ...)` in the error and switch with `cb` if needed.
 
 ```bash
 soi> mv search/google archive/google

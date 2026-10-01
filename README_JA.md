@@ -47,6 +47,8 @@
 $ go install github.com/koooyooo/soi-go@latest
 ```
 
+ローカルで開発する場合は `make install` でも同じ場所（`$(go env GOPATH)/bin`）に `soi-go` を配置します。
+
 ### 起動
 `$ soi-go` と打ち込むと `soi>` 形式のプロンプトが立ち上がります
 
@@ -146,6 +148,7 @@ soi> dig search/
 ### `mv` / `rm`
 同一バケット内での移動・削除です。バケット外へのパス脱出は拒否されます。
 `list` と同じ論理パス（拡張子なし）でも指定できます。実ファイル名（`.json`）でも構いません。
+削除できないときは、エラー末尾の `(bucket: ...)` で現在バケットを確認してください（`cb` で切替）。
 
 ```bash
 soi> mv search/google archive/google

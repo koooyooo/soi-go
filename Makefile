@@ -1,6 +1,5 @@
 CLI_MOD="soi.go"
-
-CLI_BIN="./soi"
+CLI_BIN="./soi-go"
 
 PROJECT_NAME=${SOI_PROJECT_NAME}
 BUCKET_NAME=${SOI_BUCKET_NAME}
@@ -17,10 +16,14 @@ build: clean
 	@ go build -o "$(CLI_BIN)" "$(CLI_MOD)"
 
 install: build
-	@ go install "$(CLI_MOD)"
+	@ GOBIN="$$(go env GOPATH)/bin"; \
+	  mkdir -p "$$GOBIN"; \
+	  cp "$(CLI_BIN)" "$$GOBIN/soi-go"; \
+	  rm -f "$$GOBIN/soi"; \
+	  echo "installed $$GOBIN/soi-go"
 
 clean:
-	@ rm -f "$(CLI_BIN)"
+	@ rm -f "$(CLI_BIN)" ./soi
 
 test:
 	@ go test ./...
