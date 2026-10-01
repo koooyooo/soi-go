@@ -139,7 +139,8 @@ soi> dig search/
 
 ### `mv` / `rm`
 Move or remove within the current bucket. Paths outside the bucket are rejected.  
-You can use the same logical path as in `list` (no extension), or the on-disk `.json` name.
+You can use the same logical path as in `list` (no extension), or the on-disk `.json` name.  
+If deletion fails, check `(bucket: ...)` in the error and switch with `cb` if needed.
 
 ```bash
 soi> mv search/google archive/google

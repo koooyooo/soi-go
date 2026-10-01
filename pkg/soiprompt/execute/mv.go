@@ -1,6 +1,7 @@
 package execute
 
 import (
+	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -19,20 +20,20 @@ func (e *Executor) mv(in string) error {
 	if err != nil {
 		return err
 	}
-	flags := flag.NewFlagSet("mv", flag.ContinueOnError)
-	if err = flags.Parse(strings.Split(in, " ")[1:]); err != nil {
-		return err
-	}
-	if flags.NArg() < 2 {
+	parts := strings.Fields(in)
+	if len(parts) < 3 {
 		return flag.ErrHelp
 	}
+	fromArg := parts[1]
+	toArg := strings.Join(parts[2:], " ")
 
-	from, err := pathutil.ResolveExistingUnderRoot(baseDir, flags.Arg(0))
+	sois, _ := e.Service.LoadAll(context.Background())
+	from, err := pathutil.ResolveExistingUnderRootWithSois(baseDir, fromArg, sois)
 	if err != nil {
-		return fmt.Errorf("mv from: %w", err)
+		return fmt.Errorf("mv from: %w (bucket: %s)", err, e.Bucket.Name)
 	}
 
-	to, err := resolveMvDestination(baseDir, flags.Arg(1), from)
+	to, err := resolveMvDestination(baseDir, toArg, from)
 	if err != nil {
 		return err
 	}

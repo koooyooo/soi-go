@@ -17,7 +17,11 @@ build: clean
 	@ go build -o "$(CLI_BIN)" "$(CLI_MOD)"
 
 install: build
-	@ go install "$(CLI_MOD)"
+	@ go build -o "$(CLI_BIN)" "$(CLI_MOD)"
+	@ GOBIN="$$(go env GOPATH)/bin"; \
+	  cp "$(CLI_BIN)" "$$GOBIN/soi"; \
+	  cp "$(CLI_BIN)" "$$GOBIN/soi-go"; \
+	  echo "installed $$GOBIN/soi and $$GOBIN/soi-go"
 
 clean:
 	@ rm -f "$(CLI_BIN)"
