@@ -2,6 +2,7 @@
 .env
 /repo/
 /soi
+/soi-go
 /main
 /soi-server
 /config/*.json
