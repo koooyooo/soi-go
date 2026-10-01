@@ -1,34 +1,80 @@
-run:
-
-issues:
-  exclude-use-default: false
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - gocyclo
+version: "2"
 
 linters:
+  default: none
   enable:
+    - errcheck
     - gocyclo
-    - staticcheck
     - govet
+    - ineffassign
     - revive
-  disable:
-    - maligned
-    - exhaustive
-    - noctx
-    - asciicheck
-    - sqlclosecheck
-    - rowserrcheck
-    - gosec
-    - scopelint
-  presets:
-    - bugs
+    - staticcheck
     - unused
-    - format
+  settings:
+    gocyclo:
+      min-complexity: 15
+    errcheck:
+      exclude-functions:
+        - fmt.Printf
+        - fmt.Println
+        - fmt.Fprintf
+        - fmt.Fprintln
+        - (*os.File).Close
+        - io.Close
+    revive:
+      rules:
+        - name: blank-imports
+        - name: context-as-argument
+        - name: context-keys-type
+        - name: dot-imports
+        - name: error-return
+        - name: error-strings
+        - name: error-naming
+        - name: if-return
+        - name: increment-decrement
+        - name: var-declaration
+        - name: package-comments
+          disabled: true
+        - name: range
+        - name: receiver-naming
+        - name: time-naming
+        - name: unexported-return
+        - name: indent-error-flow
+        - name: errorf
+        - name: empty-block
+        - name: superfluous-else
+        - name: unused-parameter
+          disabled: true
+        - name: unreachable-code
+        - name: redefines-builtin-id
+        - name: exported
+          disabled: true
+  exclusions:
+    generated: lax
+    rules:
+      - path: _test\.go
+        linters:
+          - gocyclo
+      - path: cmd/.*
+        linters:
+          - gocyclo
+          - errcheck
+      - path: pkg/repository/sqlite\.go
+        linters:
+          - errcheck
+          - gocyclo
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
 
-linters-settings:
-  gocyclo:
-    min-complexity: 15
-  errcheck:
-    ignore: fmt:.*,io/ioutil:^Read,^Close|^Write|^Shutdown
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

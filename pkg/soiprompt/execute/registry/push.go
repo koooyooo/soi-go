@@ -16,7 +16,7 @@ import (
 
 func Push(cfg *config.Config, bucket *model.Bucket, _ string) error {
 	if bucket.IsLocalOnly() {
-		return fmt.Errorf("Bucketname %s is Local Bucket", bucket.Name)
+		return fmt.Errorf("bucket name %s is a local bucket", bucket.Name)
 	}
 	soisDir, err := bucket.Path()
 	if err != nil {

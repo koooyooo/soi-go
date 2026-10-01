@@ -34,13 +34,13 @@ func (e *Executor) open(in string) error {
 	}
 
 	ctx := context.Background()
-	
+
 	// ソート処理を適用
 	sortedSois := e.Cache.ListSoiCache
 	if *sortByNumViews || *sortByAddDay || *sortByViewDay {
 		sortedSois = applySorting(e.Cache.ListSoiCache, *sortByNumViews, *sortByAddDay, *sortByViewDay)
 	}
-	
+
 	s, err := findSoi(sortedSois, flags.Args())
 	if err != nil {
 		return err
@@ -141,7 +141,7 @@ func applySorting(sois []*model.SoiData, sortByNumViews, sortByAddDay, sortByVie
 	// コピーを作成してソート
 	sorted := make([]*model.SoiData, len(sois))
 	copy(sorted, sois)
-	
+
 	if sortByNumViews {
 		// 閲覧回数でソート（降順）
 		for i := 0; i < len(sorted)-1; i++ {
@@ -172,7 +172,7 @@ func applySorting(sois []*model.SoiData, sortByNumViews, sortByAddDay, sortByVie
 			}
 		}
 	}
-	
+
 	return sorted
 }
 
@@ -181,17 +181,17 @@ func getLastViewTime(soi *model.SoiData) time.Time {
 	if len(soi.UsageLogs) == 0 {
 		return soi.CreatedAt
 	}
-	
+
 	var lastView time.Time
 	for _, log := range soi.UsageLogs {
 		if log.Type == model.UsageTypeOpen && log.UsedAt.After(lastView) {
 			lastView = log.UsedAt
 		}
 	}
-	
+
 	if lastView.IsZero() {
 		return soi.CreatedAt
 	}
-	
+
 	return lastView
 }
