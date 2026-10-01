@@ -17,7 +17,7 @@ import (
 // cb はbucketの変更を行います
 func (e *Executor) cb(in string) error {
 	ctx := context.Background()
-	flags := flag.NewFlagSet("cb", flag.PanicOnError)
+	flags := flag.NewFlagSet("cb", flag.ContinueOnError)
 	if err := flags.Parse(strings.Split(in, " ")[1:]); err != nil {
 		return err
 	}

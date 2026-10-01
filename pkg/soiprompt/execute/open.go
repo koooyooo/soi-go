@@ -18,7 +18,7 @@ import (
 
 // open は指定されたSoiを元にブラウザを開きます
 func (e *Executor) open(in string) error {
-	flags := flag.NewFlagSet("open", flag.PanicOnError)
+	flags := flag.NewFlagSet("open", flag.ContinueOnError)
 	chrome := flags.Bool("c", false, "use chrome")
 	firefox := flags.Bool("f", false, "use firefox")
 	safari := flags.Bool("s", false, "use safari")

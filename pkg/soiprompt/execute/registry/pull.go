@@ -3,10 +3,9 @@ package registry
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
-	"path"
 	"path/filepath"
 
 	"github.com/koooyooo/soi-go/pkg/common/file"
@@ -22,7 +21,6 @@ func Pull(cfg *config.Config, bucket *model.Bucket, _ string) error {
 		return err
 	}
 
-	// リクエスト作成
 	user, pass, headerVal, err := generateAuthValues(cfg)
 	if err != nil {
 		return err
@@ -43,26 +41,27 @@ func Pull(cfg *config.Config, bucket *model.Bucket, _ string) error {
 	if err != nil {
 		return err
 	}
-	if resp.StatusCode != 200 {
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("pull response not OK: %d", resp.StatusCode)
 	}
 
-	// バックアップディレクトリを作成
-	empty, err := file.IsEmpty(soisDir)
-	if err != nil {
-		return err
-	}
-	if !empty {
-		if err := os.RemoveAll(soisDir + ".bk"); err != nil {
+	if file.Exists(soisDir) {
+		empty, err := file.IsEmpty(soisDir)
+		if err != nil {
 			return err
 		}
-		if err := os.Rename(soisDir, soisDir+".bk"); err != nil {
-			return err
+		if !empty {
+			if err := os.RemoveAll(soisDir + ".bk"); err != nil {
+				return err
+			}
+			if err := os.Rename(soisDir, soisDir+".bk"); err != nil {
+				return err
+			}
 		}
 	}
 
-	// レスポンス処理
-	b, err := ioutil.ReadAll(resp.Body)
+	b, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return err
 	}
@@ -76,15 +75,15 @@ func Pull(cfg *config.Config, bucket *model.Bucket, _ string) error {
 		}
 	}
 	for _, sv := range sb.Sois {
-		b, err := json.Marshal(sv)
+		payload, err := json.Marshal(sv)
 		if err != nil {
 			return err
 		}
-		dir, file := path.Split(sv.FilePath(bucket.Name))
-		if err := os.MkdirAll(dir, 0700); err != nil {
+		abs := sv.FilePath(soisDir)
+		if err := os.MkdirAll(filepath.Dir(abs), 0700); err != nil {
 			return err
 		}
-		if err := os.WriteFile(filepath.Join(dir, file), b, 0644); err != nil {
+		if err := os.WriteFile(abs, payload, 0600); err != nil {
 			return err
 		}
 	}

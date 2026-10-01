@@ -2,7 +2,6 @@ package complete
 
 import (
 	"context"
-	"log"
 	"strings"
 
 	"github.com/c-bata/go-prompt"
@@ -13,13 +12,13 @@ import (
 func (c *Completer) baseList(d prompt.Document, commands ...string) []prompt.Suggest {
 	soisDir, err := c.Bucket.Path()
 	if err != nil {
-		log.Fatal(err)
+		return EmptySuggests
 	}
 	input := removeOption(removeCmd(d.TextBeforeCursor(), commands...))
 	if len(c.cache.ListSoiCache) == 0 {
 		sois, err := c.service.LoadAll(context.Background())
 		if err != nil {
-			log.Fatal(err)
+			return EmptySuggests
 		}
 		c.cache.ListSoiCache = sois
 	}

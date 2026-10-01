@@ -1,7 +1,6 @@
 package complete
 
 import (
-	"log"
 	"strings"
 
 	"golang.org/x/net/context"
@@ -15,12 +14,16 @@ func (c *Completer) digCmd(d prompt.Document) []prompt.Suggest {
 	if utils.IsOptionWord(d) {
 		return listOptSuggests
 	}
-	digPath := removeOption(strings.Split(d.TextBeforeCursor(), " ")[1])
+	parts := strings.Split(d.TextBeforeCursor(), " ")
+	digPath := ""
+	if len(parts) > 1 {
+		digPath = removeOption(parts[1])
+	}
 
 	if len(c.cache.DigPathCache) == 0 {
 		paths, err := c.service.ListPath(context.Background(), digPath, true)
 		if err != nil {
-			log.Fatal(err)
+			return EmptySuggests
 		}
 		c.cache.DigPathCache = paths
 	}

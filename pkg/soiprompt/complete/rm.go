@@ -1,7 +1,6 @@
 package complete
 
 import (
-	"log"
 	"sort"
 	"strings"
 
@@ -17,13 +16,13 @@ func (c *Completer) rmCmd(d prompt.Document) []prompt.Suggest {
 
 	dir, err := c.Bucket.Path()
 	if err != nil {
-		log.Fatal(err)
+		return EmptySuggests
 	}
 	var fileDirs []string
-	ctx := context.Background() // TODO fix context flow
+	ctx := context.Background()
 	paths, err := c.service.ListPath(ctx, "", true)
 	if err != nil {
-		log.Fatal(err)
+		return EmptySuggests
 	}
 	fileDirs = append(fileDirs, paths...)
 	sort.Strings(fileDirs)

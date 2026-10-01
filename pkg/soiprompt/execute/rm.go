@@ -3,11 +3,11 @@ package execute
 import (
 	"flag"
 	"fmt"
-	"os/exec"
-	"path/filepath"
+	"os"
 	"strings"
 
-	fileio2 "github.com/koooyooo/soi-go/pkg/common/file"
+	"github.com/koooyooo/soi-go/pkg/common/file"
+	"github.com/koooyooo/soi-go/pkg/common/pathutil"
 )
 
 // rm はsoiの削除を行います
@@ -16,7 +16,7 @@ func (e *Executor) rm(in string) error {
 	if err != nil {
 		return err
 	}
-	flags := flag.NewFlagSet("rm", flag.PanicOnError)
+	flags := flag.NewFlagSet("rm", flag.ContinueOnError)
 	if err = flags.Parse(strings.Split(in, " ")[1:]); err != nil {
 		return err
 	}
@@ -25,10 +25,17 @@ func (e *Executor) rm(in string) error {
 		fmt.Println("cannot delete bucket dir.")
 		return nil
 	}
-	target := filepath.Join(baseDir, relDir)
-	if !fileio2.Exists(target) {
+	target, err := pathutil.ResolveUnderRoot(baseDir, relDir)
+	if err != nil {
+		return err
+	}
+	if !file.Exists(target) {
 		fmt.Println("No file or dir found.")
 		return nil
 	}
-	return exec.Command("rm", "-rf", target).Start()
+	if err := os.RemoveAll(target); err != nil {
+		return err
+	}
+	e.Cache.Clear()
+	return nil
 }

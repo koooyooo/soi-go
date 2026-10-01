@@ -1,18 +1,13 @@
 package execute
 
 import (
-	"encoding/json"
+	"context"
 	"flag"
 	"fmt"
-	"os"
-	"path/filepath"
 	"strings"
 	"time"
 
-	"github.com/koooyooo/soi-go/pkg/common/file"
-
 	"github.com/koooyooo/soi-go/pkg/common/hash"
-
 	"github.com/koooyooo/soi-go/pkg/model"
 	"github.com/koooyooo/soi-go/pkg/soiprompt/utils"
 )
@@ -21,7 +16,7 @@ import (
 func (e *Executor) add(in string) error {
 	var tags utils.StringArray
 
-	flags := flag.NewFlagSet("add", flag.PanicOnError)
+	flags := flag.NewFlagSet("add", flag.ContinueOnError)
 	n := flags.String("n", "", "name of the uri")
 	d := flags.String("d", "", "soiRoot to which model store")
 	flags.Var(&tags, "t", "tag of the uri")
@@ -29,7 +24,10 @@ func (e *Executor) add(in string) error {
 		return err
 	}
 
-	dir, name, uri, tags := parseArgs(flags.Args())
+	dir, name, uri, parsedTags := parseArgs(flags.Args())
+	if uri == "" {
+		return fmt.Errorf("url is required")
+	}
 	if dir == "" {
 		dir = time.Now().Format("2006-01")
 	}
@@ -50,35 +48,28 @@ func (e *Executor) add(in string) error {
 		}
 		name = title
 	}
-	hash, err := hash.Sha1(uri)
+	h, err := hash.Sha1(uri)
 	if err != nil {
 		return err
 	}
 
-	kTags, kvTags := separateTags(tags)
+	kTags, kvTags := separateTags(append([]string(tags), parsedTags...))
 
-	s := model.SoiData{
+	s := &model.SoiData{
 		Name:      name,
 		Path:      dir,
 		URI:       uri,
-		Hash:      hash,
+		Hash:      h,
 		Tags:      kTags,
 		KVTags:    kvTags,
-		CreatedAt: time.Now(), // .Format("2006-01-02T15:04:05Z07:00"),
+		CreatedAt: time.Now(),
 	}
-	b, err := json.Marshal(&s)
-	if err != nil {
+	ctx := context.Background()
+	if err := e.Service.Store(ctx, s); err != nil {
 		return err
 	}
-	soiRoot, err := e.Bucket.Path()
-	if err != nil {
-		return err
-	}
-	baseDir := filepath.Join(soiRoot, dir)
-	if err = os.MkdirAll(baseDir, 0700); err != nil {
-		return err
-	}
-	return os.WriteFile(filepath.Join(baseDir, file.ToStorableName(name)), b, 0600)
+	e.Cache.Clear()
+	return nil
 }
 
 func parseArgs(args []string) (dir, name, uri string, tags []string) {
@@ -112,12 +103,12 @@ func parseArgs(args []string) (dir, name, uri string, tags []string) {
 func separateTags(tags []string) (kTags []string, kvTags []model.KVTag) {
 	for _, tag := range tags {
 		if strings.Contains(tag, "=") {
-			kv := strings.Split(tag, "=")
+			kv := strings.SplitN(tag, "=", 2)
 			kvTags = append(kvTags, model.KVTag{
 				Key:   kv[0],
 				Value: kv[1],
 			})
-		} else {
+		} else if tag != "" {
 			kTags = append(kTags, tag)
 		}
 	}

@@ -3,6 +3,7 @@ package registry
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -22,7 +23,10 @@ func Push(cfg *config.Config, bucket *model.Bucket, _ string) error {
 		return err
 	}
 	var sb model.ServerBucket
-	if err := filepath.Walk(soisDir, func(path string, fi os.FileInfo, _ error) error {
+	if err := filepath.Walk(soisDir, func(path string, fi os.FileInfo, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
 		if fi.IsDir() {
 			return nil
 		}
@@ -43,7 +47,6 @@ func Push(cfg *config.Config, bucket *model.Bucket, _ string) error {
 		return err
 	}
 
-	// リクエスト作成
 	user, pass, headerVal, err := generateAuthValues(cfg)
 	if err != nil {
 		return err
@@ -54,22 +57,24 @@ func Push(cfg *config.Config, bucket *model.Bucket, _ string) error {
 	}
 	req, err := http.NewRequest(
 		"POST",
-		fmt.Sprintf(
-			"%s/api/v1/%s/%s/sois:replace", cfg.Server, userHash, bucket.Name),
+		fmt.Sprintf("%s/api/v1/%s/%s/sois:replace", cfg.Server, userHash, bucket.Name),
 		strings.NewReader(sb.String()))
 	if err != nil {
 		return err
 	}
 	req.Header.Add("Authorization", headerVal)
-	req.Header.Add("ContentType", "application/json")
-	//go func() {
+	req.Header.Add("Content-Type", "application/json")
+
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		fmt.Printf("push failed: %s", err)
+		return fmt.Errorf("push failed: %w", err)
 	}
-	if resp.StatusCode == http.StatusOK {
-		fmt.Fprintf(os.Stderr, "pushed\n")
+	defer resp.Body.Close()
+	_, _ = io.Copy(io.Discard, resp.Body)
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("push failed: status %d", resp.StatusCode)
 	}
-	//}()
+	fmt.Fprintf(os.Stderr, "pushed\n")
 	return nil
 }
