@@ -87,7 +87,7 @@ func (r *filesRepository) Remove(ctx context.Context, bucket string, hash string
 	if !found {
 		return nil
 	}
-	return os.RemoveAll(s.FilePath(bucket))
+	return os.Remove(filepath.Join(r.basePath, s.FilePath(bucket)))
 }
 
 func findSoi(sois []*model.SoiData, hash string) (*model.SoiData, bool) {

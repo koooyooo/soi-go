@@ -2,7 +2,7 @@ package execute
 
 import (
 	"flag"
-	"log"
+	"fmt"
 	"os"
 	"os/exec"
 	"runtime"
@@ -10,7 +10,7 @@ import (
 )
 
 func (e *Executor) edit(in string) error {
-	flags := flag.NewFlagSet("edit", flag.PanicOnError)
+	flags := flag.NewFlagSet("edit", flag.ContinueOnError)
 	if err := flags.Parse(strings.Split(in, " ")[1:]); err != nil {
 		return err
 	}
@@ -24,22 +24,21 @@ func (e *Executor) edit(in string) error {
 	}
 	path := s.FilePath(bucketPath)
 
-	var cName, cArgs string
+	var cName string
+	var cArgs []string
 	switch runtime.GOOS {
 	case "darwin", "linux", "freebsd":
 		cName = "vim"
-		cArgs = path
+		cArgs = []string{path}
 	case "windows":
 		cName = "cmd"
-		cArgs = "/c start notepad.exe " + path
+		cArgs = []string{"/c", "start", "notepad.exe", path}
+	default:
+		return fmt.Errorf("unsupported os: %s", runtime.GOOS)
 	}
-	c := exec.Command(cName, cArgs)
+	c := exec.Command(cName, cArgs...)
 	c.Stdin = os.Stdin
 	c.Stdout = os.Stdout
 	c.Stderr = os.Stderr
-	if err := c.Run(); err != nil {
-		log.Fatal(err)
-	}
-
-	return nil
+	return c.Run()
 }

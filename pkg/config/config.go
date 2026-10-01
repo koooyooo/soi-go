@@ -20,7 +20,7 @@ type Config struct {
 	DefaultBucket     string `env:"SOI_DEFAULT_BUCKET" json:"default_bucket"`
 	Server            string `env:"SOI_SERVER" json:"server"`
 	UserName          string `env:"SOI_USER_NAME" json:"user_name"`
-	UserPass          string `env:"SOI_USER_PASS" json:"user_pass"`
+	UserPass          string `env:"SOI_USER_PASS" json:"-"` // パスワードはファイルに残さず環境変数を使う
 	DefaultRepository string `env:"SOI_DEFAULT_REPOSITORY" json:"default_repository"`
 }
 
@@ -50,24 +50,16 @@ func exists(path string) (bool, error) {
 }
 
 func initialize(path string) error {
-	//sc := bufio.NewScanner(os.Stdin)
-	//fmt.Println(`server url? (ex. https://server:80")`)
-	//fmt.Print("> ")
-	//sc.Scan()
-	//txt := sc.Text()
-	//if txt == "" {
-	//	return errors.New("no servername specified")
-	//}
 	cfg := Config{
 		DefaultBrowser:    "firefox",
 		DefaultBucket:     "default",
 		DefaultRepository: "file",
 	}
-	b, err := json.Marshal(&cfg)
+	b, err := json.MarshalIndent(&cfg, "", "  ")
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(path, b, 0644)
+	return os.WriteFile(path, b, 0600)
 }
 
 func doLoad(path string) (*Config, error) {
@@ -79,6 +71,7 @@ func doLoad(path string) (*Config, error) {
 	if err := json.Unmarshal(b, &conf); err != nil {
 		return nil, err
 	}
+	// 旧 config に user_pass が残っていても JSON タグ "-" では読めないため、明示的に拾わない
 	if err := env.Parse(&conf); err != nil {
 		return nil, err
 	}
@@ -88,6 +81,7 @@ func doLoad(path string) (*Config, error) {
 	if conf.DefaultRepository == "" {
 		conf.DefaultRepository = "file"
 	}
+	_ = os.Chmod(path, 0600)
 	return &conf, nil
 }
 
@@ -98,7 +92,7 @@ func confPath() (string, error) {
 	}
 	confDir := filepath.Join(dir, ".soi")
 	if !file.Exists(confDir) {
-		if err := os.Mkdir(confDir, 0755); err != nil {
+		if err := os.Mkdir(confDir, 0700); err != nil {
 			return "", err
 		}
 	}

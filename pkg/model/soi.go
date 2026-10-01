@@ -3,6 +3,8 @@ package model
 import (
 	"path/filepath"
 	"time"
+
+	"github.com/koooyooo/soi-go/pkg/common/file"
 )
 
 type SoiData struct {
@@ -31,7 +33,7 @@ type SoiData struct {
 }
 
 func (s *SoiData) FilePath(basePath string) string {
-	return filepath.Join(basePath, s.Path, s.Name+".json")
+	return filepath.Join(basePath, s.Path, file.ToStorableName(s.Name))
 }
 
 type OGImage struct {

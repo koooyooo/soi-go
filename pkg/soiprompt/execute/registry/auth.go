@@ -24,7 +24,7 @@ func generateAuthValues(cfg *config.Config) (user string, pass string, authValue
 		fmt.Print("> ")
 		fmt.Scan(&pass)
 		if pass == "" {
-			return "", "", "", errors.New("not user pass found")
+			return "", "", "", errors.New("no user pass found")
 		}
 	}
 	return user, pass, "Basic " + base64.StdEncoding.EncodeToString([]byte(user+":"+pass)), nil

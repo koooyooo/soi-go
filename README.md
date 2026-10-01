@@ -13,19 +13,20 @@
 ## 主な機能
 - **ブックマークの追加**: `soi> add {dir} {name} {url}` でブックマークを追加できます。
 - **ブックマークの検索**: `soi> list` でブックマークをリストアップし、任意のキーワードで絞り込めます。
-- **ブックマークの閲覧**: `soi> open {id}` でブックマークを閲覧できます。
+- **ブックマークの閲覧**: `soi> open {id}` / `list` で選択して閲覧できます。
+- **階層探索**: `soi> dig` でディレクトリを掘り下げます。
+- **バケット切替**: `soi> cb {name}` でコンテキストを切り替えます。
 
 
 ## インストール
 
 ### 必要要件
-- `go` がインストールされていること
+- `go` がインストールされていること（1.21 以上）
 
 ### インストール手順
 
 #### 設定ファイル
-`${HOME}/.soi/config.json` を作成します。最初は以下の様な設定にします。
-> 設定ファイル及び設定ディレクトリが存在しない場合、起動時に規定のファイルが生成されます。
+`${HOME}/.soi/config.json` を作成します。存在しない場合は起動時に既定ファイルが生成されます（権限 `0600`）。
 
 ```json
 {
@@ -34,7 +35,9 @@
   "default_browser": "firefox"
 }
 ```
-> `default_browser` の選択肢は `firefox` | `chrome` | `safari` です
+> `default_browser` の選択肢は `firefox` | `chrome` | `safari` | `edge` です  
+> `default_repository` は `file`（既定）または `sqlite` です  
+> サーバ同期用のパスワードは設定ファイルに書かず、環境変数 `SOI_USER_PASS` を使います（`SOI_USER_NAME` / `SOI_SERVER` も可）
 
 #### バイナリインストール 
 `$ go install` でインストールします
@@ -67,7 +70,7 @@ soi> add　{dir} {name} https://www.google.com #search #entry
 > オプションで各要素を明示的に指定できます。
 > 
 > - `-d`オプションでディレクトリを明示的に指定できます
-> - 省略時のデフォルトディレクトリは `new`です
+> - 省略時のデフォルトディレクトリは `YYYY-MM`（例: `2026-10`）です
 > - ディレクトリは `/`区切りで階層的に表現することも可能です
 > ```
 > soi> add -d search https://www.google.com
@@ -112,6 +115,7 @@ soi> list #guide
 > - `-c` `chrome`
 > - `-f` `firefox`
 > - `-s` `safari`
+> - `-e` `edge`
 
 > Note: リスト時に**ソート指定**オプションをつけることで指定した順にソートされます。
 > - `-n` 閲覧回数
@@ -136,6 +140,14 @@ soi> dig search/
                  search/yahoo.json
 ``` 
 - `Enter` キーを押下すると、ブラウザでブックマークを開きます
+
+### `mv` / `rm`
+同一バケット内での移動・削除です。バケット外へのパス脱出は拒否されます。
+
+```bash
+soi> mv search/google.json archive/google.json
+soi> rm archive/google.json
+```
 
 ### `cb`
 `cb` コマンドで バケットを切り替えます。バケットとはブックマークをコンテキスト毎に整理するためのもので、例えば `work`, `hobby` 等です。

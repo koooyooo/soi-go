@@ -1,7 +1,6 @@
 package complete
 
 import (
-	"log"
 	"strings"
 
 	"golang.org/x/net/context"
@@ -12,10 +11,8 @@ import (
 
 // addCmd はaddコマンド系のSuggestを提示します
 func (c *Completer) addCmd(d prompt.Document) []prompt.Suggest {
-	// remove cache
 	c.cache.Clear()
 
-	// option探索
 	if utils.IsOptionWord(d) {
 		return []prompt.Suggest{
 			{Text: "-n", Description: "name of the url"},
@@ -26,20 +23,19 @@ func (c *Completer) addCmd(d prompt.Document) []prompt.Suggest {
 	if strings.HasSuffix(d.Text, "-n ") {
 		return EmptySuggests
 	}
-	// dir探索
 	if strings.HasSuffix(d.Text, "-d ") {
 		var suggests []prompt.Suggest
 		soiRoot, err := c.Bucket.Path()
 		if err != nil {
-			log.Fatal(err)
+			return EmptySuggests
 		}
-		dirs, err := c.service.ListPath(context.Background(), "", false) // TODO fix context flow
+		dirs, err := c.service.ListPath(context.Background(), "", false)
 		if err != nil {
-			log.Fatal(err)
+			return EmptySuggests
 		}
-		for _, d := range dirs {
+		for _, dir := range dirs {
 			suggests = append(suggests, prompt.Suggest{
-				Text:        strings.TrimPrefix(d, soiRoot+"/"),
+				Text:        strings.TrimPrefix(dir, soiRoot+"/"),
 				Description: "",
 			})
 		}

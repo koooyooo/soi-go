@@ -3,14 +3,13 @@ package loader
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"os"
+	"path/filepath"
 	"strings"
 	"sync"
 
 	"github.com/koooyooo/soi-go/pkg/common/file"
 	"github.com/koooyooo/soi-go/pkg/common/hash"
-	"github.com/koooyooo/soi-go/pkg/constant"
 	"github.com/koooyooo/soi-go/pkg/model"
 	"github.com/koooyooo/soi-go/pkg/soiprompt/utils"
 )
@@ -19,55 +18,69 @@ var isSoiFile = func(soiPath string) bool {
 	return strings.HasSuffix(soiPath, ".json")
 }
 
-func LoadSois(filepath string) ([]*model.SoiData, error) {
-	files, err := utils.ListFilesRecursively(filepath)
+func LoadSois(bucketRoot string) ([]*model.SoiData, error) {
+	files, err := utils.ListFilesRecursively(bucketRoot)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
-	sois, err := loadFilteredSoiDataArray(files)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return sois, nil
+	return loadFilteredSoiDataArray(bucketRoot, files)
 }
 
-// loadFilteredSoiDataArray は指定されたファイルパスの配列からSoiData(WithPath)の配列をロードします
-func loadFilteredSoiDataArray(files []string) ([]*model.SoiData, error) {
+// loadFilteredSoiDataArray は指定されたファイルパスの配列からSoiDataの配列をロードします
+func loadFilteredSoiDataArray(bucketRoot string, files []string) ([]*model.SoiData, error) {
 	var filtered []string
 	for _, f := range files {
 		if !isSoiFile(f) {
-			fmt.Printf("[Warn] found unknown format file: %s", f)
+			fmt.Printf("[Warn] found unknown format file: %s\n", f)
 			continue
 		}
 		filtered = append(filtered, f)
 	}
-	return loadSoiDataArray(filtered)
+	return loadSoiDataArray(bucketRoot, filtered)
 }
 
-func loadSoiDataArray(files []string) ([]*model.SoiData, error) {
+func loadSoiDataArray(bucketRoot string, files []string) ([]*model.SoiData, error) {
 	var wg sync.WaitGroup
 	wg.Add(len(files))
 
 	var ss = make([]*model.SoiData, len(files))
+	var firstErr error
+	var mu sync.Mutex
 	for i, f := range files {
 		go func(idx int, fp string) {
 			defer wg.Done()
-			sd, err := LoadSoiData(fp)
+			sd, err := LoadSoiData(bucketRoot, fp)
 			if err != nil {
-				fmt.Printf("failed in load sd: %s", err.Error())
+				mu.Lock()
+				if firstErr == nil {
+					firstErr = err
+				}
+				mu.Unlock()
+				fmt.Printf("failed in load sd: %s\n", err.Error())
 				return
 			}
 			ss[idx] = sd
 		}(i, f)
 	}
 	wg.Wait()
+	if firstErr != nil {
+		// 部分的に読めている場合でも、呼び出し側が扱えるよう成功分だけ返す
+		var compact []*model.SoiData
+		for _, s := range ss {
+			if s != nil {
+				compact = append(compact, s)
+			}
+		}
+		return compact, nil
+	}
 	return ss, nil
 }
 
-// loadSoiData は指定されたファイルパスよりSoiデータをロードします
-func LoadSoiData(filepath string) (*model.SoiData, error) {
-	filepath = addJSONSuffix(filepath)
-	b, err := os.ReadFile(filepath)
+// LoadSoiData は指定されたファイルパスよりSoiデータをロードします。
+// Path は bucketRoot からの相対ディレクトリに正規化します。
+func LoadSoiData(bucketRoot, filePath string) (*model.SoiData, error) {
+	filePath = addJSONSuffix(filePath)
+	b, err := os.ReadFile(filePath)
 	if err != nil {
 		return nil, err
 	}
@@ -75,17 +88,24 @@ func LoadSoiData(filepath string) (*model.SoiData, error) {
 	if err := json.Unmarshal(b, &sd); err != nil {
 		return nil, err
 	}
-	// complement fields // TODO fix this
-	soisDir, err := constant.SoisDir()
+
+	rel, err := filepath.Rel(bucketRoot, filePath)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("resolve relative path: %w", err)
 	}
-	path := filepath
-	path = strings.TrimPrefix(path, soisDir+"/")
-	idxBucketTail := strings.Index(path, "/")
-	path = path[idxBucketTail+1:]
-	path = strings.TrimSuffix(sd.Path, ".json")
-	sd.Path = path
+	rel = filepath.ToSlash(rel)
+	dir := filepath.ToSlash(filepath.Dir(rel))
+	if dir == "." {
+		dir = ""
+	}
+	sd.Path = dir
+
+	base := filepath.Base(rel)
+	fileName := strings.TrimSuffix(base, ".json")
+	if sd.Name == "" {
+		sd.Name = fileName
+	}
+
 	if sd.Hash == "" {
 		sd.Hash, err = hash.Sha1(sd.URI)
 		if err != nil {
@@ -95,21 +115,21 @@ func LoadSoiData(filepath string) (*model.SoiData, error) {
 	return &sd, nil
 }
 
-func StoreSoiData(filepath string, s *model.SoiData) error {
-	filepath = addJSONSuffix(filepath)
+func StoreSoiData(filePath string, s *model.SoiData) error {
+	filePath = addJSONSuffix(filePath)
+	if err := os.MkdirAll(filepath.Dir(filePath), 0700); err != nil {
+		return err
+	}
 	ub, err := json.Marshal(s)
 	if err != nil {
 		return err
 	}
-	if err := os.WriteFile(filepath, ub, 0600); err != nil {
-		return err
-	}
-	return nil
+	return os.WriteFile(filePath, ub, 0600)
 }
 
-func Exists(filepath string) bool {
-	filepath = addJSONSuffix(filepath)
-	return file.Exists(filepath)
+func Exists(filePath string) bool {
+	filePath = addJSONSuffix(filePath)
+	return file.Exists(filePath)
 }
 
 // 末尾に ".json" を追加します

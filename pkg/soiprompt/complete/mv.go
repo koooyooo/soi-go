@@ -1,7 +1,6 @@
 package complete
 
 import (
-	"log"
 	"strings"
 
 	"golang.org/x/net/context"
@@ -16,11 +15,11 @@ func (c *Completer) mvCmd(d prompt.Document) []prompt.Suggest {
 	is2ndArg := 2 < len(strings.Split(d.Text, " "))
 	paths, err := c.service.ListPath(context.Background(), word, !is2ndArg)
 	if err != nil {
-		log.Fatal(err)
+		return EmptySuggests
 	}
 	dir, err := c.Bucket.Path()
 	if err != nil {
-		log.Fatal(err)
+		return EmptySuggests
 	}
 	return utils.FilePathsToSuggests(dir, paths, word)
 }

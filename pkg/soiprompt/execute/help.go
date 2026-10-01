@@ -9,30 +9,43 @@ General:
 
 Commands:
 
-  [add]: 
-      Desc:  add url to model
-      Usage: add (URL)
+  [add]:
+      Desc:  add url to soi
+      Usage: add (dir) (name) (URL) (#tags...)
       Option:
         -n: logical name of the url    (default: <title> of the URL)
-        -d: directory to store the url (default: "new")
+        -d: directory to store the url (default: YYYY-MM)
 
-  [dig]: 
+  [dig]:
       Desc:  dig url directory with [Tab] key completion and [→] key listing next suggestions
-      Usage: dig (URL Completion with [Tab] and [→] key listing next suggestions)
+      Usage: dig (path)
 
   [list]:
       Desc:  list all urls with filtering
       Usage: list (free words)
-		
+      Option:
+        -c/-f/-s/-e: browser
+        -n/-a/-v: sort
+        -p: private mode
+
   [tag]:
-      Desc:  not implemented now
+      Desc:  replace tags of a soi
+      Usage: tag (hash) (#tags...)
 
   [mv]:
-      Desc:  move file to dir 
-      Usage: mv (current path) to (dir)
+      Desc:  move file or dir within the current bucket
+      Usage: mv (from) (to)
+
+  [rm]:
+      Desc:  remove file or dir within the current bucket
+      Usage: rm (path)
+
+  [cb]:
+      Desc:  show or change bucket
+      Usage: cb [bucket]
 
   [quit]:
-      Desc:  quit model> and go back to console. Ctrl+D works too.
+      Desc:  quit soi> and go back to console. Ctrl+D works too.
       Usage: quit`)
 	return nil
 }

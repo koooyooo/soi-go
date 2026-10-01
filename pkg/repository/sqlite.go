@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -31,7 +30,10 @@ type sqliteRepository struct {
 
 func (r *sqliteRepository) reload(_ context.Context) error {
 	dbFilePath := filepath.Join(r.basePath, r.currentBucket+".db")
-	fmt.Println("DB->", dbFilePath) // TODO
+	if r.db != nil {
+		_ = r.db.Close()
+		r.db = nil
+	}
 	db, err := sql.Open("sqlite3", dbFilePath)
 	if err != nil {
 		return err
@@ -351,9 +353,38 @@ func (r *sqliteRepository) Exists(ctx context.Context, bucket string, hash strin
 
 func (r *sqliteRepository) Remove(ctx context.Context, bucket string, hash string) error {
 	if r.currentBucket != bucket {
-		r.reload(ctx)
+		if err := r.reload(ctx); err != nil {
+			return err
+		}
 		r.currentBucket = bucket
 	}
-	//TODO implement me
-	panic("implement me")
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	var soiID int64
+	err = tx.QueryRowContext(ctx, "select id from sois where bucket = ? and hash = ?", bucket, hash).Scan(&soiID)
+	if err == sql.ErrNoRows {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+
+	queries := []string{
+		`delete from og_imgs where og_id in (select id from ogs where soi_id = ?)`,
+		`delete from ogs where soi_id = ?`,
+		`delete from usage_logs where soi_id = ?`,
+		`delete from soi_tags where soi_id = ?`,
+		`delete from soi_kv_tags where soi_id = ?`,
+		`delete from sois where id = ?`,
+	}
+	for _, q := range queries {
+		if _, err := tx.ExecContext(ctx, q, soiID); err != nil {
+			return err
+		}
+	}
+	return tx.Commit()
 }

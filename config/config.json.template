@@ -1,6 +1,8 @@
 {
-  "server": "http://localhost:8080",
+  "theme": "black",
   "default_bucket": "default",
-  "default_repository": "sqlite",
-  "default_browser": "firefox"
+  "default_repository": "file",
+  "default_browser": "firefox",
+  "server": "",
+  "user_name": ""
 }
