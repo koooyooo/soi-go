@@ -37,9 +37,9 @@ func ParseLine4Path(elms []string) (string, bool) {
 
 // コンソール表示をパースします。
 func ParseLine(s string) (*SoiLine, error) {
-	s = strings.Replace(s, " -v", "", -1)
-	s = strings.Replace(s, " -u", "", -1)
-	s = strings.Replace(s, " -r", "", -1)
+	s = strings.ReplaceAll(s, " -v", "")
+	s = strings.ReplaceAll(s, " -u", "")
+	s = strings.ReplaceAll(s, " -r", "")
 
 	const spaceWidth = 1
 	const bracketWidth = 1

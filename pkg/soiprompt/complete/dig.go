@@ -50,12 +50,3 @@ func nextElmPath(paths []string, part string) []string {
 	}
 	return result
 }
-
-// toLeafDirPath はPathを末端ディレクトリのPathに変換します
-func toLeafDirPath(path string) string {
-	lastSlashIdx := strings.LastIndex(path, "/")
-	if lastSlashIdx == -1 {
-		return ""
-	}
-	return path[0:lastSlashIdx]
-}

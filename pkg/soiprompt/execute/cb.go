@@ -25,7 +25,7 @@ func (e *Executor) cb(in string) error {
 	bucketName := flags.Arg(0)
 	// 引数なしの場合は現在のバケット表示
 	if bucketName == "" {
-		fmt.Printf("current bucket: [%s]\n", e.BucketRef.Bucket.Name)
+		fmt.Printf("current bucket: [%s]\n", e.Bucket.Name)
 		return nil
 	}
 	buckets, err := model.ListBuckets()

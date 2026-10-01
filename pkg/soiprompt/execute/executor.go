@@ -50,12 +50,12 @@ func (e *Executor) Execute(in string) {
 	case "help", "h":
 		op(e.help, in)
 	case "pull":
-		if err := registry.Pull(e.Conf, e.BucketRef.Bucket, in); err != nil {
+		if err := registry.Pull(e.Conf, e.Bucket, in); err != nil {
 			fmt.Println(err)
 			return
 		}
 	case "push":
-		if err := registry.Push(e.Conf, e.BucketRef.Bucket, in); err != nil {
+		if err := registry.Push(e.Conf, e.Bucket, in); err != nil {
 			fmt.Println(err)
 			return
 		}

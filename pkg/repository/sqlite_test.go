@@ -3,12 +3,13 @@ package repository
 import (
 	"context"
 	"fmt"
-	"github.com/koooyooo/soi-go/pkg/model"
-	_ "github.com/mattn/go-sqlite3"
-	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
 	"time"
+
+	"github.com/koooyooo/soi-go/pkg/model"
+	_ "github.com/mattn/go-sqlite3"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestSQLite(t *testing.T) {
